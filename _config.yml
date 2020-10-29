@@ -4,10 +4,9 @@ baseurl: "/"
 url: "https://cafedang.xyz"
 permalink: /:year/:month/:day/:title
 repository: Kioku17/kioku17.github.io
-paginate: 5
+paginate: 10
 
-github_profile: "https://github.com/Kioku17"
-user: "Kioku17"
+user: "Trần Khánh"
 user_email: "trankhanh9227@gmail.com"
 contact_url: "https://facebook.com/tnkxd"
 google_tracking_id: "UA-96359860-1"
