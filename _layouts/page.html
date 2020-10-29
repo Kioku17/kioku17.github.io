@@ -1,0 +1,16 @@
+---
+layout: default
+---
+        <div class="site-inner">
+            <div class="content-sidebar-wrap">
+                <main class="content">
+                    <div class="breadcrumb"><span><span><a href="/">Trang chủ</a> » <span class="breadcrumb_last">{{ page.title }}</span></span></span></div>
+                    <article itemscope itemtype="https://schema.org/CreativeWork">
+                        <header class="entry-header">
+                            <h1 class="entry-title" itemprop="headline">{{ page.title }}</h1>
+                        </header>
+                        <div class="entry-content" itemprop="text">
+													{{ content }}
+                        </div>
+                    </article>
+                </main>

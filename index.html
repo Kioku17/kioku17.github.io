@@ -1,0 +1,49 @@
+---
+layout: default
+---
+
+         <div class="site-inner">
+            <div class="content-sidebar-wrap">
+               <main class="content">
+						{% for post in paginator.posts %}
+                  <article itemscope itemtype="https://schema.org/CreativeWork">
+                     <header class="entry-header">
+                        <h2 class="entry-title" itemprop="headline"><a class="mix" data-balloon="large" aria-label="{{ post.title }}" data-balloon-pos="up" href="{{ post.url }}">{{ post.title }}</a></h2>
+                        <p class="entry-meta"><time class="entry-time" itemprop="datePublished" datetime="{{ post.date }}">{{ post.date | date: "%d/%m/%Y" }}</time> <span class="entry-author" itemprop="author" itemscope itemtype="https://schema.org/Person"><a href="/author" class="entry-author-link" itemprop="url" rel="author"><span class="entry-author-name" itemprop="name">{{ site.author }}</span></a></span> </p>
+                     </header>
+                     <div class="entry-content" itemprop="text">
+                        <a class="mix" href="{{ post.url }}" aria-hidden="true">
+								<img width="150" height="150" src="{% if post.img %}{{ post.img }}{% else %}https://i.imgur.com/KBpSwjz.png{% endif %}" class="alignleft post-image entry-image" alt="{{ post.title }}" />
+                        </a>
+                        <p>{{ post.content | strip_html | truncatewords: 70 }}</p>
+                     </div>
+                  </article>
+								 <hr>
+						{% endfor %}
+								 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/balloon-css/1.0.0/balloon.css" integrity="sha256-cOFokBk6C4wvnJKWqNJFrVFjDmWgZDYOsQSEY3jpCb4=" crossorigin="anonymous" />
+                  {% if paginator.total_pages > 1 %}
+                  <div class="archive-pagination pagination">
+                     <ul>
+                        {% if paginator.previous_page %}
+								 <li class="pagination-previous"><a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">&#x000AB;</a></li>{% else %}{% endif %}
+                        {% for page in (1..paginator.total_pages) %}
+                        {% if page == paginator.page %}
+											 
+												 {% if page == 1 %}
+													<li class="active"><a href="/" aria-label="Current page" aria-current="page"><span class="screen-reader-text">Page </span>{{ page }}</a></li>
+													{% else %}
+													<li class="active"><a href="{{ site.paginate_path | prepend: site.baseurl | replace: '//', '/' | replace: ':num', page }}" aria-label="Current page" aria-current="page"><span class="screen-reader-text">Page </span>{{ page }}</a></li>
+
+												 {% endif %} 
+                        {% elsif page == 1 %}
+                        <li><a href="/"><span class="screen-reader-text">Page </span>{{ page }}</a></li>
+                        {% else %}
+                        <li><a href="{{ site.paginate_path | prepend: site.baseurl | replace: '//', '/' | replace: ':num', page }}"><span class="screen-reader-text">Page </span>{{ page }}</a></li>
+                        {% endif %}{% endfor %}
+                        {% if paginator.next_page %}
+							   <li class="pagination-next"><a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}">&#x000BB;</a></li>{% else %}{% endif %} 
+                     </ul>
+                  </div>		 
+                  </div>
+                  {% endif %} 
+               </main>

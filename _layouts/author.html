@@ -1,0 +1,19 @@
+---
+layout: default
+---
+  <div class="site-inner">
+            <div class="content-sidebar-wrap">
+               <main class="content">
+                  <div class="breadcrumb"><span><span><a href="/">Trang chủ</a> » <span class="breadcrumb_last">Tác giả</span></span></span></div>
+                  <div class="archive-description taxonomy-archive-description taxonomy-description">
+                     <h1 class="archive-title">{{ page.title }}</h1>
+                     <p>{{ content }}</p>
+                  </div>
+                    <section class="author-box" itemprop="author" itemscope itemtype="https://schema.org/Person">
+                        <img src="https://images.weserv.nl/?url={{ site.avatar }}&w=70&h=70&t=square&q=90" class='avatar avatar-70 photo' height='70' width='70' />
+                        <h4 class="author-box-title">Tác giả: <span itemprop="name">{{ site.author }}</span></h4>
+                        <div class="author-box-content" itemprop="description">
+                            <p>"{{ site.quotes }}".</p>
+                        </div>
+                    </section>
+               </main>

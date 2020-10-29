@@ -1,0 +1,56 @@
+               <aside class="sidebar sidebar-primary widget-area" role="complementary" aria-label="Primary Sidebar" itemscope itemtype="https://schema.org/WPSideBar">
+                  <h2 class="genesis-sidebar-title screen-reader-text">Primary Sidebar</h2>
+                  <section id="nav_menu-2" class="widget widget_nav_menu">
+                     <div class="widget-wrap">
+                        <h3 class="widgettitle widget-title">Danh mục</h3>
+                        <div class="menu-series-container">
+                           <ul id="menu-series" class="menu">
+														{% for category in site.categories %}
+															{% capture cat %}{{ category | first }}{% endcapture %}
+                              <li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/category/{{cat}}" itemprop="url">{% for desc in site.descriptions %}{% if desc.cat == cat %}<i class="fa fa-{{ desc.fa }}" aria-hidden="true"></i>{% endif %}{% endfor %} {{ cat | capitalize }}</a></li>
+															{% endfor %}
+                           </ul>
+                        </div>
+                     </div>
+                  </section>
+                  <section id="search-2" class="widget widget_search">
+                     <div class="widget-wrap">
+                        <form method="get" class="searchform search-form" action="/search.html">
+                           <input type="search" value="" name="query" aria-label="search" placeholder="Nhập từ khóa..." class="s search-input" onfocus="if (this.value == '') {this.value = '';}" onblur="if (this.value == '') {this.value = '';}" />
+                           <input type="submit" class="searchsubmit search-submit" value="Search" />
+                        </form>
+                     </div>
+                  </section>
+								 
+               </aside>
+            </div>
+         </div>
+
+         <footer class="site-footer" itemscope itemtype="https://schema.org/WPFooter">
+            <div class="wrap">
+               <div class="creds">
+                  <p>&copy;  {{ site.time | date: '%Y' }} &middot; {{site.title}}</p>
+								 </div>
+            </div>
+         </footer>
+      </div>
+			{% if site.ga_tracking_id %}
+			<!-- Google Analytics -->
+			<script>
+				(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+				(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+				m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+				})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+				ga('create', '{{ site.ga_tracking_id }}', 'auto');
+				ga('send', 'pageview', {
+					'page': '{{ page.url }}',
+					'title': '{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}'
+				});
+			</script>
+			{% endif %}
+
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.3.4/lib/darkmode-js.min.js"></script> 
+<script> 
+const darkmode = new Darkmode({ label: '🌓' }).showWidget(); 
+darkmode.showWidget(); 
+</script>

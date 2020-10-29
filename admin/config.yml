@@ -1,0 +1,50 @@
+backend:
+  name: github
+  repo: Moleys/demolition
+  branch: master 
+
+
+media_folder: "assets/uploads" # Folder where user uploaded files should go
+
+media_library:
+  name: cloudinary
+  config:
+    cloud_name: dwnxk3qfs
+    api_key: 152837372752924
+    
+slug:
+  encoding: "ascii"
+  clean_accents: true
+  
+collections: # A list of collections the CMS should be able to edit
+  - name: 'post'
+    label: "Post" # Used in the UI, ie.: "New Post"
+    folder: "_posts" # The path to the folder where the documents are stored
+    sort: "date:desc" # Default is title:asc
+    create: true # Allow users to create new documents in this collection
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields: # The fields each document in this collection have
+      - {label: "Layout", name: "layout", widget: "hidden", default: "post"}
+      - {label: "Title", name: "title", widget: "string", tagname: "h1"}
+      - {label: "Body", name: "body", widget: "markdown"}
+      - label: 'Thumbnail'
+        name: 'img'
+        widget: 'image'
+        required: false
+        tagname: ''
+        media_library:
+          config:
+            default_transformations:
+              -   - fetch_format: auto
+                    width: 150
+                    height: 150
+                    quality: auto
+                    crop: fill 
+      - {label: "Categories",
+        name: "categories",
+        widget: "select",
+        options: ["Viết", "Bookmark", "Thơ", "Truyện", "Nhảm"]}
+      - {label: "Tags", name: "tags", widget: "string", required: false}
+#      - {label: "Publish Date", name: "date", widget: "datetime", format: "YYYY-MM-DD hh:mm:ss"}
+      - {label: "Paginate", name: "paginate", widget: "boolean", default: false, required: false}
+      - {label: "Publish Date", name: "date", widget: "datetime", format: "YYYY-MM-DD hh:mm:ss"}

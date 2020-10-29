@@ -1,0 +1,78 @@
+---
+layout: default
+---
+
+<style>blockquote{width:100%;margin:10px auto;color:#555;padding:1.2em 30px 1.2em 35px;border-left:8px solid #78C0A8;position:relative;background:#EDEDED}blockquote::before{content:"\201C";color:#78C0A8;font-size:4em;position:absolute;left:10px;top:-10px}blockquote::after{content:''}</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/ocean.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+        <div class="site-inner">
+            <div class="content-sidebar-wrap">
+                <main class="content">
+                    <div class="breadcrumb"><span><span><a href="/">Trang chủ</a> » <span>  {% if page.categories.size > 0 %} {% for cat in page.categories %} {% if site.jekyll-archives %} <a href="{{ site.url }}/category/{{ cat }}">{{ cat | capitalize }}</a>{% if forloop.last == false %}, {% endif %} {% else %} <a href="{{ site.url }}/posts/#{{ cat }}">{{ cat | capitalize }}</a>{% if forloop.last == false %}, {% endif %} {% endif %} {% endfor %}{% endif %} » <span class="breadcrumb_last">{{ page.title }}</span></span></span></span></div>
+                    <article itemscope itemtype="https://schema.org/CreativeWork">
+                        <header class="entry-header">
+                            <h1 class="entry-title" itemprop="headline">{{ page.title }}</h1>
+                            <p class="entry-meta"><time class="entry-time" itemprop="datePublished" datetime="{{ page.date }}">{{ page.date | date: "%d/%m/%Y" }}</time> <span class="entry-author" itemprop="author" itemscope itemtype="https://schema.org/Person"><a href="/author" class="entry-author-link" itemprop="url" rel="author"><span class="entry-author-name" itemprop="name">{{ site.author }}</span></a></span> </p>
+                        </header>
+
+                        <div class="entry-content" itemprop="text">
+													{{ content }}
+                        </div>
+<div class="archive-pagination pagination">
+<ul>		
+{% if paginator.page_trail %}
+  <div class="pager">
+    {% if paginator.is_first %}
+    {% else %}
+      <li class="pagination-previous"><a href="{{ site.url }}{{ paginator.first_path | replace: '//', '/'}}">&#x000AB;</a></li>
+      <li class="pagination-previous"><a href="{{ site.url }}{{ paginator.previous_path | replace: '//', '/'}}">&#8249;</a></li>
+    {% endif %} 
+
+    {% for p in paginator.page_trail %}
+      {% if p.num == paginator.page %}
+        	<li class="active"><a href="{{ site.url }}{{ p.path | replace: '//', '/'}}" aria-label="Current page" aria-current="page"><span class="screen-reader-text">Page </span>{{ p.num }}</a></li> 
+      {% else %}
+					<li><a href="{{ site.url }}{{ p.path | replace: '//', '/'}}">{{ p.num }}</a></li>
+      {% endif %}
+    {% endfor %}
+
+    {% if paginator.is_last %}
+    {% else %}
+      <li class="pagination-next"><a href="{{ site.url }}{{ paginator.next_path | replace: '//', '/'}}">&#8250;</a></li>
+      <li class="pagination-next"><a href="{{ site.url }}{{ paginator.last_path | replace: '//', '/'}}">&#x000BB;</a></li>
+    {% endif %} 
+  </div>
+{% endif %}							
+</ul>
+</div>
+											
+											
+                        {% if site.jekyll-archives %}<footer class="entry-footer">
+                            <p class="entry-meta">
+{% if page.categories.size > 0 %}<span class="entry-categories">Chuyên mục:  {% for cat in page.categories %} {% if site.jekyll-archives %} <a rel="category tag" href="{{ site.url }}/category/{{ cat }}">{{ cat | capitalize }}</a>{% if forloop.last == false %}, {% endif %} {% else %} <a href="{{ site.url }}/posts/#{{ cat }}">{{ cat | capitalize }}</a>{% if forloop.last == false %}, {% endif %} {% endif %} {% endfor %}</span>{% endif %} {% if page.tags.size > 0 %}<span class="entry-tags">Thẻ: {% for tag in page.tags %}<a href="{{ site.url }}/tag/{{ tag }}" rel="tag">{{ tag }}</a>{% if forloop.last == false %},&nbsp;{% endif %}{% endfor %}</span>{% endif %}
+													</p>
+                        </footer>{% endif %}
+                    </article>
+                    <section class="author-box" itemprop="author" itemscope itemtype="https://schema.org/Person">
+                        <img src="https://images.weserv.nl/?url={{ site.avatar }}&w=70&h=70&t=square&q=90" class='avatar avatar-70 photo' height='70' width='70' />
+                        <h4 class="author-box-title">Tác giả: <span itemprop="name"><a href="/author">{{ site.author }}</a></span></h4>
+                        <div class="author-box-content" itemprop="description">
+                            <p>"{{ site.quotes }}".</p>
+                        </div>
+                    </section>
+{% if site.disqus_shortname %}
+{% unless page.disqus_disabled %}
+                    <div class="entry-comments" id="comments">
+                        <h3>Bình luận</h3>
+                        <ol class="comment-list">
+													  <div id="disqus_thread"></div>
+															<script type="text/javascript">var disqus_shortname="{{ site.disqus_shortname }}";!function(){var e=document.createElement("script");e.type="text/javascript",e.async=!0,e.src="https://{{ site.disqus_shortname }}.disqus.com/embed.js",(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(e)}();</script>
+                        </ol>
+                    </div>
+{% endunless %}
+{% endif %}
+									
+						
+                </main>
+

@@ -1,0 +1,90 @@
+
+
+# Site settings
+title: Infernoid
+subtitle: "Dé dé"
+email: agwinao@gmail.com
+author: Agwinao
+avatar: https://i.imgur.com/W4CVcjq.jpg
+quotes: "Dé dé."
+description: 
+  Một khoảng trời riêng của tôi.
+
+baseurl: "/" 
+url: "https://cranky-jennings-123d94.netlify.com" 
+
+# Gitalk
+gitalk:
+  enable: true    #Gitalk
+  clientID: ae0d5746c6f55bef27df
+  clientSecret: c69aa5849c743b867953bf648f9601ab8741dc22
+  repo: demolition
+  owner: Moleys
+  admin: Moleys
+  distractionFreeMode: true 
+
+# Build settings
+markdown: kramdown
+permalink: /:title
+paginate: 7
+paginate_path: "/page-:num/"
+
+
+# Archive settings 
+jekyll-archives:
+  enabled:
+    - categories
+    - tags
+  layout: 'archive'
+  permalinks:
+    category: '/category/:name/'
+    tag: '/tag/:name/'
+# Category descriptions (for archive pages)
+descriptions:
+  - cat: Viết
+    fa: leaf
+
+  - cat: Bookmark
+    fa: bookmark
+    
+  - cat: Thơ
+    fa: bath
+    
+  - cat: Truyện
+    fa: book
+    
+  - cat: Nhảm
+    fa: ravelry
+
+# Disqus comments
+# disqus_shortname: XXXX
+
+# Google analytics
+# ga_tracking_id: "UA-XXXX-1"
+
+# Content paginator
+paginate_content:
+  enabled: true
+  debug: false
+  collections:
+    - posts
+  auto: false
+  separator: "--page-break--"
+  permalink: "/:num/"
+  seo_canonical: true
+  properties:
+    part:
+      is_generated: true
+    last:
+      is_generated: true
+    single:
+      is_generated: true
+
+gems:
+  - jekyll-archives 
+  - jekyll-sitemap
+  - jekyll-paginate
+  - jekyll-paginate-content
+  - kramdown-parser-gfm
+
+
