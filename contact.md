@@ -1,6 +1,6 @@
 ---
 layout: page
-title: "Contact"
+title: "Liên hệ"
 css: ["contact.css"]
 ---
 <div class="col s12">
