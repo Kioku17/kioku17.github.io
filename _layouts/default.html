@@ -1,15 +1,7 @@
----
-layout: compress
----
+{% include header.html %}
 
-<!DOCTYPE html>
-<html>
-  {% include head.html %}
-	   <body class="home blog wp-schema-pro-1.2.0 custom-header header-image content-sidebar primary-nav" itemscope itemtype="https://schema.org/WebPage">
-		 <style type="text/css">.site-title a{background:url(/assets/logo.png) no-repeat!important}</style>
-    {% include header.html %}
-        {{ content }}
-    {% include footer.html %}
+<div class="container">
+  {{ content }}
+</div>
 
-   </body>
-</html>
+{% include footer.html %}
