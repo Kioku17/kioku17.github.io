@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "Tôi và chiếc thuyền"
+rwurl: "toi-va-chiec-thuyen"
 date:   2019-02-02 09:10:05 +0700
 categories: Thơ
 comments: 1
