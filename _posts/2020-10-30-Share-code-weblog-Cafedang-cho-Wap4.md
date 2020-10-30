@@ -20,6 +20,8 @@ Code được xây dựng dựa trên func gốc của wap4, func tiaxgame và m
 
 - Hệ thống giải trí và công cụ tiện ích
 
+- Tùy chọn giao diện cho thành viên: chế độ sáng và chế độ ban đêm (không hiển thị với màn hình máy tính bàn hoặc thiết bị có màn hình rộng hơn 750px)
+
 > Đây là demo: [Valeric.viwap.com](http://valeric.viwap.com) (nói không phải mê tín chứ demo dẹo rồi)
 
 Còn đây là code, các bạn import các file có dạng "CFĐ: tên file" từ trang này: [GPlay.viwap.com](http://gplay.viwap.com)
