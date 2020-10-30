@@ -1,0 +1,16 @@
+{% from 'func.twig' import add,get,up,level %}
+<div class="list3"><a href="/pages/rank.php"><b>top đại gia</b></a> | <b>top like</b> | <a href="/pages/rank.php?top=post"><b>top bài viết</b></a></div>
+{% set data=[] %}{% for i in 1..100 %}{% set data=get_data('id_users',100,i)|merge(data) %}{% endfor %}
+{% set listlike %}{% for i in data %}{% set user = i.data %}{% set like = get('user_'~user,'like')|trim %}{{like}}#{% endfor %}{% endset %}
+{% set listname %}{% for i in data %}{% set user = i.data %}{% set like = get('user_'~user,'like')|trim %}{{user}}#{{like}}.{% endfor %}{% endset %}
+{% set listtop %}{% for i in listlike|split('#')|sort|reverse %}{% for top in listname|split('.') %}{% if '#'~i in top %}{{top}}.{% endif %}{% endfor %}{% endfor %}{% endset %}
+{% set list=[] %}{% for i in listtop|split('.') %}{% if i not in list %}{% set list=list|merge([i]) %}{% endif %}{% endfor %}
+{% for i in list|slice(0,6) %}
+{% set khanh = i|split('#') %}
+{% set lv = get('user_'~khanh[0],'level')|trim %}
+{% set names = get('user_'~khanh[0],'nick')|trim %}
+{% if loop.last==false %}
+<div class="list1"><img src="http://mblogbb.viwap.com/images/top{{loop.index}}.png" title="top{{loop.index}}"> {% set icon = get('user_'~names,'icon') %}
+{% if icon %}<img src="/images/{{icon}}.png">{% endif %} <a href="/account/{{khanh[0]}}"><font class="{{lv}}">{{names}}</font></a><span style="font-weight:bold;float:right"><img src="/images/demthank.png"> <font color="violet">{{khanh[1]}}</font></span></div>
+{% endif %}
+{% endfor %}

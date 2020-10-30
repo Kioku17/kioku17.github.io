@@ -1,0 +1,59 @@
+{% from 'func.twig' import get,add,up,del,login %}
+{% use('_blocks') %}
+{% set url=get_uri_segments() %}
+{% if url[1] == 'rank.php' %}
+{% set title = 'Bảng xếp hạng thành viên' %}
+{{block('head')}}
+<div class="mainblok">
+<div class="phdr"><b>BXH Thành Viên</b></div>
+{% include 'top-dai-gia' %}
+<div class="menu">Thành viên đứng đầu mỗi top sẽ được tặng icon <b><font color="red">[RANK]</font></b> <img src="/images/badao.png"> cực bá đạo!</div>
+</div>
+{% elseif url[1] == 'faq.php' %}
+{% set title = 'F.A.Q' %}
+{{block('head')}}
+<div class="mainblok">
+<div class="phdr"><b>F.A.Q !</b></div>
+<div class="list1">• <b><a href="/threads/11/faq-noi-quy-dien-dan-m-blogbb-gq.html">Nội quy diễn đàn</a></b></div>
+<div class="list1">• <a href="/pages/avatars.php">Avatars</a></div>
+<div class="list1">• <a href="/pages/bbcode.php"> Sử dụng BBcode</a></div>
+<div class="list1">• <a href="/pages/smileys/index.php">Smileys</a></div>
+</div>
+{% elseif url[1] == 'smileys' and url[2] == 'index.php' %}
+{% set title='Smileys' %}
+{{block('head')}}
+<div class="mainblok">
+<div class="phdr"><a href="/pages/faq.php"><b>F.A.Q !</b></a> | Smileys</div>
+<div class="list1">• <a href="/pages/smileys/matcuoi.php">Mặt cười</a> (85)</div>
+<div class="list1">• <a href="/pages/smileys/baby.php">Baby</a> (58)</div>
+<div class="list1">• <a href="/pages/smileys/haihuoc.php">Hài hước</a> (24)</div>
+</div>
+{{block('end')}}
+{% elseif url[1] == 'smileys' and url[2] == 'matcuoi.php' %}
+{% include 'smileys-matcuoi' %}
+{% elseif url[1] == 'smileys' and url[2] == 'baby.php' %}
+{% include 'smileys-baby' %}
+{% elseif url[1] == 'smileys' and url[2] == 'haihuoc.php' %}
+{% include 'smileys-haihuoc' %}
+{% elseif url[1] == 'bbcode.php' %}
+{% set title = 'Sử dụng BBcode' %}
+{{block('head')}}
+<div class="mainblok"><div class="phdr"><a href="/pages/faq.php"><b>F.A.Q !</b></a> | FAQ on tags</div><div class="list1"><p><table cellpadding="3" cellspacing="0"><tr><td align="right"><h3>BBcode</h3></td><td></td></tr><tr><td align="right">[code]...[/code]</td><td>Code</td></tr><tr><td align="right"><a href="#">Link</a></td><td>[url=http://site_url]<span style="color:blue"></span>[/url]</td></tr><tr><td align="right">[b]...[/b]</td><td><b>In đậm</b></td></tr><tr><td align="right">[i]...[/i]</td><td><i>In nghiêng</i></td></tr><tr><td align="right">[u]...[/u]</td><td><u>Gạch dưới</u></td></tr><tr><td align="right">[s]...[/s]</td><td><strike>Gạch ngang</strike></td></tr><tr><td align="right">[red]...[/red]</td><td><span style="color:red">Màu đỏ</span></td></tr><tr><td align="right">[green]...[/green]</td><td><span style="color:green">Màu xanh lá</span></td></tr><tr><td align="right">[blue]...[/blue]</td><td><span style="color:blue">Màu xanh dương</span></td></tr><tr><td align="right">[quote]...[/quote]</td><td>Trích dẫn</td></tr><tr><td align="right" valign="top">[spoiler]...[/spoiler]</td><td>Menu ẩn - hiện</td></tr><tr><td align="right" valign="top">[img]...[/img]</td><td>Hình ảnh căn giữa</td></tr></table></p></div>
+<div class="note">Hãy sử dụng bbcode [center][src]...[/src][/center] thay cho [img]...[/img] khi chèn hình ảnh được upload từ server imgur.com đề phòng bên họ chặn hiển thị hình ảnh!</div><div class="phdr"><a href="/">thoát</a></div></div>
+{% elseif url[1] == 'avatars.php' %}
+{% set title = 'Ảnh đại diện mặc định' %}
+{{block('head')}}
+<div class="mainblok"><div class="phdr"><a href="/pages/faq.php"><b>F.A.Q !</b></a> | Avatar Default</div>
+<div class="note">Default</div>
+<div class="list1">• <b>Boy</b><br/><img src="/images/boy-avatar.png" width="50px" height="70px"><br/><input value="/images/boy-avatar.png"></div>
+<div class="list1">• <b>Girl</b><br/><img src="/images/girl-avatar.png" width="50px" height="70px"><br/><input value="/images/girl-avatar.png"></div>
+<div class="note">Selemet</div>
+{% for avt in 1..9 %}
+<div class="list1">• <b>{{avt}}</b><br/><img src="/images/100{{avt}}.png" width="50px" height="70px"><br/><input value="/images/100{{avt}}.png"></div>
+{% endfor %}
+{% for avt in 10..14 %}
+<div class="list1">• <b>{{avt}}</b><br/><img src="/images/10{{avt}}.png" width="50px" height="70px"><br/><input value="/images/10{{avt}}.png"></div>
+{% endfor %}
+</div>
+{% endif %}
+{% if url[1] != 'smileys' %}{{block('end')}}{% endif %}

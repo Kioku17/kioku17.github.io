@@ -1,0 +1,88 @@
+{% from 'func.twig' import add,get,up,login,del %}
+{% use '_blocks' %}
+{% set login = login()|trim %}
+{% set title= 'Cấu trúc chuyên mục' %}
+{% set level = get('user_'~login,'level')|trim %}
+{% set act = get_get('act') %}
+{% set id = get_get('id') %}
+{% set tenn = get('category_'~id,'ten') %}
+{% if act == 'edit' and tenn %}
+<div class="phdr"><b>Chỉnh sửa chuyên mục</b></div>
+{% elseif act == 'xoa' and tenn %}
+<div class="phdr"><b>Xoá chuyên mục</b></div>
+{% else %}
+<div class="phdr"><b>Cấu Trúc Chuyên Mục</b></div>
+{% endif %}
+{% if login and level == 'right9s' %}
+{% if request_method()|lower == "post" %}
+{% set ten = get_post('ten') %}
+{% set mota = get_post('mota') %}
+{% set name = get_post('name') %}
+{% set motas = get_post('motas') %}
+{% set xoa = get_post('xoa') %}
+{% set dem = (get('info','category')|trim+1) %}
+{% if ten and mota %}
+{% set nd = {"ten":ten,"mota":mota,"id":dem}|json_encode %}
+{% set save=save_data('category_'~dem,nd) %}
+{{up('list_category',dem,'up')}}
+{{add('info','category',dem)}}
+<div class="list1">Tạo chuyên mục thành công</div>
+{% elseif name and motas and tenn %}
+{{add('category_'~id,'ten',name)}}
+{{add('category_'~id,'mota',motas)}}
+<div class="rmenu">Chỉnh sửa thành công</div>
+{% elseif xoa and tenn %}
+{% set data1 = get('show_category_'~id)|split('@') %}
+{% for i in data1 %}
+{% set i = i|trim %}
+{% if loop.last == false %}
+{% set data2 = get('forum_'~i~'_show')|split('@') %}
+{% for s in data2 %}
+{% if loop.last == false %}
+{{del('forum_'~i~'_'~s|trim,'del')}}
+{% endif %}
+{% endfor %}
+{{del('forum_'~i~'_show','del')}}
+{{del('forum_'~i~'_info','del')}}
+{{del('show_forum',i,'up')}}
+{% endif %}
+{% endfor %}
+{{del('show_category_'~id,'del')}}
+{{del('category_'~id,'del')}}
+{{del('list_category',id,'up')}}
+<div class="rmenu">Xoá thành công</div>
+{% endif %}
+{% endif %}
+{% set tenn = get('category_'~id,'ten') %}
+{% if act == 'edit' and tenn %}
+<div class="list1"><form action="" method="post">Tên chuyên mục: <br /><input type="text" name="name" value="{{tenn}}"><br/> Mô tả: <br /><textarea name="motas">{{get('category_'~id,'mota')}}</textarea>
+<br />
+<input type="submit" value="Chỉnh sửa">
+</div>
+{% elseif act == 'xoa' and tenn and not xoa %}
+<div class="list1">
+<form action="" method="post">
+Bạn có chắc muốn xoá chuyên mục {{tenn}} không?
+<br />
+<input type="submit" name="xoa" value="Đồng ý"> <a href="/created" class="phdr">Không</a>
+</form>
+</div>
+{% else %}
+<div class="list1"><form action="" method="post">Tên chuyên mục: <br /><input type="text" name="ten" value=""><br/> Mô tả: <br /><textarea name="mota"></textarea>
+<br />
+<input type="submit" value="Tạo">
+</div>
+{% endif %}
+{% set data = get('list_category')|split('@') %}
+{% if data|length-1 > 0 %}
+<div class="phdr"><b>Diễn đàn</b> » <b>Chuyên mục chính</b></div>
+{% endif %}
+{% for i in data %}
+{% if loop.last == false %}
+<div class="list1">{{get('category_'~i|trim,'ten')}} <a href="?act=edit&id={{i|trim}}">Sửa</a> • <a href="?act=xoa&id={{i|trim}}">Xoá</a>
+</div>
+{% endif %}
+{% endfor %}
+{% else %}
+<div class="rmenu">Bạn không có quyền truy cập vào đây!</div>
+{% endif %}

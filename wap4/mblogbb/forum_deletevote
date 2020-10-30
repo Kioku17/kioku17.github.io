@@ -1,0 +1,25 @@
+{% from 'func.twig' import login,up,add,get,lever,del %}
+{% set login = login()|trim %}
+{% set level = get('user_'~login,'level')|trim %}
+{% set url = get_uri_segments() %}
+{% set nick = get('forum_'~url[1]~'_info','first') %}
+{% set namevote = get('forum_'~url[1]~'_info','vote_name')|trim %}
+{% set vote = get('forum_'~url[1]~'_info','vote')|trim %}
+<div class="phdr"><span itemscope itemtype="http://data-vocabulary.org/Breadcrumb" itemscope="itemscope"><a itemprop="url" href="/"><span itemprop="title">Trang chủ</span></a></span> » <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb" itemscope="itemscope"><a itemprop="url" href="/{{url[0]}}/{{url[1]}}/{{url[2]}}{% if p %}&p={{p}}{% endif %}"><span itemprop="title">{{ten}}</span></a></span> » <span><a class="reg_link">Xóa bình chọn</a></span></div>
+{% if login == nick and vote != '' or level in ['right9s','right8s','right7s'] and vote != '' %}
+{% if request_method()|lower == "post" %}
+{{add('forum_'~url[1]~'_info','vote_name','')}}
+{% for i in 1..vote %}
+{{add('forum_'~url[1]~'_info','vote_'~i,'')}}{{del('forum_'~url[1]~'_vote_'~i)}}
+{% endfor %}
+{{add('forum_'~url[1]~'_info','vote','')}}
+<div class="rmenu">Xóa thành công</div>
+{% else %}
+<div class="menu">Bạn có muốn xóa bình chọn không ?<br/><form action="" method="post"><input type="submit" value="  DELETE  "></form></div>
+{% endif %}
+{% elseif vote == '' %}
+{{vote}}
+<div class="menu">Chưa có bình chọn nào</div>
+{% else %}
+<div class="gmenu">Bạn không có quyền hạn này</div>
+{% endif %}

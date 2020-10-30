@@ -1,0 +1,22 @@
+{% from 'func.twig' import get,del,up %}
+{% set id = get_get('id') %}
+{% set file = get_get('file') %}
+{% set tenfile = get_get('tenfile') %}
+{% set f = get_get('f') %}
+{% if get_data_count('file_'~tenfile~'_'~id) > 0 %}
+{{get('file_'~file~'_'~id,'filename')}}
+{% elseif get_data_count('file_'~file~'_'~id) > 0 %}
+{{get('list_file_'~file)|split('@')|length-1}}
+{% elseif get_data_count('file_'~f~'_'~id) > 0 and get_get('xoa') == 'on' %}
+{% if get('list_file_'~f)|split('@')|length-1 == '1' %}
+{{del('list_file_'~f,'del')}}
+{% else %}
+{{del('list_file_'~f,id,'up')}}
+{% endif %}
+{{del('file_'~f~'_'~id,'del')}}
+Xoá file thành công!
+{% elseif get_data_count('forum_'~get_get('f')~'_info') > 0 %}
+1
+{% elseif file %}
+{{get('list_file_'~file)|split('@')|length-1}}
+{% endif %}

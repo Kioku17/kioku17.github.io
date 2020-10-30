@@ -1,0 +1,3 @@
+{% set data={} %}
+{% from 'func.twig' import login %}
+{% set save=save_data( "farm_"~login()|trim,data|json_encode) %}

@@ -1,0 +1,35 @@
+{% from 'func.twig' import get,up,add,login,del %}
+{% set url = get_uri_segments() %}
+{% if request_method()|lower == "post" %}
+{% set nd = get_post('nd') %}
+{% set id = get('info','mail')|trim+1 %}
+{% set nd1 = {"nick":login,"id":id,"nd":nd,"time":"now"|date("U"),"view":"no"}|json_encode %}
+{% if nd|length < '3' or nd|length > '16000' %}
+<div class="menu"> Nội dung không hợp lệ</div>
+{% else %}
+{% set save=save_data('mail_'~id,nd1) %}
+{# list me #}
+{{up('list_mail_'~login,url[1],'up')}}
+{# kt list me #}
+{# list you #}
+{{up('list_mail_'~url[1],login,'up')}}
+{# kt list you #}
+{# show ds me #}
+{{up('mail_'~login~'_'~url[1],id,'up')}}
+{# kt show ds me #}
+{# show ds you #}
+{{up('mail_'~url[1]~'_'~login,id,'up')}}
+{# kt show ds you #}
+{# new inbox #}
+{{up('new_mail_'~url[1],login,'up')}}
+{# kt new mail #}
+{# up + inbox #}
+{{add('info','mail',id)}}
+{# kt up+ inbox #}
+{% endif %}
+
+
+
+{% endif %}
+{{del('new_mail_'~login,url[1],'up')}}
+<div class="menu"><form action="" method="post"><textarea name="nd" rows="5"></textarea><input type="submit" value="Gửi"></form></div>

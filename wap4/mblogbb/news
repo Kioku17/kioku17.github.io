@@ -1,0 +1,98 @@
+{% from 'func.twig' import add,login,up,get,del %}
+{% from 'time.twig' import ago %}
+{% from 'paging.twig' import paging %}
+{% from 'bbcode.twig' import bbcode %}
+{% from 'news' import new %}
+{% use('_blocks') %}
+{% set login = login()|trim %}
+{% set url=get_uri_segments() %}
+{% macro new() %}
+{% from 'func.twig' import add,login,up,get,del %}
+{% from 'time.twig' import ago %}
+{% from 'paging.twig' import paging %}
+{% from 'bbcode.twig' import bbcode %}
+{% set login = login()|trim %}
+{% set url=get_uri_segments() %}
+{% if url[0] == 'news' %}
+{% set per = '10' %}
+{% else %}
+{% set per = '2' %}
+{% endif %}
+{% set data = get('news')|split('@') %}
+{% set total=data|length-1 %}
+{% set page_max=total//per %}
+{% if total//per != total/per %}
+{% set page_max=total//per+1 %}
+{% endif %}
+{% set p=get_get('p')|default(1) %}
+{% if p matches '/[a-zA-z]|%/' or p<1 %}
+{% set p=1 %}
+{% endif %}
+{% if p>page_max %}
+{% set p=page_max %}
+{% endif %}
+{% set st=p*per-per %}
+{% if total == '0' %}
+<div class="list1">Chưa có tin tức nào</div>
+{% else %}
+{% for t in data|slice(0,total)|slice(st,per) %}
+{% set timen = t|split('_')[4]|trim %}
+{% set text = t|split('_')[3]|trim %}
+{% set author = t|split('_')[2]|trim %}
+{% set title = t|split('_')[1]|trim %}
+{% set news = t|split('_')[0]|trim %}
+{% set nd = get(news~'_'~title~'_'~author,'nd') %}
+<div class="{% if url[0] == 'news' %}list1{% else %}news{% endif %}">
+<h3>{{title}}</h3>
+{% if url[0] == 'news' %}<br/><span class="gray">Tác giả: {{author}} <i>({{ago(timen)}})</i></span>
+<br/>{% endif %}
+{{bbcode(text)}}
+{% if url[0] == 'news' %}<div class="sub"></div>{% endif %}
+</div>
+{% endfor %}
+{% endif %}
+{% if url[0] == 'news' %}{{paging('?p',p,page_max)}}{% else %}
+{% set newx = get('news')|split('@') %}
+{% set totalnews = newx|length-1 %}
+<div class="note"><a href="/news"><i class="fa fa-newspaper-o"></i> Lưu trữ tin tức <span class="gray">({{totalnews}})</span></a></div>{% endif %}
+{% endmacro %}
+{% if url[0] == 'news' %}{% set title='Trang web tin tức' %}{{block('head')}}{% endif %}
+<div class="mainblok">
+<div class="phdr"><b>{% if url[0] == 'news' %}Lưu Trữ {% endif %}Tin Tức</b></div>
+{{new()}}
+{% if url[0] == 'news' %}
+{% set newx = get('news')|split('@') %}
+{% set totalnews = newx|length-1 %}
+<div class="note">Tổng số: {{totalnews|default(0)}}</div>
+{% if get_get('panel') == 'deln' and totalnews >= '20' %}
+{% if totalnews >= '20' %}
+<div class="rmenu">Xoá thành công! Hoạt động trống.</div>
+{% set key = 'news' %}
+{% for i in 1..get_data_count(key) %}
+{{ delete_data_by_id(key,get_data(key)|last.id) }}
+{% endfor %}
+ <script>window.location.href='/news'</script>
+{% endif %}
+<div class="rmenu">» <a href="?want=delete"><font color="red"> 
+Dọn dẹp tin tức mới</font></a></div>{% endif %}
+{% endif %}
+{% if get_get('panel') == 'ok' and get('user_'~login,'level') == 'right9s' and url[0] == 'news' %}
+<div class="phdr"><b>Add News</b></div>
+{% set title = get_post('title') %}
+{% set text = get_post('text') %}
+{% set nick = get('user_'~login,'nick') %}
+{% if request_method()|lower == "post" %}
+{{up('news','news_'~title~'_'~nick~'_'~text~'_'~"now"|date('U'),'up')}}
+<div class="rmenu">Upload thành công!<br/><a href="/news">Quay lại</a></div>
+{% else %}
+<div class="list1"><form action="" method="post"><b>Tiêu đề</b><br/>
+<input type="text" name="title" value=" ">
+<br />
+<b>Nội dung:</b><br />
+<textarea rows="10" name="text"></textarea>
+<br />
+<input type="submit" name="ok" value="Lưu lại"></form></div>
+{% endif %}
+{% endif %}
+</div>
+{% if url[0] == 'news' %}{{block('end')}}{% endif %}

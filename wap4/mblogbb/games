@@ -1,0 +1,246 @@
+{% use '_blocks' %}
+{% set act = get_get('act') %}
+{% if act == 'daovang' %}
+{% set title='Khu giải trí | Game đào vàng' %}
+{% elseif act == 'vip' %}
+   {% set title='Khu giải trí | Mua VIP' %}
+{% elseif act == 'pro' %}
+   {% set title='Khu giải trí | Mua PRO' %}
+{% elseif act == 'chuyentien' %}
+   {% set title='Khu giải trí | Chuyển tiền' %}
+{% else %}
+{% set title='Khu giải trí' %}
+{% endif %}
+{{ block('head') }} 
+{% from 'func.twig' import rwurl,get,login,add,up %} 
+{% set login=login()|trim %}
+{% if get('user_'~login,'block') == 'yes' %}
+<div class="mainblok">
+<div class="phdr"><b>Thông Báo</b></div>
+<div class="rmenu"> Tài khoản của bạn đã bị khóa, vui lòng liên hệ với BQT để tìm hiểu lý do và ân xá để lấy lại. BQT xin trân trọng thông báo!</div>
+</div>
+{% else %}
+<div class="mainblok">
+{% set tien=get('user_'~login,'xu') %}
+{% if act == 'vip' %}
+   {% if login %}   
+   <div class="phdr"><b>Khu Giải Trí</b> » Mua danh hiệu <b>VIP</b></div>
+ {% set vip=get_post('vip')|trim %}
+{% set mvip = get('user_'~login,'vip') %}
+ {% if request_method()|lower == "post" %} 
+{% if vip %}
+{% if tien >= '150000' and get('user_'~login,'tinnhiem') >= '5' and get('user_'~login,'cmt') >= '200'%}
+<div class="rmenu">Mua VIP thành công</div>
+{{ add('user_'~login,'icon',vip) }}
+{{ add('user_'~login,'xu',get('user_'~login,'xu')|trim-150000) }}
+{% else %}
+<div class="rmenu">Bạn không đủ tiền để mua VIP</div>
+{% endif %}
+{% endif %}
+{% endif %}
+<div class="list1">
+<center><b><font color="darkviolet">Chào mừng bạn đến với VIP Team</font></b></center>
+<br/><br/>
+Để khẳng định danh vọng, thứ hạng của bạn trên diễn đàn hãy mua danh hiệu VIP. <br/>
+{% if mvip == '' %}Khi có được danh hiệu <b><font color="red">[VIP]</font></b> bạn sẽ nhận được rất nhiều ưu đãi và quyền lợi khi "Hành tẩu giang hồ"... <br/>{% endif %}
+{% if mvip == '1' %}Để sử dụng toàn bộ quyền lợi của <b><font color="red">[VIP]</font></b>  (đua rank vip, gia hạn nợ ngân hàng, nhiệm vụ nhận thưởng dành cho VIP...). Bạn hãy nâng cấp VIP của bạn lên <b><font color="red">[VIP 2]</font></b>{% else %}Khi mua xong bạn sẽ nhận được danh hiệu <b><font color="red">[VIP]</font></b> cấp 1, có thể dùng tiền để nâng lên cấp 2 để hưởng nhiều ưu đãi mới.{% endif %}
+</div>
+{% if get('user_'~login,'xu') >= '150000' and get('user_'~login,'tinnhiem') >= '5' and get('user_'~login,'cmt') >= '200' %}
+  <form method="post" action="">
+<div class="list1">
+<input type="radio" name="vip" value="1" /> <img src="/images/vip1.png"> <b><font color="red">VIP 1</font></b><br />
+<button>Mua VIP</button>
+</form>
+</div>
+{% elseif get('user_'~login,'xu') >= '500000' and get('user_'~login,'tinnhiem') >= '20' and get('user_'~login,'cmt') >= '500' %}
+  <form method="post" action="">
+<div class="list1">
+<input type="radio" name="vip" value="2" /> <img src="/images/vip2.png"> <b><font color="red">VIP 2</font></b><br />
+<button>Nâng cấp VIP 2</button>
+</form>
+</div>
+{% elseif mvip == '1' %}
+<div class="list1">
+<b>Điều kiện để nâng cấp VIP 2:</b><br/>
+- Bài viết diễn đàn phải đạt: <b>{{get('user_'~login,'cmt')}}/<font color="red">500</font></b> post ({% if get('user_'~login,'cmt') < '500' %}Chưa đạt{% else %}Đã đạt{% endif %}) <br/>
+- Tiền: <b>{{get('user_'~login,'xu')}}/<font color="red">500.000</font></b> xu ({% if get('user_'~login,'xu') < '500000' %}Chưa đạt{% else %}Đã đạt{% endif %}) <br/>
+- Điểm tín nhiệm: <b>{{get('user_'~login,'tinnhiem')|default(0)}}/<font color="red">20</font></b> ({% if get('user_'~login,'tinnhiem') < '20' %}Chưa đạt{% else %}Đã đạt{% endif %})<br/><br/>
+Bạn chưa đạt đủ điều kiện để nâng cấp <b><font color="red">[VIP 2]</font></b><br/>
+<b><font color="orange">Hãy quay lại sau nhé!</font></b>
+</div>
+{% else %}
+<div class="list1">
+<b>Điều kiện để mua VIP:</b><br/>
+- Bài viết diễn đàn phải đạt: <b>{{get('user_'~login,'cmt')}}/<font color="red">200</font></b> post ({% if get('user_'~login,'cmt') < '200' %}Chưa đạt{% else %}Đã đạt{% endif %}) <br/>
+- Tiền: <b>{{get('user_'~login,'xu')}}/<font color="red">150.000</font></b> xu ({% if get('user_'~login,'xu') < '150000' %}Chưa đạt{% else %}Đã đạt{% endif %}) <br/>
+- Điểm tín nhiệm: <b>{{get('user_'~login,'tinnhiem')|default(0)}}/<font color="red">5</font></b> ({% if get('user_'~login,'tinnhiem') < '5' %}Chưa đạt{% else %}Đã đạt{% endif %})<br/><br/>
+Bạn chưa đạt đủ điều kiện để mua danh hiệu <b><font color="red">[VIP]</font></b><br/>
+<b><font color="orange">Hãy quay lại sau nhé!</font></b>
+</div>
+{% endif %}
+
+{% else %}
+<div class="rmenu">Vui lòng đăng nhập để sử dụng chức năng</div>
+{% endif %}
+{% elseif act == 'pro' %}
+   {% if login %}   
+   <div class="phdr"><b>Khu Giải Trí</b> » Mua danh hiệu <b>PRO</b></div>
+ {% set pro=get_post('pro')|trim %}
+{% set mpro = get('user_'~login,'icon2') %}
+ {% if request_method()|lower == "post" %} 
+{% if pro %}
+{% if tien >= '1000000' %}
+<div class="rmenu">Mua PRO thành công</div>
+{{ add('user_'~login,'icon2',pro) }}
+{{ add('user_'~login,'xu',get('user_'~login,'xu')|trim-1000000) }}
+{% else %}
+<div class="rmenu">Bạn không đủ tiền để mua PRO</div>
+{% endif %}
+{% endif %}
+{% endif %}
+<div class="list1">
+<center><b><font color="darkviolet">Chào mừng bạn đến với PRO Team</font></b></center>
+<br/><br/>
+Để khẳng định danh vọng, thứ hạng của bạn trên diễn đàn hãy mua danh hiệu PRO. <br/>
+{% if mpro == '' %}Khi có được danh hiệu <b><font color="red">[PRO]</font></b>, bạn sẽ mở được nhiều chức năng cực pro cho riêng mình!<br/>{% endif %}
+Giá danh hiệu <b><font color="red">[PRO]</font></b> hiện tại rất ưu đãi, chỉ với 1.000.000 xu! Còn chờ gì nữa, mại zo mại zo nào :))
+</div>
+{% if get('user_'~login,'xu') >= '1000000' and mpro != 'pro' %}
+  <form method="post" action="">
+<div class="list1">
+<input type="radio" name="pro" value="pro" /> <img src="/images/pro.png"> <b><font color="red">PRO</font></b><br />
+<button>Mua PRO</button>
+</form>
+</div>
+{% elseif mpro == 'pro' %}
+<div class="list1"> Bạn hiện tại đang là thành viên <b><font color="red">[PRO]</font></b> của diễn đàn!</div>
+{% else %}
+<div class="list1">
+<b>Điều kiện để mua PRO:</b><br/>
+- Tiền: <b>{{get('user_'~login,'xu')}}/<font color="red">1000000</font></b> xu ({% if get('user_'~login,'xu') < '1000000' %}Chưa đạt{% else %}Đã đạt{% endif %}) <br/><br/>
+Bạn chưa đạt đủ điều kiện để mua danh hiệu <b><font color="red">[PRO]</font></b><br/>
+<b><font color="orange">Hãy quay lại sau nhé!</font></b>
+</div>
+{% endif %}
+
+{% else %}
+<div class="rmenu">Vui lòng đăng nhập để sử dụng chức năng</div>
+{% endif %}
+{% elseif act == 'daovang' %}
+   {% if login %}   
+   <div class="phdr"><b>Khu Giải Trí</b> > Game Đào Vàng</div>
+   {% set kq=random(['một thỏi vàng','một viên kim cương','một tảng đá','một túi tiền','một cục shit']) %}   
+   {% set xu=random(500) %}   
+   {% set suachua=get_post('suachua')|trim %}   
+   {% set dao=get_post('dao')|trim %}   
+   {% set db=get('user_'~login,'db') %}
+    {% if request_method()|lower == "post"  and db%}
+   {% if dao %}   
+   {% if db <= '4' %}<div class="rmenu">Oh! Có vẻ như bạn không đủ lượng để đào vàng. Hãy hoạt động tích cực trên diễn đàn để có lượng nhiều hơn nhé!</div>   
+   {% else %}   
+   <div class="list1">Chúc mừng bạn đào được {{kq}} và được cộng {{xu}} xu vào tài khoản.</div>   
+   {{ add('user_'~login,'xu',get('user_'~login,'xu')|trim+xu) }}   
+   {{ add('user_'~login,'db',get('user_'~login,'db')|trim-5) }}{% endif %}{% endif %}{% endif %}
+<form method="post" action="">
+   <div class="list1">Tài sản: {{get('user_'~login,'xu')}} Xu <br>Bạn có: {{db}} exp<br><center><img src="/images/daovang.png" /><br />
+   <input type="submit" name="dao" value="Đào vàng">
+<br/><b>Note: Mỗi lần đào bị trừ 5 điểm exp</b>
+</center></div></form>
+<div class="phdr">Hướng dẫn</div>
+<div class="list1">
+Khi đăng ký tài khoản, bạn sẽ được cộng sẵn 100 điểm exp và 2000 xu.
+<br/> Mỗi lần đào vàng, bạn sẽ bị trừ 5 điểm exp.
+<br/>Để được tặng điểm exp, bạn hãy chăm chỉ chăm sóc nông trại của mình và đăng chủ đề lên diễn đàn!
+<br/>Tích điểm exp để đổi lấy thẻ cào theo 2 mức phần thưởng định sẵn:
+<br/><i>+) 5.000 điểm exp = 1 thẻ Viettel 10.000 VNĐ</i>
+<br/><i>+) 9.000 điểm exp = 2 thẻ Viettel 10.000 VNĐ hoặc 1 thẻ Viettel 20.000 VNĐ</i>
+</div>
+{% else %}<div class="rmenu">Chỉ dành cho thành viên đăng nhập.</div>{% endif %}
+{% elseif act == 'chuyentien' %}
+{% set user=get_post('user')|trim|lower %}
+{% set xu = tien %}
+ {% set tien=get_post('tien')|trim %}
+{% if login %}
+<div class="phdr"><b>Khu Giải Trí</b> » Ngân Hàng - Chuyển Tiền</div>
+ {% if request_method()|lower == "post" %}
+{% if user and tien %}
+<div class="list1">
+{% if get_data_count('user_'~user)>0 %}
+{% if user == login %}
+Lỗi! Bạn không thể chuyển xu cho chính mình
+{% else %}
+{% if tien matches '/^[0-9]+[0-9]$/' %}
+{% if tien >= '10' %}
+{% if xu >= tien %}
+{% if tien <= '1000000' %}
+Bạn đã chuyển {{tien}} xu cho thành viên {% if get('user_'~user,'icon') %}<img src="/images/{{get('user_'~user,'icon')}}.png" alt="icon" /> {% endif %}<a href="/user/{{user}}"><span class="{{get('user_'~user,'lever')}}">{{get('user_'~user,'nick')}}</span></a> thành công!
+{% set comment = {"name":"bot","time":"now"|date('U'), "comment":"@"~login~" đã chuyển nhượng cho [url=http://m.blogbb.gq/user/"~user~"]@"~get('user_'~user,'nick')~"[/url] số tiền "~tien~" xu"} %}
+{% set save = save_data( "chat", comment|json_encode ) %}
+{{ add('user_'~login,'xu',get('user_'~login,'xu')|trim-tien) }}
+{{ add('user_'~user,'xu',get('user_'~user,'xu')|trim+tien) }}
+{% else %}
+Lỗi! Số tiền chuyển tối đa là 1000000 xu
+{% endif %}
+{% else %}
+Bạn không có đủ xu để chuyển
+{% endif %}
+{% else %}
+Số xu nhập vào phải từ 10 xu trở lên
+{% endif %}
+{% else %}
+Số xu nhập vào phải là số và phải từ 10 xu trở lên
+{% endif %}
+{% endif %}
+{% else %}
+Tài khoản không tồn tại
+{% endif %}
+</div>
+{% else %}
+<div class="rmenu">Vui lòng điền đầy đủ thông tin
+</div>
+{% endif %}
+{% else %}
+<div class="list1">Số tiền chuyển tối thiểu là 10 xu và tối đa là 1000000 xu</div>
+{% endif %}
+<div class="list1">
+  <form method="post" action="">
+Tài khản muốn chuyển:<br />
+<input type="text" name="user">
+<br />
+Nhập số xu muốn chuyển:<br />
+<input type="text" name="tien">
+ <input type="submit" name="submit" value="Chuyển tiền">
+</form>
+</div>
+{% else %}
+<div class="rmenu">
+Vui lòng đăng nhập để sử dụng chức năng</div>
+{% endif %}
+{% else %}
+{% if login %} 
+<div class="phdr"><b>Khu Giải Trí</b></div> 
+<b>
+<div class="list1"><img src="/images/gift.png"> <a href="/nhanqua.php"><span style="color:#7f1ea6">Nhận quà mỗi ngày !</span></a></div>
+<div class="list1"><img src="/images/vip1.png"> <a href="?act=vip">{% if get('user_'~login,'icon') == 'vip1' %}Nâng cấp danh hiệu <font color="red">[VIP 2]</font>{% else %}Mua danh hiệu <font color="red">[VIP]</font>{% endif %}</a></div>
+<div class="list1"><img src="/images/pro.png"> <a href="?act=pro">Mua danh hiệu <font color="red">[PRO]</font></a></div>
+<div class="list1"><img src="/images/farm.png"> <a href="/farm"><b><font color="red">Farm - Nông trại vui vẻ</font></b></a></div>
+<div class="list1"><img src="/images/dua-pet.png" width="20" height="20"> <a href="/duathu.php">Đua Pet vui nhộn</a></div>
+<div class="list1"><img src="/images/ott.png"> <a href="/ott">Oẳn tù tì với <b>Bot Ẹp Zai</b></a></div>
+<div class="list1"><img src="/images/dvang.png"> <a href="?act=daovang">Đào vàng</a></div>
+<div class="list1"><img src="/images/trung.png" width="16px" height="16px"> <a href="/daptrung">Đập trứng</a></div>
+<div class="list1"><img src="/images/phitieu0.gif" width="16px" height="16px"> <a href="/phitieu.php"> Phi tiêu may mắn</a></div>
+<div class="list1"><img src="/images/balans.png"> <a href="/bank">Ngân hàng BlogBB</a></div>
+</b>
+</div>
+<div class="mainblok">
+<div class="phdr"><b>Game HTML5</b></div>
+<div class="list1"> » <a href="/2048">2048</a></div>
+<div class="list1"> » <a href="/memory.html">Memory</a></div>
+<div class="list1"> » <a href="/cham-bong.html">Color Switch</a></div>
+{% else %}
+<div class="rmenu">Vui lòng đăng nhập để dùng toàn bộ chứng năng của diễn đàn</div>
+{% endif %}
+{% endif %}
+</div>
+{% endif %}
+{{ block('end') }} 

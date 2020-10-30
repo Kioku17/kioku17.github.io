@@ -1,0 +1,51 @@
+{% set title = 'Giải Phương Trình Bậc 2 ẩn x' %}
+{% use ('_blocks') %}
+{% set a = get_post('a') %}
+{% set b = get_post('b') %}
+{% set c = get_post('c') %}
+{% set delta = b*b-4*a*c %}
+{% set absdelta = delta|abs %}
+{% set sqrtdelta = absdelta**(1/2) %}
+{% if a == 0 %}
+{% set kq = 'Nghiệm duy nhất' %}
+{% set x1 = -c/b %}
+{% set x2 = x1 %}
+{% else %}
+{% if delta>=0 %}
+{% if delta==0 %}
+{% set kq = 'Nghiệm kép' %}
+{% else %}
+{% set kq = '2 nghiệm phân biệt' %}
+{% endif %}
+{% set x1 = (-b+sqrtdelta)/(2*a) %}
+{% set x2 = (-b-sqrtdelta)/(2*a) %}
+{% else %}
+{% set kq = 'Nghiệm phức' %}
+{% set R = -b/(2*a) %}
+{% set i = sqrtdelta/(2*a) %}
+{% set x1 = R~'+'~i~'i' %}
+{% set x2 = R~'-'~i~'i' %}
+{% endif %}
+{% endif %}
+{{block('head')}}
+<div class="mainblok">
+<div class="phdr"><b>Tiện ích / Giải PT bậc 2 ẩn x</b></div>
+<form action="" method="post">
+<div class="list1">Nhập hệ số a:
+<p><input name="a" type="number" value="{{a|default()}}" /></p></div>
+<div class="list1">Nhập hệ số b:
+<p><input type="number" name="b" value="{{b|default()}}" /></p></div>
+<div class="list1">Nhập hệ số c:
+<p><input type="number" name="c" value="{{c|default()}}" /></p></div>
+<div class="list1"><input class="btn btn-primary" type="submit" value="Bắt đầu giải"> 
+  <a href="/phuong-trinh-bac2-mot-an">[ Nhập lại ]</a></div>
+</form>
+{% if request_method()|lower == 'post' %}
+<div class="chuky">Kết quả: <b>{{kq}}</b></div>
+<div class="list1">Nghiệm 1: 
+<p><input type="text" placeholder="{{x1}}"></p></div>
+<div class="list1">Nghiệm 2: 
+<p><input type="text" placeholder="{{x2}}"></p></div>
+{% endif %}
+</div>
+{{block('end')}}

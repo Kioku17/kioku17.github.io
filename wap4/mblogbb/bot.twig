@@ -1,0 +1,18 @@
+{% macro autobot(content,user) %}{% spaceless %}
+{% from 'func.twig' import add,up,get,login %}
+{% set data = {"ê bot| bot ơi":"BOT đây| Ai kêu ta đó| kêu cc| Đang chán. Kêu gì? ","hello bot| hi bot| chào bot":"Chào [you] nhé!| BOT chào [you]!","bye bot":"Tạm biệt [you]| bye [you] ~~!","bot ngu":"ngu cái cc nhé| [you] ngu vcl| Ngu cai lồn","dmm| dkm bot| dkmm bot| bot loz| bot chó| chó bot| đ!t mẹ mày| fuck":"Chửi cái dmm| láo vừa thôi |địt chị [you]| Goắt đu diu đu :troll:, phúc mi roài quỵt :yaoming:","wei tei":"quay cái dcmm :dc:"} %}
+{% for bot,you in data %}
+{% set rbot=bot|trim|split('|') %}
+{% set ryou=you|trim|split('|') %} 
+{% if rbot in data|trim|split('|') %}
+{% set comment = {"name":bot,"time":"now"|date('U'), "comment":rbot} %}
+{% set save = save_data( "chat", comment|json_encode ) %}
+{% endif %}
+{% endfor %}
+{% endspaceless %}{% endmacro %}
+{% set randg1 = random(['BOT đây','Ai kêu ta đó','kêu cc','Đang chán. Kêu gì?']) %}
+{% set randg2 = random(['Chào @'~get('user_'~login,'nick')~' nhé!','BOT chào @'~get('user_'~login,'nick')~' !']) %}
+{% if random(['ê bot','bot ơi']) in nd|lower %}
+{% set comment = {"name":bot,"time":"now"|date('U'), "comment":randg1} %}
+{% set save = save_data( "chat", comment|json_encode ) %}
+{% endif %}

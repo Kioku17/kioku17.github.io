@@ -1,0 +1,301 @@
+{% macro forum_mini() %}
+{% from 'func.twig' import get,rwurl,level,account %}
+{% from 'paging.twig' import paging %}
+{% set per = '10' %}
+{% set data = get('show_forum')|split('@') %}
+{% set total = data|length-1 %}
+{% set page_max=total//per %}
+{% if total//per != total/per %}
+{% set page_max=total//per+1 %}
+{% endif %}
+{% set p=get_get('p')|default(1) %}
+{% if p matches '/[a-zA-z]|%/' or p<1 %}
+{% set p=1 %}
+{% endif %}
+{% if p>page_max %}
+{% set p=page_max %}
+{% endif %}
+{% set st=p*per-per %}
+{% set at=(st+per) %}
+{% if at>total %}
+{% set at=total %}
+{% endif %}
+{% if total == 0 %}
+<div class="rmenu">Chưa có bài viết nào</div>
+{% endif %}
+{% if total>=1 %}
+{% for i in st..at %}
+{% set i = data[i] %}
+{% set ten = get('forum_'~i|trim~'_info','ten') %}
+{% set total = get('forum_'~i|trim~'_show')|split('@')|length-1 %}
+{% set img = get('forum_'~i|trim~'_info','img') %}
+{% set ghim = get('forum_'~i|trim~'_info','ghim') %}
+{% set nd = get('forum_'~i|trim~'_1','nd') %}
+{% set vote = get('forum_'~i|trim~'_info','vote')|default(0) %}
+{% set block = get('forum_'~i|trim~'_info','block') %}
+{% if loop.last==false %}
+{% set cmtdau = get('forum_'~i|trim~'_1','nick') %}
+{% set cmtcuoi = get('forum_'~i|trim~'_'~total,'nick') %}
+{% set category=ten|split(']')|first|split('[')|last|raw %}
+{% set title=ten|split(']',2)|last|raw %}
+<div class="list{% if ghim == '1' %}3{% else %}1{% endif %}"><img src="/images/{% if ghim=="1" %}pt{% else %}op{% endif %}.gif" class="icon" alt="icon" /> {% if block == 'yes' %}<img src="/images/block.gif" class="icon" alt="icon" />{% endif %}{% if vote > 0 %}<img src="/images/rate.gif" class="icon" alt="rate" />{% endif %}<a href="/threads/{{i|trim}}/{{rwurl(ten)}}.html" data-balloon="{{ten|raw}}" data-balloon-pos="up">{% if title != ten %}{{random(['<span class="badge" style="background:red">','<span class="badge" style="background:green">','<span class="badge" style="background:olive">','<span class="badge" style="background:blue">','<span class="badge" style="background:lightgreen">','<span class="badge" style="background:gray">','<span class="badge" style="background:silver">','<span class="badge" style="background:yellow">','<span class="badge" style="background:orange">','<span class="badge" style="background:violet">','<span class="badge" style="background:darkorange">','<span class="badge" style="background:darkviolet">','<span class="badge" style="background:darkgray">'])|raw}}{{category|raw}}</span>{% endif %} {{title|raw}}</a> <font color="gray">[{{total}}]</font> <a href="/account/{{cmtdau}}">{{account(cmtdau)}}</a>{% if total > 1 and cmtdau != cmtcuoi %} / <a href="/account/{{cmtcuoi}}">{{account(cmtcuoi)}}</a>{% endif %}
+</div>
+{% endif %}
+{% endfor %}
+{% endif %}
+{{paging('?p',p,page_max)}}
+{% endmacro %}
+{% macro forum_ghim() %}
+{% from 'func.twig' import get,rwurl,level,account %}
+{% set per = '500' %}
+{% set data = get('show_forum')|split('@') %}
+{% set total = data|length-1 %}
+{% set page_max=total//per %}
+{% if total//per != total/per %}
+{% set page_max=total//per+1 %}
+{% endif %}
+{% if p matches '/[a-zA-z]|%/' or p<1 %}
+{% set p=1 %}
+{% endif %}
+{% if p>page_max %}
+{% set p=page_max %}
+{% endif %}
+{% set st=p*per-per %}
+{% set at=(st+per) %}
+{% if at>total %}
+{% set at=total %}
+{% endif %}
+{% if total == 0 %}
+<div class="rmenu">Chưa có bài viết nào</div>
+{% endif %}
+{% if total>=1 %}
+{% for i in st..at %}
+{% set i = data[i] %}
+{% set ten = get('forum_'~i|trim~'_info','ten') %}
+{% set total = get('forum_'~i|trim~'_show')|split('@')|length-1 %}
+{% set img = get('forum_'~i|trim~'_info','img') %}
+{% set ghim = get('forum_'~i|trim~'_info','ghim') %}
+{% set nd = get('forum_'~i|trim~'_1','nd') %}
+{% set vote = get('forum_'~i|trim~'_info','vote')|default(0) %}
+{% set block = get('forum_'~i|trim~'_info','block') %}
+{% if loop.last == false and ghim == '1' %}
+{% set cmtdau = get('forum_'~i|trim~'_1','nick') %}
+{% set cmtcuoi = get('forum_'~i|trim~'_'~total,'nick') %}
+{% set category=ten|split(']')|first|split('[')|last|raw %}
+{% set title=ten|split(']',2)|last|raw %}
+<div class="list{% if ghim == '1' %}3{% else %}1{% endif %}"><img src="/images/{% if ghim=="1" %}pt{% else %}op{% endif %}.gif" class="icon" alt="icon" /> {% if block == 'yes' %}<img src="/images/block.gif" class="icon" alt="icon" />{% endif %}{% if vote > 0 %}<img src="/images/rate.gif" class="icon" alt="rate" />{% endif %}<a href="/threads/{{i|trim}}/{{rwurl(ten)}}.html" data-balloon="{{ten|raw}}" data-balloon-pos="up">{% if title != ten %}{{random(['<span class="badge" style="background:red">','<span class="badge" style="background:green">','<span class="badge" style="background:olive">','<span class="badge" style="background:blue">','<span class="badge" style="background:lightgreen">','<span class="badge" style="background:gray">','<span class="badge" style="background:silver">','<span class="badge" style="background:yellow">','<span class="badge" style="background:orange">','<span class="badge" style="background:violet">','<span class="badge" style="background:darkorange">','<span class="badge" style="background:darkviolet">','<span class="badge" style="background:darkgray">'])|raw}}{{category|raw}}</span>{% endif %} {{title|raw}}</a> <font color="gray">[{{total}}]</font> <a href="/account/{{cmtdau}}">{{account(cmtdau)}}</a>{% if total > 1 and cmtdau != cmtcuoi %} / <a href="/account/{{cmtcuoi}}">{{account(cmtcuoi)}}</a>{% endif %}
+</div>
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endmacro %}
+{% macro forum_cmm(id) %}
+{% from 'func.twig' import get,rwurl,level,account %}
+{% from 'time.twig' import ago %}
+{% from 'paging.twig' import paging %}
+{% set per = '10' %}
+{% set data = get('show_category_'~id)|split('@') %}
+{% set total = data|length-1 %}
+{% set page_max=total//per %}
+{% if total//per != total/per %}
+{% set page_max=total//per+1 %}
+{% endif %}
+{% set p=get_get('p')|default(1) %}
+{% if p matches '/[a-zA-z]|%/' or p<1 %}
+{% set p=1 %}
+{% endif %}
+{% if p>page_max %}
+{% set p=page_max %}
+{% endif %}
+{% set st=p*per-per %}
+{% set at=(st+per) %}
+{% if at>total %}
+{% set at=total %}
+{% endif %}
+{% if total == 0 %}
+<div class="rmenu">Chưa có bài viết nào</div>
+{% endif %}
+{% if total>=1 %}
+{% for i in st..at %}
+{% set i = data[i] %}
+{% set ten = get('forum_'~i|trim~'_info','ten') %}
+{% set total = get('forum_'~i|trim~'_show')|split('@')|length-1 %}
+{% set img = get('forum_'~i|trim~'_info','img') %}
+{% set ghim = get('forum_'~i|trim~'_info','ghim') %}
+{% set nd = get('forum_'~i|trim~'_1','nd') %}
+{% set vote = get('forum_'~i|trim~'_info','vote')|default(0) %}
+{% set block = get('forum_'~i|trim~'_info','block') %}
+{% if loop.last==false %}
+{% set cmtdau = get('forum_'~i|trim~'_1','nick') %}
+{% set cmtcuoi = get('forum_'~i|trim~'_'~total,'nick') %}
+{% set timebv = get('forum_'~i|trim~'_'~total,'time') %}
+{% set category=ten|split(']')|first|split('[')|last|raw %}
+{% set title=ten|split(']',2)|last|raw %}
+<div class="list{% if ghim == '1' %}3{% else %}1{% endif %}"><img src="/images/{% if ghim=="1" %}pt{% else %}op{% endif %}.gif" class="icon" alt="icon" /> {% if block == 'yes' %}<img src="/images/block.gif" class="icon" alt="icon" />{% endif %}{% if vote > 0 %}<img src="/images/rate.gif" class="icon" alt="rate" />{% endif %} <a href="/threads/{{i|trim}}/{{rwurl(ten)}}.html" data-balloon="{{ten|raw}}" data-balloon-pos="up">{% if title != ten %}{{random(['<span class="badge" style="background:red">','<span class="badge" style="background:green">','<span class="badge" style="background:olive">','<span class="badge" style="background:blue">','<span class="badge" style="background:lightgreen">','<span class="badge" style="background:gray">','<span class="badge" style="background:silver">','<span class="badge" style="background:yellow">','<span class="badge" style="background:orange">','<span class="badge" style="background:violet">','<span class="badge" style="background:darkorange">','<span class="badge" style="background:darkviolet">','<span class="badge" style="background:darkgray">'])|raw}}{{category|raw}}</span> {% endif %}{{title|raw}}</a> <font color="gray">[{{total}}]</font> 
+<div class="sub">
+<a href="/account/{{cmtdau}}">{{account(cmtdau)}}</a>{% if total > 1 and cmtdau != cmtcuoi %} / {% set icon = get('user_'~cmtcuoi,'icon') %}
+{% if icon %}<img src="/images/{{icon}}.png">{% endif %} <a href="/account/{{cmtcuoi}}">{{account(cmtcuoi)}}</a>{% endif %} <i><font color="gray">( {{ago(timebv)}} )</font></i>
+</div>
+</div>
+{% endif %}
+{% endfor %}
+{% endif %}
+{{paging('forums/'~id~'?p',p,page_max)}}
+{% endmacro %}
+{% macro forum_cmtn() %}
+{% from 'func.twig' import get,rwurl,level,account %}
+{% set per = '1' %}
+{% set data = get('show_forum')|split('@') %}
+{% set p='1' %}
+{% set total = data|length-1 %}
+{% set st=p*per-per %}
+{% set at=(st+per) %}
+{% if at>total %}
+{% set at=total %}
+{% endif %}
+{% if total == 0 %}
+<div class="rmenu">Chưa có bài viết nào</div>
+{% endif %}
+{% if total>=1 %}
+{% for i in st..at %}
+{% set i = data[i] %}
+{% set ten = get('forum_'~get('tb_chu_de_moi','topicid')|trim~'_info','ten') %}
+{% set total = get('forum_'~get('tb_chu_de_moi','topicid')|trim~'_show')|split('@')|length-1 %}
+{% set img = get('forum_'~get('tb_chu_de_moi','topicid')|trim~'_info','img') %}
+{% set ghim = get('forum_'~get('tb_chu_de_moi','topicid')|trim~'_info','ghim') %}
+{% set nd = get('forum_'~get('tb_chu_de_moi','topicid')|trim~'_1','nd') %}
+{% set vote = get('forum_'~get('tb_chu_de_moi','topicid')|trim~'_info','vote')|default(0) %}
+{% set block = get('forum_'~get('tb_chu_de_moi','topicid')|trim~'_info','block') %}
+{% if loop.last==false %}
+{% set cmtdau = get('forum_'~get('tb_chu_de_moi','topicid')|trim~'_1','nick') %}
+{% set cmtcuoi = get('forum_'~get('tb_chu_de_moi','topicid')|trim~'_'~total,'nick') %}
+{% set category=ten|split(']')|first|split('[')|last|raw %}
+{% set title=ten|split(']',2)|last|raw %}
+<div class="list{% if ghim == '1' %}3{% else %}1{% endif %}"><img src="/images/op.gif" class="icon" alt="icon" /> {% if block == 'yes' %}<img src="/images/block.gif" class="icon" alt="icon" />{% endif %}{% if vote > 0 %}<img src="/images/rate.gif" class="icon" alt="rate" />{% endif %} <a href="/threads/{{get('tb_chu_de_moi','topicid')|trim}}/{{rwurl(ten)}}.html" data-balloon="{{ten|raw}}" data-balloon-pos="up">{% if title != ten %}{{random(['<span class="badge" style="background:red">','<span class="badge" style="background:green">','<span class="badge" style="background:olive">','<span class="badge" style="background:blue">','<span class="badge" style="background:lightgreen">','<span class="badge" style="background:gray">','<span class="badge" style="background:silver">','<span class="badge" style="background:yellow">','<span class="badge" style="background:orange">','<span class="badge" style="background:violet">','<span class="badge" style="background:darkorange">','<span class="badge" style="background:darkviolet">','<span class="badge" style="background:darkgray">'])|raw}}{{category|raw}}</span> {% endif %}{{title|raw}}</a> <font color="gray">[{{total}}]</font> <a href="/account/{{cmtdau}}">{{account(cmtdau)}}</a>{% if total > 1 and cmtdau != cmtcuoi %} / <a href="/account/{{cmtcuoi}}">{{account(cmtcuoi)}}</a>{% endif %}
+</div>
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endmacro %}
+{% macro forum_nn() %}
+{% from 'func.twig' import get,rwurl %}
+{% set show = get('show_forum')|split('@') %}
+{% set data=[] %} 
+{% set play='yes' %} 
+{% for i in show %} 
+{% if play=='yes' %} 
+{% set data2=i %} 
+{% endif %} 
+{% if data2 %} 
+{% set data=data|merge([data2]) %} 
+{% else %} 
+{% set play='no' %}
+{% set data2='' %} 
+{% endif %} 
+{% endfor %}
+{% if show|length-1 > 0 %}
+{% set show %}{% for i in 1..12 %}{{random(data)}}#{% endfor %}{% endset %}
+{% set list=[] %}{% for i in show|split('#') %}{% if i not in list and i != '' %}{% set list=list|merge([i]) %}{% endif %}{% endfor %}
+{% for i in list|slice(0,5) %}
+{% set ten = get('forum_'~i|trim~'_info','ten') %}
+{% set total = get('forum_'~i|trim~'_show')|split('@')|length-1 %}
+<div class="list1"><a href="/forum/{{i|trim}}/{{rwurl(ten)}}.html">{{ten}}</a> (<span class="red">{{total}}</span>)</div>
+{% endfor %}
+{% else %}
+<div class="rmenu">Chưa có bài viết nào</div>
+{% endif %}
+{% endmacro %}
+{% macro forum_cmmm(id) %}
+{% from 'func.twig' import get,up,add,login,rwurl %}
+{% from 'time.twig' import ago %}
+{% from 'paging.twig' import paging %}
+{% set per = '10' %}
+{% set data = get('show_category_'~id)|split('@') %}
+{% set total=data|length-1 %}
+{% set page_max=total//per %}
+{% if total//per != total/per %}
+{% set page_max=total//per+1 %}
+{% endif %}
+{% set p=get_get('p')|default(1) %}
+{% if p matches '/[a-zA-z]|%/' or p<1 %}
+{% set p=1 %}
+{% endif %}
+{% if p>page_max %}
+{% set p=page_max %}
+{% endif %}
+{% set st=p*per-per %}
+{% if total == '0' %}
+<div class="rmenu">Chưa có bài viết nào</div>
+{% else %}
+{% for i in data|slice(0,total)|slice(st,per) %}
+{% set ten = get('forum_'~i|trim~'_info','ten') %}
+{% set first = get('user_'~get('forum_'~i|trim~'_info','first'),'nick') %}
+{% set time = get('forum_'~i|trim~'_info','time')|trim %}
+{% set idbv = get('forum_'~i|trim~'_info','idbv') %}
+{% set total = get('forum_'~i|trim~'_show')|split('@')|length-1 %}
+<div class="list1"><div><a href="/threads/{{idbv}}/{{rwurl(ten)}}.html"><script language="javascript" type="text/javascript">t="{{data.time}}";h=t.search("gi");m=t.search("ph");n=t.search("V");if (((h!=-1)&&(n!=-1))||((m!=-1)&&(t.length==13))){document.write("<b><font color=\"darkgreen\">");}</script><script language="javascript" type="text/javascript"> pic = new Array('<span class="badge" style="background:red">','<span class="badge" style="background:green">','<span class="badge" style="background:olive">','<span class="badge" style="background:blue">','<span class="badge" style="background:lightgreen">','<span class="badge" style="background:gray">','<span class="badge" style="background:silver">','<span class="badge" style="background:yellow">','<span class="badge" style="background:orange">','<span class="badge" style="background:violet">','<span class="badge" style="background:darkorange">','<span class="badge" style="background:darkviolet">','<span class="badge" style="background:darkgray">'); n=Math.floor(Math.random() * 13); ten='{{ten}}';  dau=ten.indexOf('['); cuoi=ten.indexOf(']'); g=cuoi-(-1); tiento=ten.substring(dau,g); m=dau-cuoi; if((m!=0)&&(tiento.length<20)){ a=tiento.replace(']','</span> '); b=a.replace('[',pic[n]);  ten=ten.replace(tiento,b);} document.write(ten);</script><script language="javascript" type="text/javascript">t=" ";h=t.search("gi");m=t.search("ph");n=t.search("V");if (((h!=-1)&&(n!=-1))||((m!=-1)&&(t.length==13))){document.write("</font></b>");}</script></a> [{{total}}]</div>
+<div class="sub">Đăng bởi: {{first}} <span class="gray">({{ago(time)}})</span></div>
+</div>
+{% endfor %}
+{% endif %}
+{{paging('category/'~id~'?p',p,page_max)}}
+{% endmacro %}
+{% macro ccm(id,idbv) %}
+{% from 'func.twig' import get,rwurl %}
+{% set show = get('show_category_'~id)|split('@') %}
+{% set data=[] %} 
+{% set play='yes' %} 
+{% for i in show %} 
+{% if play=='yes' %} 
+{% set data2=i %} 
+{% endif %} 
+{% if data2 %} 
+{% set data=data|merge([data2]) %} 
+{% else %} 
+{% set play='no' %}
+{% set data2='' %} 
+{% endif %} 
+{% endfor %}
+{% set listtop %}{% for i in data %}{% if i|trim != idbv %}{{i|trim}}.{% endif %}{% endfor %}{% endset %}
+{% set list=[] %}{% for i in listtop|split('.') %}{% if i not in list %}{% set list=list|merge([i]) %}{% endif %}{% endfor %}
+{% if list|length-1 < 1 %}
+<div class="list1">Chưa có bài viết nào</div>
+{% endif %}
+{% for i in list|slice(0,6) %}
+{% set ten = get('forum_'~i|trim~'_info','ten') %}
+{% set total = get('forum_'~i|trim~'_show')|split('@')|length-1 %}
+{% if loop.last==false %}
+<div class="list1"><a href="/forum/{{i|trim}}/{{rwurl(ten)}}.html">{{ten}}</a> (<span class="red">{{total}}</span>)</div>
+{% endif %}
+{% endfor %}
+{% endmacro %}
+{% macro topbl() %}
+{% from 'func.twig' import get,rwurl %}
+{% set show = get('show_forum')|split('@') %}
+{% set data=[] %} 
+{% set play='yes' %} 
+{% for i in show %} 
+{% if play=='yes' %} 
+{% set data2=i %} 
+{% endif %} 
+{% if data2 %} 
+{% set data=data|merge([data2]) %} 
+{% else %} 
+{% set play='no' %}
+{% set data2='' %} 
+{% endif %} 
+{% endfor %}
+{% set listxu %}{% for i in data %}{{get('forum_'~i|trim~'_show')|split('@')|length-1}}#{% endfor %}{% endset %}
+{% set listname %}{% for i in data %}{{i|trim}}#{{get('forum_'~i|trim~'_show')|split('@')|length-1}}.{% endfor %}{% endset %}
+{% set listtop %}{% for i in listxu|split('#')|sort|reverse %}{% for top in listname|split('.') %}{% if '#'~i in top %}{{top}}.{% endif %}{% endfor %}{% endfor %}{% endset %}
+{% set list=[] %}{% for i in listtop|split('.') %}{% if i not in list %}{% set list=list|merge([i]) %}{% endif %}{% endfor %}
+{% for i in list|slice(0,6) %}
+{% set i = i|split('#')[0] %}
+
+{% set ten = get('forum_'~i|trim~'_info','ten') %}
+{% set total = get('forum_'~i|trim~'_show')|split('@')|length-1 %}
+{% if loop.last==false %}
+<div class="list1"><a href="/forum/{{i|trim}}/{{rwurl(ten)}}.html">{{ten}}</a> (<span class="red">{{total}}</span>)</div>
+{% endif %}
+{% endfor %}
+{% endmacro %}

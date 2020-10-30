@@ -1,0 +1,42 @@
+{% macro paging(trang,p,max,b) %}
+{% from 'func.twig' import get,login %}
+{% set login = login()|trim %}
+    {% if max > 1 %}
+    <div class="{% if login and get('user_'~login,'css') == 'mobile' %}mtext{% else %}pagination{% endif %}" {% if login and get('user_'~login,'css') == 'mobile' %}style="overflow: auto;"{% else %}align="center"{% endif %}>
+ {# set p=pagination.current_page %} {% set max=pagination.pages|last #}
+{% set a='<a href="/'~trang~'=' %}
+ {% if p>max %}{% set p=max %}a{% endif %} 
+ {% if p>1 %}
+{{a|raw}}{{p-1}}{{b}}" class="{% if login and get('user_'~login,'css') == 'mobile' %}current{% endif %}page">&lt;&lt;</a>
+{% endif %}
+{% if p>3 %}
+{{a|raw}}1{{b}}" class="page{% if login and get('user_'~login,'css') == 'mobile' %}nav{% endif %}">1</a>
+{% endif %}
+{% if p>4 %}
+<a class="page{% if login and get('user_'~login,'css') == 'mobile' %}nav{% endif %}">...</a>
+{% endif %}
+{% if p>2 %}
+{{a|raw}}{{p-2}}{{b}}" class="page{% if login and get('user_'~login,'css') == 'mobile' %}nav{% endif %}">{{p-2}}</a>
+{% endif %}
+{% if p>1 %}
+{{a|raw}}{{p-1}}{{b}}" class="page{% if login and get('user_'~login,'css') == 'mobile' %}nav{% endif %}">{{p-1}}</a>
+{% endif %}
+<a class="{% if login and get('user_'~login,'css') == 'mobile' %}currentpage{% else %}page active{% endif %}">{{p}}</a>
+{% if p<max-1 %}
+{{a|raw}}{{p+1}}{{b}}" class="page{% if login and get('user_'~login,'css') == 'mobile' %}nav{% endif %}">{{p+1}}</a>
+{% endif %}
+{% if p<max-2 %}
+{{a|raw}}{{p+2}}{{b}}" class="page{% if login and get('user_'~login,'css') == 'mobile' %}nav{% endif %}">{{p+2}}</a>
+{% endif %}
+{% if p<max-3 %}
+<a class="page{% if login and get('user_'~login,'css') == 'mobile' %}nav{% endif %}">...</a>
+{% endif %}
+{% if p<max %}
+{{a|raw}}{{max}}{{b}}" class="page{% if login and get('user_'~login,'css') == 'mobile' %}nav{% endif %}">{{max}}</a>
+{% endif %}
+{% if p<max %}
+{{a|raw}}{{p+1}}{{b}}" class="page{% if login and get('user_'~login,'css') == 'mobile' %}nav{% endif %}">&gt;&gt;</a>
+{% endif %}
+</div>
+    {% endif %}
+{% endmacro %}

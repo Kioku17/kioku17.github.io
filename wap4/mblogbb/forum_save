@@ -1,0 +1,32 @@
+{% from 'func.twig' import get,up,add,login %}
+{% set login = login()|trim %}
+{% set url = get_uri_segments() %}
+{% set idbv = url[1] %}
+{% set total = (get('forum_'~url[1]~'_info','total')|trim+1) %}
+{% set totaln = get('forum_'~url[1]~'_info','total') %}
+{% set nick = get('forum_'~url[1]~'_'~totaln,'nick') %}
+{% set nd = get_post('nd') %}
+{% set ten = get_post('ten') %}
+{% if login and nd %}
+{% set data = {"nick":login,"idbv":idbv,"total":total,"nd":nd,"time":"now"|date("U")}|json_encode %}
+{{up('show_forum',url[1],'up')}}
+{{up('forum_'~url[1]~'_'~total,data)}}
+{{add('forum_'~url[1]~'_info','total',total)}}
+{{up('forum_'~url[1]~'_show',total,'up')}}
+{{add('user_'~login,'cmt',get('user_'~login,'cmt')|trim+1)}}
+{{add('user_'~login,'xu',get('user_'~login,'xu')|trim+50)}}
+{{add('user_'~login,'db',get('user_'~login,'db')|trim+1)}}
+{{add('tb_chu_de_moi','last',true)}}
+{{add('tb_chu_de_moi','topicid',url[1])}}
+{{add('info','baiviet',get('info','baiviet')|trim+1)}}
+{% if login != nick %}
+{{up('tb_chua_xem_'~nick,'forum-cmt-'~url[1]~'-'~total~'-'~login~'-'~nick~'-'~"now"|date('U'),'up')}}
+{% endif %}
+{% set comment = {"name":"bot","time":"now"|date('U'), "comment":"[src]http://mblogbb.viwap.com/images/say.png[/src] [b]"~get('user_'~login,'nick')~"[/b] vừa bình luận trong một bài viết gần đây. [url=http://m.blogbb.gq/threads/"~url[1]~"/]Xem chi tiết[/url]."} %}
+{% set save = save_data( "event", comment|json_encode ) %}
+{% elseif nd and ten %}
+{% set data = {"name":ten,"idbv":idbv,"total":total,"nd":nd,"time":"now"|date("U")}|json_encode %}
+{{up('forum_'~url[1]~'_'~total,data)}}
+{{add('forum_'~url[1]~'_info','total',total)}}
+{{up('forum_'~url[1]~'_show',total,'up')}}
+{% endif %}

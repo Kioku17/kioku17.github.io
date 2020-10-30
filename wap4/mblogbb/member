@@ -1,0 +1,35 @@
+{% from 'func.twig' import add,get,up,level,login %}
+{% use '_blocks' %}
+{% set title="Quản lý thành viên" %}
+{% set url = get_uri_segments() %}
+{% set login = login()|trim %}
+{% set lv=get('user_'~login,'level')|trim %}
+{% set tk=url[2] %}
+{% set lvv=get('user_'~tk,'level')|trim %}
+{% if login %}
+{% if lv == 'right9s' and lv != lvv or nick == 'admin' %}
+<div class="phdr"><b>Band - Thành viên cấm</b></div>
+{% set blocks = get_post('blocks') %}
+{% set block = get('user_'~tk,'block') %}
+{% if request_method()|lower == 'post' %}
+{% if block != blocks %}
+<div class="rmenu">Cập nhật quyền truy cập cho <b>{{tk}}</b> thành công!</div>
+{% endif %}
+{% if blocks %}
+{% if blocks != block %}
+{{add('user_'~tk,'block',blocks)}}
+{% endif %}
+{% endif %}
+{% else %}
+<div class="list1">
+<form method="post" action="">
+<input type="radio" name="blocks" value="{% if block == 'yes' %}no{% else %}yes{% endif %}" {% if block == 'yes' %}checked="checked" {% endif %}/> <b>{% if block == 'yes' %}Đang cấm{% else %}Chưa cấm{% endif %}</b> <br />
+<input type="submit" value="ok luôn">
+</form>
+</div>
+{% endif %}
+{% endif %}
+
+{% else %}
+<div class="rmenu">Bạn không có quyền truy cập vào đây!</div>
+{% endif %}

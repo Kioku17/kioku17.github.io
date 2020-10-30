@@ -1,0 +1,77 @@
+{# đăng ký #}
+{% from 'func.twig' import rwurl,auto,up %}
+<div class="mainblok">
+<div class="phdr"><b><i class="fa fa-pencil-square-o"></i> Tạo tài khoản cho thành viên</b></div>
+{% set id=get_data_count('id_users') %}
+{# kiểm tra và lưu tài khoản #}
+{% set user = get_post('user') %}
+{% set pass = get_post('pass') %} 
+{% set repass = get_post('repass') %} 
+{% set gt = get_post('gt') %}
+{% set registration %}
+<div class="list1"> 
+<form method="post" action="" class="ten_form">Tên tài khoản:<br/><input type="text" name="user" value="" required><br/>Mật khẩu:<br/> <input type="password"  name="pass" value="" required><br/>Nhập lại mật khẩu:<br/> <input type="password" name="repass" value="" required><br/>
+<font color="red">Không sử dụng mật khẩu trùng với bất kì tài khoản của diễn đàn, blog nào!</font>
+<br />
+Giới tính:<br /> <select name="gt"><option value="boy">Boy</option> <option value="girl">Girl</option>
+<option value="gay">Không xác định</option>
+</select></div>
+<div class="list1">
+<input type="submit" name="submit" value="Đăng Ký"></form></div>
+</div>
+{% endset %}
+{% if request_method()|lower == "post" %}
+{% if user and pass and repass and gt %} 
+{% if ("now"|date("U") < get_data_by_id('stop_user',get_data('stop_user')|last.id).data) %}   
+<div class="rmenu"> Xin lỗi vì sự cố này, bạn có thể tiếp tục đăng ký tài khoản sau {{ get_data_by_id('stop_user',get_data('stop_user')|last.id).data - "now"|date("U") }} giây</div></div>
+{% elseif pass!=repass %}
+<div class="rmenu">Mật khẩu xác nhận không đúng.</div>
+{% else %}
+{% if get_data_count('user_'~rwurl(user))>0 %} 
+ <div class="rmenu"> Tài khoản đã tồn tại.</div>
+{{registration}}
+{% elseif user|length>30 %}
+<div class="rmenu">Tài khoản không dài quá 30 ký tự</div>
+{{registration}}
+{% else %} 
+{% if user matches '/^[a-zA-Z0-9\\-\\_]+[a-zA-Z0-9\\-\\_]$/' %} 
+<div class="list1">
+<b><big>Dữ liệu thông tin:</big></b>
+<br/><br/>
+<b>Tài khoản:</b> {{user}} <br/>
+<b>Mật khẩu:</b> {{pass}} <br/>
+<b>Giới tính:</b> {% if gt=='boy' %}Boy{% elseif gt=='girl' %}Girl{% endif %}
+<br/>
+<a href="/panel/cms" id="nutlike">Admin Panel</a> <a href="/index.php">Trang chủ</a></div>
+</div>
+{% if rwurl(user) == 'admin' or rwurl(user) == 'bot' %}
+{% else %}
+{% set comment = {"name":"bot","time":"now"|date('U'), "comment":"Chào mừng @"~rwurl(user)~" vừa gia nhập diễn đàn :)) ! Hãy lưu lại trang này và giới thiệu với bạn bè nhé :yaoming:"} %}
+{% set save = save_data( "chat", comment|json_encode ) %}
+{% endif %}
+{{up('ip_history_'~user,'ip_'~ip()~'_'~"now"|date('U'),'up')}}
+{% set save=save_data('id_users',''~rwurl(user)~'') %}
+{% set auto=auto()|trim %}
+{% set data={"nick":user,"pass":pass,"auto":auto,"id":(id+6),"gt":gt,"avt":"/images/"~gt~"-avatar.png","level":"right0s","icon":"","xu":"2000","db":"100","tamtrang":"I L0v3 viỆt Nam","cmt":"0","like":"0","top":"no","act":"act","reg":"now"|date("U")} %}
+{% set save=save_data( "user_"~rwurl(user),data|json_encode) %}
+{% set save=save_data('auto_'~auto,''~rwurl(user)~'') %}
+{% if get_data_count('stop_user')==0 %}   
+{% set save = save_data('stop_user', '12345') %}   
+{% else %}   
+{% set id = get_data('stop_user')|last.id %}   
+{{ update_data_by_id('stop_user',id,("now"|date("U") + 600)) }}
+{% endif %}   
+{% else %}
+ <div class="rmenu">Tài khoản không được chứa ký tự đặc biệt.</div>
+{{registration}}
+{% endif %} 
+{% endif %}
+{% endif %}
+{% else %}
+<div class="rmenu"> Vui lòng điền đầy đủ thông tin.</div>
+{{registration}}
+{% endif %}
+{% else %}
+{{registration}}
+{% endif %}
+{# kết thúc đăng ký #}

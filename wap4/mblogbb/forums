@@ -1,0 +1,42 @@
+{% from 'func.twig' import add,up,login,paging,get,rwurl %}
+{% from 'time.twig' import ago %}
+{% from 'func_show_fr.twig' import forum_cmm %}
+{% use '_blocks' %}
+{% set login = login()|trim %}
+{% set url = get_uri_segments() %}
+{% set id = get('category_'~url[1],'id') %}
+{% set ten = get('category_'~url[1],'ten') %}
+{% set mota = get('category_'~url[1],'mota') %}
+{% if id %}
+{% set title = ten %}
+{{block('head')}}
+<div class="mainblok">
+<div class="phdr"><a href="/">Trang chủ</a> » <a href="/forums">Diễn đàn</a> » <b>{{ten}}</b></div>
+<div class="note"><a href="/search">Tìm kiếm</a> | <a href="/bank">Ngân hàng</a></div>
+{{forum_cmm(id)}}
+</div>
+{% else %}
+{% set title = 'Diễn đàn' %}
+{{block('head')}}
+{# list category #}
+{% set category = get('list_category')|split('@') %}
+{% set forum = get('show_forum')|split('@') %}
+<div class="mainblok">
+{% if category|length-1 > 0 %}
+<div class="phdr"><a href="/">Trang chủ</a> » <b>Diễn đàn</b></div>
+<div class="newsx" align="center"><img src="/images/community.png"></div>
+{% endif %}
+{% for i in category|reverse %}
+{% set ten = get('category_'~i|trim,'ten') %}
+{% set mota = get('category_'~i|trim,'mota') %}
+{% if loop.first==false %}
+<div class="list1">
+<img src="/images/cat.gif" title="{{ten}}"> <a href="/forums/{{i|trim}}">{{ten}}</a>
+<div class="sub"><span class="gray">{{mota}}</span></div>
+</div>
+{% endif %}
+{% endfor %}
+</div>
+{# end #}
+{% endif %}
+{{block('end')}}

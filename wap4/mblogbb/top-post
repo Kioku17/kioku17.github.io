@@ -1,0 +1,66 @@
+{% from 'func.twig' import add,get,up,level %}
+<div class="list3"><a href="/pages/rank.php"><b>top đại gia</b></a> | <a href="/pages/rank.php?top=like"><b>top like</b></a> | <b>top bài viết</b></div>
+{% set data=[] %}{% for i in 1..100 %}{% set data=get_data('id_users',100,i)|merge(data) %}{% endfor %}
+{% set listpost %}{% for i in data %}{% set user = i.data %}{% set post = get('user_'~user,'cmt')|trim %}{{post}}#{% endfor %}{% endset %}
+{% set listname %}{% for i in data %}{% set user = i.data %}{% set post = get('user_'~user,'cmt')|trim %}{{user}}#{{post}}.{% endfor %}{% endset %}
+{% set listtop %}{% for i in listpost|split('#')|sort|reverse %}{% for top in listname|split('.') %}{% if '#'~i in top %}{{top}}.{% endif %}{% endfor %}{% endfor %}{% endset %}
+{% set list=[] %}{% for i in listtop|split('.') %}{% if i not in list %}{% set list=list|merge([i]) %}{% endif %}{% endfor %}
+{% for i in list|slice(0,6) %}
+{% set khanh = i|split('#') %}
+{% set lv = get('user_'~khanh[0],'level')|trim %}
+{% set names = get('user_'~khanh[0],'nick')|trim %}
+{% set all = khanh[1] %}
+{%if (all >= '0') and (all <= '19')%} 
+{%set level,capbac='1',"Chưa nhập môn"%} 
+{%elseif (all >='20') and (all <= '49')%} 
+{%set level,capbac='2',"Lính mới"%} 
+{%elseif (all >= '50') and (all <= '99')%} 
+{%set level,capbac='3',"Tập sự trung cấp"%} 
+{%elseif (all >= '100') and (all <= '149')%} 
+{%set level,capbac='4',"Tập sự cao cấp"%} 
+{%elseif (all >= '150') and (all <= '199')%} 
+{%set level,capbac='5',"Tân binh"%} 
+{%elseif (all >= '200') and (all <= '249')%} 
+{%set level,capbac='6',"Chiến binh"%} 
+{%elseif (all >= '250') and (all <= '299')%} 
+{%set level,capbac='7',"Chiến binh cao cấp"%} 
+{%elseif (all >= '300') and (all <= '349')%} 
+{%set level,capbac='8',"Siêu nhân cấp 1"%} 
+{%elseif (all >= '350') and (all <= '399')%} 
+{%set level,capbac='9',"Siêu nhân cấp 2"%} 
+{%elseif (all >= '400') and (all <= '499')%} 
+{%set level,capbac='10',"Siêu nhân cấp 3"%} 
+{%elseif (all >= '500') and (all <= '699')%} 
+{%set level,capbac='11',"Bậc thầy"%} 
+{%elseif (all >= '700') and (all <= '999')%} 
+{%set level,capbac='12',"Bậc thầy cấp 2"%} 
+{%elseif (all >= '1000') and (all <= '1399')%} 
+{%set level,capbac='13',"Bậc thầy cấp 3"%} 
+{%elseif (all >= '1400') and (all <= '1799')%} 
+{%set level,capbac='14',"Cổ tích BlogBB"%} 
+{%elseif (all >= '1800') and (all <= '2299')%} 
+{%set level,capbac='15',"Cổ tích BlogBB cấp 2"%} 
+{%elseif (all >= '2300') and (all <= '2899')%} 
+{%set level,capbac='16',"Cổ tích BlogBB cấp 3"%} 
+{%elseif (all >= '2900') and (all <= '3699')%} 
+{%set level,capbac='17',"Tinh tú thần"%} 
+{%elseif (all >= '3700') and (all <= '4599')%} 
+{%set level,capbac='18',"Tinh tú thần cấp 2"%} 
+{%elseif (all >= '4600') and (all <= '5599')%} 
+{%set level,capbac='19',"Tinh tú thần cấp 3"%} 
+{%elseif (all >= '5600') and (all <= '6699')%} 
+{%set level,capbac='20',"Thần thoại sơ cấp"%} 
+{%elseif (all >= '6700') and (all <= '7899')%} 
+{%set level,capbac='21',"Thần thoại trung cấp"%} 
+{%elseif (all >= '7900') and (all <= '9199')%} 
+{%set level,capbac='22',"Thần thoại cao cấp"%} 
+{%elseif (all >= '9200') and (all <= '10599')%} 
+{%set level,capbac='23',"Anh hùng"%}
+{%elseif (all >= '10600')%} 
+{%set level,capbac='24',"Huyền thoại BlogBB"%}
+{%endif%}
+{% if loop.last==false %}
+<div class="list1"><img src="http://mblogbb.viwap.com/images/top{{loop.index}}.png" title="top{{loop.index}}"> {% set icon = get('user_'~names,'icon') %}
+{% if icon %}<img src="/images/{{icon}}.png">{% endif %} <a href="/account/{{khanh[0]}}"><font class="{{lv}}">{{names}}</font></a><span style="font-weight:bold;float:right"><img src="http://tanovigame.viwap.com/images/{{level}}.gif"> {{khanh[1]}}</span></div>
+{% endif %}
+{% endfor %}

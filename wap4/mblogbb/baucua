@@ -1,0 +1,62 @@
+{% from 'func.twig' import get,login,add,up %}    
+   {% set login=login()|trim %}   
+{% if login %}
+{% set do,xu,cuoc,chon,kq1,kq2,kq3=get_post('do'),get_post('xu'),get_post('cuoc'),get_post('chon'),random(["bau","cua","tom","ca","nai","ga"]),random(["bau","cua","tom","ca","nai","ga"]),random(["bau","cua","tom","ca","nai","ga"])%}
+<link rel="stylesheet" href="/theme/farm.css" />
+<div class="phdr"><a href="/farm">Nông trại</a> » <a href="/users/laibuon.php"> 
+Lái buôn</a> » <b> 
+Bầu tôm cua cá</b></div>
+<div class="farm" align="center">
+<div class="center star_fruit_tree_2">
+  <div align="center">
+    <img src="/images/laibuon.gif" />
+  </div>
+  </div>
+<div class="textbox">Hãy thể hiện bản lĩnh của mình để kiếm thật nhiều tiền nhé, chúc các bạn vui vẻ! <br/>
+Tài sản hiện có: <b>{%set xu=get('user_'~login,'xu')%}
+{{xu}} </b> xu</div><div><br/></div>
+{%if get_post('do')=="play" and cuoc <= xu and cuoc >= 1%}{%set vv,pp=["bau","cua","tom"],["ca","nai","ga"]%}
+{%for i in vv%}
+<img src="http://pybpro.viwap.com/images/{{i}}{%if kq1!=i and kq2!=i and kq3!=i%}1{%endif%}.png" alt="{{i}}"> {%endfor%}<br>
+{%for i in pp%}
+<img src="http://pybpro.viwap.com/images/{{i}}{%if kq1!=i and kq2!=i and kq3!=i%}1{%endif%}.png" alt="{{i}}"> 
+{%endfor%}
+<div align="left"><b>KQ:</b></div>
+<div><img src="http://pybpro.viwap.com/images/{{kq1}}.png"> <img src="http://pybpro.viwap.com/images/{{kq2}}.png"> <img src="http://pybpro.viwap.com/images/{{kq3}}.png"><br/>
+{%endif%}
+{%if get_post('do')=="play" and cuoc <= xu and cuoc >= 1%}{%if kq1==chon%}
+{%set a="1"%}
+{%endif%}
+{%if kq2==chon%}
+{%set b="1"%}
+{%endif%}
+{%if kq3==chon%}
+{%set c="1"%}
+{% endif %}
+{% set vip=chon|replace({"bau":"Bầu","cua":"Cua","tom":"Tôm","ca":"Cá","nai":"Nai","ga":"Gà"})%}
+{%if (a+b+c) >= "1"%}
+ Xin chúc mừng {{a+b+c}} {{vip}} bạn vừa được cộng {{cuoc*(a+b+c)}} xu vào tài sản
+{{ add('user_'~login,'xu',get('user_'~login,'xu')|trim+xu+cuoc) }}
+{% else %} 
+Tưởng chú thế nào, cái đồ... gà mờ... ván này cóc có {{vip}} nhé. Cưng bị phạt {{cuoc}} xu :)) Anh lấy tạm để đi mua cần câu cá :))
+{{ add('user_'~login,'xu',get('user_'~login,'xu')|trim-xu-cuoc) }} 
+{% endif %}
+</div>
+<div>
+<form method="post">{% if (a+b+c) >= "1"%}
+{%set xu=xu+(cuoc*(a+b+c))%}
+{% else %}
+{% set xu=xu-cuoc%}
+{% endif %}
+<input type="hidden" name="xu" value="{{xu}}"><input type="submit" value=" Chơi tiếp...">
+</form></div>
+{% elseif get_post('do')=="play" and cuoc < 1 %}
+Chơi mà quên đặt cược kìa cưng =)) <a href="/users/baucua.php">Quay lại</a>
+{%endif%}
+{%if get_post('do') != "play" or get_post('xu') < get_post('cuoc')%}{%if get_post('xu') < get_post('cuoc')%}<br><b>Chăm cày farm mới đủ tiền chơi game này nhé cưng =))</b><br>
+{% endif %}
+<form method="post"><input type="hidden" name="do" value="play"><table width="60%"><tr>{%set a,b=["bau","cua","tom"],["ca","nai","ga"]%}{%for i in a%}<td width="1%"><input {%if i == "bau"%}checked{%endif%} type="radio" name="chon" value="{{i}}"> <img src="http://pybpro.viwap.com/images/{{i}}.png" alt="{{i}}"></td>{%endfor%}</tr><tr>{%for i in b%}<td width="1%"><input type="radio" name="chon" value="{{i}}"> <img src="http://pybpro.viwap.com/images/{{i}}.png" alt="{{i}}"></td>{%endfor%}</tr></table><br><div align="center"><b>Chú muốn cược bao nhiêu?</b></div><input type="number" name="cuoc" value="50" size="4" style="-wap-input-format:"*N""> xu<br><input type="hidden" name="xu" value="{{xu}}"><input type="submit" value="Chơi luôn... sợ gì =))">{%endif%}</form>
+</div>
+{% else %}
+<div class="rmenu">Hãy đăng nhập để sử dụng chức năng này !</div>
+{% endif %}

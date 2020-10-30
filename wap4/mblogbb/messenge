@@ -1,0 +1,97 @@
+{% from 'func.twig' import login,get,add,del,account %}
+{% from 'time.twig' import ago %}
+{% from 'paging.twig' import paging %}
+{% from 'bbcode.twig' import bbcode %}
+{% use '_blocks' %}
+{% set login = login()|trim %}
+{% set title='Tin nhắn' %}
+{{block('head')}}
+<div class="mainblok">
+{% if login %}
+{% set url = get_uri_segments() %}
+{% set length = get('user_'~url[1],'nick')|trim|length %}
+{% set user = get('user_'~url[1],'nick')|trim %}
+{% if length > '2' and url[1] != login %}
+<div class="phdr"><a href="/messenge"><b>Hộp thư</b></a> -> <a href="/account/{{url[1]}}">{{account(url[1])}}</a> ({{ago(get('user_'~user,'on')|trim)}})</div>
+{% include 'mail_send' %}
+{% set per = '10' %}
+{% set data = get('mail_'~login~'_'~url[1])|split('@') %}
+{% set total=data|length-1 %}
+{% set page_max=total//per %}
+{% if total//per != total/per %}
+{% set page_max=total//per+1 %}
+{% endif %}
+{% set p=get_get('p')|default(1) %}
+{% if p matches '/[a-zA-z]|%/' or p<1 %}
+{% set p=1 %}
+{% endif %}
+{% if p>page_max %}
+{% set p=page_max %}
+{% endif %}
+{% set st=p*per-per %}
+{% if total == '0' %}
+<div class="rmenu"> Hộp thư trống </div>
+{% else %}
+{% for i in data|slice(0,total)|slice(st,per) %}
+{% set ten = get('mail_'~i|trim,'nick') %}
+{% set lever = get('user_'~ten|trim,'lever') %}
+{% set nd = get('mail_'~i|trim,'nd') %}
+{% set time = get('mail_'~i|trim,'time')|trim %}
+{% set view = get('mail_'~i|trim,'view') %}
+{% if ten != login and view == 'no' %}
+{{add('mail_'~i|trim,'view','yes')}}
+{% endif %}
+{% set repmail %}{% if get('user_'~ten,'nick') != get('user_'~login,'nick') %}my-msg not-my-msg mright{% elseif get('user_'~login,'nick')%}my-msg mleft{% endif %}{% endset %}
+<div class="{% if login and get('user_'~login,'css') == 'mobile' %}list1{% else %}{{repmail}}{% endif %}" align="left"><div class="message-text"><img onerror="this.src='https://i.imgur.com/S8PNyJj.png'; "src="{{get('user_'~ten,'avt')}}" width="20px" height="20px" style="border-radius:20px"/> <a href="/account/{{ten}}">{{account(ten)}}</a>:  <span>{{bbcode(nd)}}</span></div> <span class="gray">({{ago(time)}} - {% if view == 'no' %}Chưa xem{% else %}Đã xem <b><font color="white"><i class="fa fa-check-circle-o" aria-hidden="true"></i></font></b>{% endif %})</span>
+</div>
+<div style="clear:both"></div>
+{% endfor %}
+{{paging('messenge/'~url[1]~'?p',p,page_max)}}
+{% endif %}
+{% else %}
+<div class="phdr"><b>Tin nhắn của tôi</b></div>
+{% set per = '10' %}
+{% set data = get('list_mail_'~login)|split('@') %}
+{% set total = data|length-1 %}
+{% set page_max=total//per %}
+{% if total//per != total/per %}
+{% set page_max=total//per+1 %}
+{% endif %}
+{% set p=get_get('p')|default(1) %}
+{% if p matches '/[a-zA-z]|%/' or p<1 %}
+{% set p=1 %}
+{% endif %}
+{% if p>page_max %}
+{% set p=page_max %}
+{% endif %}
+{% set st=p*per-per %}
+{% if total == '0' %}
+<div class="rmenu">Danh sách trống</div>
+{% else %}
+{% for i in data|slice(0,total)|slice(st,per) %}
+{% set ii = get('mail_'~login~'_'~i|trim)|split('@') %}
+{% set ten = get('user_'~i|trim,'nick') %}
+{% set nd = get('mail_'~ii[0]|trim,'nd') %}
+{% set time = get('mail_'~ii[0]|trim,'time')|trim %}
+{% set view = get('mail_'~ii[0]|trim,'view') %}
+{% set lvten = get('user_'~i|trim,'level') %}
+{% set ten2 %}{% endset %}
+{% for iii in ii %}
+{% set ten3 = get('mail_'~iii|trim,'nick') %}
+{% set view3 = get('mail_'~iii|trim,'view') %}
+{% if ten3 != login and view3 == 'no' %}
+{% set ten2=ten2~'@'~ten3 %}
+{% endif %}
+{% endfor %}
+{% set total = ten2|split('@')|length-1 %}
+{{del('new_mail_'~login,ten,'up')}}
+{% if login and get('user_'~login,'css') == 'mobile' %}<div class="list1">{% else %}<div class="bbcode_container"><div class="bbcode_quote"><div class="quote_container"><div class="bbcode_quote_container"></div>{% endif%}<img src="{{get('user_'~ten,'avt')|default('/images/no-avatar.png')}}" style="border:1px solid #5dbef7;width:15px;height:15px"> <a href="/messenge/{{i|trim}}">{{account(i|trim)}}</a> {% if total > '0' %}({{total}}){% endif %}: <br/>{{bbcode(nd|slice(0,200))}}<br/><span class="gray">{{ago(time)}} - {{get('user_'~login,'nick')}} {% if total!='0' %}chưa xem{% else %}đã xem <i class="fa fa-check-circle-o" aria-hidden="true"></i>{% endif %}</span>{% if login and get('user_'~login,'css') == 'mobile' %}</div>{% else %}</div></div></div><div class="sub"></div>{% endif %}
+{% endfor %}
+{% endif %}
+{{paging('messenge?p',p,page_max)}}
+{% endif %}
+{% else %}
+<div class="rmenu"> Bạn chưa đăng nhập</div>
+{% endif %}
+</div>
+{{block('end')}}

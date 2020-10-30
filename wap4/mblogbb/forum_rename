@@ -1,0 +1,22 @@
+{% from 'func.twig' import login,up,add,get,level %}
+{% set login = login()|trim %}
+{% set level = get('user_'~login,'level')|trim %}
+{% set url = get_uri_segments() %}
+{% set nick = get('forum_'~url[1]~'_info','first') %}
+{% set ten = get('forum_'~url[1]~'_info','ten') %}
+<div class="phdr"><span itemscope itemtype="http://data-vocabulary.org/Breadcrumb" itemscope="itemscope"><a itemprop="url" href="/"><span itemprop="title">Trang chủ</span></a></span> » <a href="/forums">Diễn đàn</a> » <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb" itemscope="itemscope"><a itemprop="url" href="/forums/{{id}}"><span itemprop="title">{{nameid}}</span></a></span> » <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb" itemscope="itemscope"><a itemprop="url" href="/{{url[0]}}/{{url[1]}}/{{url[2]}}{% if p %}&p={{p}}{% endif %}"><span itemprop="title">{{ten}}</span></a></span> » <span><a class="reg_link">Đổi tên chủ đề</a></span></div>
+{% if login == nick or level in ['right9s','right8s','right7s','right6s'] %}
+{% if request_method()|lower == "post" %}
+{% set ndmoi = get_post('nd') %}
+{{add('forum_'~url[1]~'_info','ten',ndmoi)}}
+<div class="rmenu">Đổi tên thành công</div>
+<script language="javascript" type="text/javascript">
+window.location.href="/";
+</script>
+<META HTTP-EQUIV="Refresh" CONTENT="0;URL=/">
+{% else %}
+<div class="menu"><form action="" method="post"><textarea name="nd">{{ten}}</textarea><input type="submit" value="  SAVE  "></form></div>
+{% endif %}
+{% else %}
+<div class="gmenu">Bạn không có quyền hạn này</div>
+{% endif %}

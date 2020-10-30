@@ -1,0 +1,75 @@
+{% macro ago(time_ago) %}
+{% set cur_time="now"|date('U') %}
+{% set time_elapsed = cur_time - time_ago %}
+{% set seconds = time_elapsed %}
+ {% set minutes = (time_elapsed / 60 )|round %}
+{% set hours = (time_elapsed / 3600)|round %}
+ {% set days = (time_elapsed / 86400 )|round %}
+ {% set weeks = (time_elapsed / 604800)|round %}
+ {% set months = (time_elapsed / 2600640 )|round %}
+ {% set years = (time_elapsed / 31207680 )|round %}
+{% set thu = {'Monday':'Thứ Hai','Tuesday':'Thứ Ba','Wednesday':'Thứ Tư','Thursday':'Thứ Năm','Friday':'Thứ Sáu','Saturday':'Thứ Bảy','Sunday':'Chủ Nhật'} %}
+{% set timethu = thu[time_ago|date('l','Asia/Ho_Chi_Minh')] %}
+{% set timengay = time_ago|date("d", "Asia/Ho_Chi_Minh") %}
+{% set timethang = time_ago|date("m", "Asia/Ho_Chi_Minh") %}
+{% set timenam = time_ago|date("y", "Asia/Ho_Chi_Minh") %}
+{% set timegio = time_ago|date("H:i", "Asia/Ho_Chi_Minh") %}
+{% set fulltime = time_ago|date('d.m.Y / H:i', 'Asia/Ho_Chi_Minh') %}
+{# Seconds #}
+{% if seconds >= 0 and seconds < 2 %}
+{{"vừa xong"}}
+{% elseif seconds >= 2 and seconds <= 60 %}
+{{seconds~"
+giây trước "}}
+
+{# Minutes #}
+{% elseif minutes <=60 %}
+   {% if minutes==1 %}
+{{"1 phút trước"}}
+   {% else %}
+{{minutes~"
+phút trước" }}
+   {% endif %}
+
+{# Hours #}
+{% elseif hours <=24 %}
+   {% if hours==1 %}
+{{"1 giờ trước"}}
+   {% else %}
+{{hours~"
+giờ trước"}}
+   {% endif %}
+
+{# Days #}
+{% elseif days <= 7 %}
+   {% if days==1 %}
+{{"Hôm qua, lúc "~timegio}}
+   {% else %}
+{{timethu}}, {{timengay}} tháng {{timethang}}, lúc {{timegio}}
+   {% endif %}
+
+{# Weeks #}
+{% elseif weeks <= 4.3 %}
+   {% if weeks==1 %}
+{{timethu}}, {{timengay}} tháng {{timethang}}, lúc {{timegio}}
+   {% else %}
+{{timethu}}, {{timengay}} tháng {{timethang}}, lúc {{timegio}}
+   {% endif %}
+
+{# Months #}
+{% elseif months <=12 %}
+   {% if months==1 %}
+{{timethu}}, {{timengay}} tháng {{timethang}}, lúc {{timegio}}
+   {% else %}
+{{timethu}}, {{timengay}} tháng {{timethang}}, lúc {{timegio}}
+   {% endif %}
+
+{# Years #}
+{% else %}
+   {% if years==1 %}
+{{timethu}}, {{timengay}} tháng {{timethang}} {{timenam}}, lúc {{timegio}}
+   {% else %}
+{{timethu}}, {{timengay}} tháng {{timethang}} {{timenam}}, lúc {{timegio}}
+   {% endif %}
+{% endif %}
+{% endmacro %}

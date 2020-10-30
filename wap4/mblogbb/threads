@@ -1,0 +1,15 @@
+{% from 'func.twig' import add,login,up,get %}
+{% use '_blocks' %}
+{% set url = get_uri_segments() %}
+{% set data = get('forum_'~url[1]~'_info','ten')|length %}
+{% if data > '2' %}
+{% include 'forum_show' %}
+{% else %}
+{% set title='Lỗi bài viết không tồn tại' %}
+{{block('head')}}
+<div class="mainblok">
+<div class="phdr">Trang không tồn tại </div>
+<div class="list1">Trang bạn yêu cầu không tồn tại trên diễn đàn</div>
+</div>
+{% endif %}
+{{block('end')}}

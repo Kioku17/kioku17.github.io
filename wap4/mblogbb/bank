@@ -1,0 +1,208 @@
+{% use '_blocks' %}
+{% set act = get_get('act') %}
+ {% set url=get_uri_segments() %}
+{% if act == 'vaytien' %}
+{% set title='Vay nặng lãi' %}
+{% elseif act == 'chuyentien' %}
+   {% set title='Chuyển tiền' %}
+{% elseif act == 'trano' %}
+   {% set title='Trả nợ' %}
+{% elseif act == 'rut-gon-link' %}
+   {% set title='Dịch vụ rút gọn link' %}
+{% else %}
+{% set title='Khu giải trí | Ngân Hàng' %}
+{% endif %}
+{{ block('head') }} 
+{% from 'func.twig' import rwurl,get,login,add,up %} 
+{% set total = (get('forum_43_info','total')|trim+1) %}
+{% set totaln = get('forum_43_info','total') %}
+{% set nick = get('forum_43_'~totaln,'nick') %}
+{% set login=login()|trim %}
+<div class="mainblok">
+{% set tien=get('user_'~login,'xu')|trim %}
+{% set xu_vay=get('user_'~login,'xu_vay')|trim %}
+{% set time_vay=get('user_'~login,'time_vay')|trim %}
+
+{% if act == 'vaytien' %}
+ {% set tien=get_post('tien')|trim %}
+{% if login %}
+<div class="phdr"><b>Ngân hàng</b> » Vay nặng lãi - <a href="/bank"> Quay lại </a></div>
+{%if get('user_'~login,'xu_vay')|trim >0%}<div class="rmenu"> Bạn đang nợ ngân hàng <b style="color:red">{{get('user_'~login,'xu_vay')}} xu </b> và <b style="color:green">{{xu_vay//100*20}} xu tiền lãi</b> </div>
+<div class="rmenu"> Bạn đang nợ ngân hàng. không thể vay thêm </div>
+{%else%} 
+ {% if request_method()|lower == "post" %}
+{% if tien matches '/^[0-9]+[0-9]$/' %}
+{% if tien >= '0' and tien <= '20000' %}
+Bạn đã vay {{tien}} xu  thành công! Bạn có 48 giờ để hoàn trả cùng với lãi 20%. Quá hạn sẽ bị phạt.
+{% set data = {"nick":"bot","idbv":"43","total":total,"nd":"@"~login~" vừa vay thành công "~tien~" xu ở ngân hàng @bot !","time":"now"|date("U")}|json_encode %}
+{{up('forum_43_'~total,data)}}
+{{add('forum_43_info','total',total)}}
+{{up('forum_43_show',total,'up')}}
+{{ add('user_'~login,'xu',get('user_'~login,'xu')|trim+tien) }}
+{{ add('user_'~login,'xu_vay',tien) }}
+{{ add('user_'~login,'time_vay','now'|date('U')+172800) }}
+{% else %}
+Lỗi! Số tiền vay không hợp lệ{% endif %}
+{% else %}
+Số xu nhập vào phải là số.
+{% endif %}
+
+{% else %}
+<div class="rmenu">Vui lòng điền đầy đủ thông tin
+</div>
+{% endif %}
+
+<div class="list1">
+<form action="" method="post">
+Nhập số xu muốn vay:<br />
+<input type="text" name="tien">
+ <input type="submit" name="submit" value="Vay">
+</form>
+</div>
+{% endif %}
+{% else %}
+<div class="rmenu">
+Vui lòng đăng nhập để sử dụng chức năng</div>
+{% endif %}
+
+
+{% elseif act == 'trano' %}
+ {% if login %}
+<div class="phdr"><b>Ngân hàng</b> » Trả nợ - <a href="/bank"> Quay lại </a></div>
+{%if xu_vay>0 %}{%if get_post("tra")==''%}<div class="rmenu"> Bạn đang nợ ngân hàng <b style="color:red">{{get('user_'~login,'xu_vay')}} xu </b> và <b style="color:green">{{xu_vay//100*20}} xu tiền lãi</b> <br> Thời hạn trả nợ của bạn còn <b>{{(-'now'|date('U')+time_vay)//3600}} giờ {{(-'now'|date('U')+time_vay)%3600 //60}} phút {{(-'now'|date('U')+time_vay)%3600%60%60}} giây </b><br/>
+<div class="list1">
+<form action="" method="post">
+<input type="hidden" name="act" value="trano">
+<input type="hidden" name="tra" value="ok">
+ <input type="submit" value="Trả nợ">
+</form>
+</div></div>{%endif%}
+
+{% if  get_post("tra")%}<div class="list2">
+Đã xóa nợ. Mong gặp lại bạn . haha<br/><center>- <a href="/bank"> Quay lại </a></center></div>
+{% set balans = get('user_'~login,'xu_vay')|trim+xu_vay//100*20 %}
+{% set data = {"nick":"bot","idbv":"43","total":total,"nd":"@"~login~" vừa trả nợ "~balans~" xu cho ngân hàng @bot , anh mong sẽ gặp lại chú em vào lần tới!","time":"now"|date("U")}|json_encode %}
+{{up('forum_43_'~total,data)}}
+{{add('forum_43_info','total',total)}}
+{{up('forum_43_show',total,'up')}}
+{{ add('user_'~login,'xu',get('user_'~login,'xu')|trim-(xu_vay*1.2)) }}
+{{ add('user_'~login,'time_vay',0) }}
+
+{{ add('user_'~login,'xu_vay',0) }}
+
+{% endif %}
+{%else%}<div class="list1"> Bạn không nợ ngân hàng</div>
+{% endif %}
+{% else %}
+<div class="rmenu">
+Vui lòng đăng nhập để sử dụng chức năng</div>
+{% endif %}
+
+
+{% elseif act == 'chuyentien' %}
+{% set user=get_post('user')|trim|lower %}
+{% set xu = tien %}
+ {% set tien=get_post('tien')|trim %}
+{% if login %}
+<div class="phdr"><b>Ngân hàng</b> » Chuyển tiền - <a href="/bank"> Quay lại </a> </div>
+ {% if request_method()|lower == "post" %}
+{% if user and tien %}
+<div class="list1">
+{% if get_data_count('user_'~user)>0 %}
+{% if user == login %}
+Lỗi! Bạn không thể chuyển xu cho chính mình
+{% else %}
+{% if tien matches '/^[0-9]+[0-9]$/' %}
+{% if tien >= '10' %}
+{% if xu >= tien %}
+{% if tien <= '1000000' %}
+Bạn đã chuyển {{tien}} xu cho thành viên {% if get('user_'~user,'icon') %}<img src="/images/{{get('user_'~user,'icon')}}.png" alt="icon" /> {% endif %}<a href="/account/{{user}}"><span class="{{get('user_'~user,'level')}}">{{get('user_'~user,'nick')}}</span></a> thành công!
+{% set data = {"nick":"bot","idbv":"43","total":total,"nd":"@"~login~" vừa chuyển thành công "~tien~" xu cho @"~user~" !","time":"now"|date("U")}|json_encode %}
+{{up('forum_43_'~total,data)}}
+{{add('forum_43_info','total',total)}}
+{{up('forum_43_show',total,'up')}}
+{{ add('user_'~login,'xu',get('user_'~login,'xu')|trim-tien) }}
+{{ add('user_'~user,'xu',get('user_'~user,'xu')|trim+tien) }}
+{% else %}
+Lỗi! Số tiền chuyển tối đa là 1000000 xu
+{% endif %}
+{% else %}
+Bạn không có đủ xu để chuyển
+{% endif %}
+{% else %}
+Số xu nhập vào phải từ 10 xu trở lên
+{% endif %}
+{% else %}
+Số xu nhập vào phải là số và phải từ 10 xu trở lên
+{% endif %}
+{% endif %}
+{% else %}
+Tài khoản không tồn tại
+{% endif %}
+</div>
+{% else %}
+<div class="rmenu">Vui lòng điền đầy đủ thông tin
+</div>
+{% endif %}
+{% else %}
+<div class="list1">Số tiền chuyển tối thiểu là 10 xu và tối đa là 1000000 xu</div>
+{% endif %}
+<div class="list1">
+  <form method="post" action="">
+Tài khản muốn chuyển:<br />
+<input type="text" name="user">
+<br />
+Nhập số xu muốn chuyển:<br />
+<input type="text" name="tien">
+ <input type="submit" name="submit" value="Chuyển tiền">
+</form>
+</div>
+{% else %}
+<div class="rmenu">
+Vui lòng đăng nhập để sử dụng chức năng</div>
+{% endif %}
+</div>
+{% elseif act == 'rut-gon-link' %}
+{% if login %}
+<div class="phdr"><b>Khu giải trí</b> » Dịch vụ rút gọn link</div>
+{% if get('user_'~login,'db') >= '500' %}
+{% set id %}{% for i in 1..6%}{{ random('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') }}{% endfor %}{% endset %}
+{% if request_method()|lower=="post" %}
+<div class="rmenu">Rút gọn url thành công, bạn bị trừ <b><font color="red">500 điểm exp</font></b></div>
+{% set save=save_data(get_post('id'),{"url":get_post('url'),"view":"0"}|json_encode) %}
+{% set link='http://m.blogbb.gq/s/'~get_post('id') %}
+{% if get('user_'~login,'db') >= '500' %}{{ add('user_'~login,'db',get('user_'~login,'db')|trim-500) }}{% endif %}
+<div class="list1">Url của bạn là:<br/><input type="hidden" name="id" value="{{id}}"><input type="text" name="url" value="{{link}}"></div>
+{% else %}
+<div class="rmenu">Phí mỗi lần rút gọn url (link) là: <b><font color="red">500 xu</font></b><br/>Bạn đang có: <b>{{get('user_'~login,'db')}} xu</b></div>
+<div class="list1" align="center">
+<form method="post"><input type="hidden" name="id" value="{{id}}"><input type="text" name="url" value="{{link}}"> <input type="submit" value="Rút gọn URL"></form>
+</div>
+{% endif %}
+{% else %}
+<div class="rmenu"> Bạn phải có tối thiểu <b><font color="red">500 điểm exp</font></b> để sử dụng dịch vụ này!</div>
+{% endif %}
+{% else %}
+<div class="rmenu">Vui lòng đăng nhập để dùng toàn bộ chức năng của diễn đàn!</div>
+{% endif %}
+{% else %}
+{% if login %} 
+<div class="phdr"><b>Khu giải trí</b> » Ngân hàng</div> 
+<div class="list1"><a href="?act=chuyentien"><i class="fa fa-paper-plane"></i>   Chuyển tiền</a></div>
+<div class="list1"><a href="?act=trano"><i class="fa fa-paper-plane"></i>   Trả nợ</a></div>
+<div class="list1"><a href="?act=vaytien"><i class="fa fa-paper-plane"></i>  Vay nặng lãi</a></div>
+{% else %}
+<div class="rmenu">Vui lòng đăng nhập để dùng toàn bộ chức năng của diễn đàn!</div>
+{% endif %}
+{% endif %}
+</div>
+{# đếm view by khanhirg #}
+{# get url #}
+{% set getview = get_data('view_bank',1,1).0 %}
+{# save view #}
+{% if getview.id %}
+{% set trankhanh = update_data_by_id('view_bank',getview.id,getview.data+1) %}
+{% else %}
+{% set trankhanh = save_data('view_bank','1') %}
+{% endif %}
+{{ block('end') }} 

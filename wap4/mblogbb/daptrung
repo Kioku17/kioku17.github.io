@@ -1,0 +1,57 @@
+{% use '_blocks' %}   
+   {% set title='Khu giải trí | Game đập trứng' %}   
+ {% from 'func.twig' import rwurl,up,ca,bo,get,add,login %}
+   {{ block('head') }}   
+   {% set login=login()|trim %}
+<div class="mainblok">
+   <div class="phdr"><b>Khu Giải Trí</b> » Game đập trứng</div>
+{% if login %}
+{% set t = get_get('t') %}
+{% set dap = get_get('dap') %}
+{% set xu=get('user_'~login,'xu') %}
+{% if t == 'ketqua' %}
+{% set nick=get('user_'~login,'nick') %}
+{% set ketqua=random(4) %}
+{% set mayman = random(4) %}
+{% set tien = 1000 %}
+{% set tientrung=tien*3 %}
+{% if dap < 0 or dap > 4 %}
+<div class="rmenu">Ui từ 0-4 thui bạn ui!<br/>&laquo; <a href="/daptrung">Quay lại</a></div>
+{% elseif xu < '500' %}
+<div class="rmenu">Bạn không đủ xu</div>
+{% else %}
+{% if dap == ketqua %}
+{% if dap == mayman %}
+<div class="list1"><img src="/images/trungvo.png"> Xin chúc mừng {{nick}} đã đập trúng trứng {{kq}} cùng trúng trứng may mắn Và  nhận được x3 tiền thắng lên {{tientrung}} xu </div><div class="list1">» <a href="/trung">Chơi tiếp</a></div>
+{{ add('user_'~login,'xu',get('user_'~login,'xu')|trim+tientrung) }}
+{% else %}
+<div class="list1"><img src="/images/trungvo.png"alt="Trứng vỡ" /> Xin chúc mừng {{nick}} đã đập trúng trứng {{kq}} Và nhận được 1000 Xu
+<br />
+» <a href="/daptrung">Chơi tiếp</a>
+</div>
+  {{ add('user_'~login,'xu',get('user_'~login,'xu')|trim+tien) }}
+{% endif %}
+{% else %}
+<div class="list1"><img src="/images/trungvo.png" alt="Trứng vỡ" /> Ui trứng đúng là {{ketqua}} rất tiếc bạn đã đập trật và bị trừ 500 xu
+<br />
+» <a href="/daptrung">Chơi tiếp</a>
+</div>
+  {{ add('user_'~login,'xu',get('user_'~login,'xu')|trim-500) }}
+{% endif %}
+{% endif %}
+{% else %}
+<div class="list1">
+•&nbsp;Số dư của tài khoản: <b>{{xu}} xu</b><br />•&nbsp;Thắng sẽ được 1000, thua bị trừ 500 xu.
+<br/>•&nbsp;Trong khi đập nếu may mắn trúng trứng đặc biệt sẽ được x3.
+<br />•&nbsp;Số trứng gồm 5 trứng 0-4<br />&bull; Chọn Một  Trứng:
+<br />
+{% for i in 0..4 %}
+<a href="?t=ketqua&dap={{i}}"><img src="/images/trung.png" alt="Trứng {{i}}" /></a>
+{% endfor %}
+</div>
+{% endif %}
+{% else %}
+<div class="rmenu">Vui lòng đăng nhập để chơi game</div>
+{% endif %}
+</div>
+ {{ block('end') }}

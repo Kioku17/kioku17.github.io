@@ -1,0 +1,64 @@
+{% from 'func.twig' import login,get,add %}
+{% from 'paging.twig' import paging %}
+{% from 'bbcode.twig' import bbcode %}
+{% set login = login()|trim %}
+{% if login and get('user_'~login,'css') == 'mobile' %}
+{% else %}
+ <div class="phdr"><b>Hoạt động gần đây</b></div>
+{% endif %}
+{% set s = '<a href="/smile">[Smile]</a>' %}
+{% set data=[] %}
+{% set play='yes' %}
+{% for i in 1..100 %}
+{% if play=='yes' %}
+{% set data2=get_data( 'event',100,i) %}
+{% endif %}
+{% if data2 %}
+{% set data=data2|reverse|merge(data) %}
+{% else %}
+{% set play='no' %}
+{% set data2='' %}
+{% endif %}
+{% endfor %}
+{% set total=data|length %}
+{% set per = '5' %}
+ {% set page_max=total//per %}
+{% if total//per != total/per %}
+{% set page_max=total//per+1 %}
+{% endif %}
+ {% set url=get_get('page') %}
+{% set p=url|default('1') %}
+{% if p matches '/[a-zA-z]|%/' or p<1 %}
+{% set p=1 %}
+{% endif %}
+{% if p>page_max %}
+{% set p=page_max %}
+{% endif %}
+{% if get_get('id') == 'xoahd' %}
+{% if data|length >= '20' %}
+<div class="rmenu">Xoá thành công! Hoạt động trống.</div>
+{% set key = 'event' %}
+{% for i in 1..get_data_count(key) %}
+{{ delete_data_by_id(key,get_data(key)|last.id) }}
+{% endfor %}
+ <script>window.location.href='/'</script>
+{% else %}
+<div class="rmenu">Chưa đạt giới hạn cần xóa</div>
+{% endif %}
+{% endif %}
+{% set st=p*per-per %}
+{% from 'time.twig' import ago %}
+{% set entries= data|slice(st,5) %}
+{% set data='' %}
+{% if total == 0 %}
+<div class="rmenu">Chưa có hoạt động nào diễn ra gần đây</div>
+{% endif %}
+{% for tiax in entries %}
+{% set entry = tiax.data|json_decode %}
+{% set user='user_'~entry.name %}
+{% set nd = entry.comment %}
+{% set on=get(user,'on')|trim %}
+{% set time = entry.time %}
+ <div class="list1">{{bbcode(nd|raw)}}
+</div>
+{% endfor %}

@@ -1,0 +1,36 @@
+{% from 'func.twig' import login,up,add,get,level,del,rwurl %}
+{% set login = login()|trim %}
+{% set nick = get('forum_'~url[1]~'_'~like,'nick') %}
+{% set nicklike = get('forum_'~url[1]~'_'~like~'_like')|replace({" ":""})|split('@') %}
+<div class="phdr"><span itemscope itemtype="http://data-vocabulary.org/Breadcrumb" itemscope="itemscope"><a itemprop="url" href="/"><span itemprop="title">Diễn đàn</span></a></span> » <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb" itemscope="itemscope"><a itemprop="url" href="/forums/{{id}}"><span itemprop="title">{{nameid}}</span></a></span> » <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb" itemscope="itemscope"><a itemprop="url" href="/{{url[0]}}/{{url[1]}}/{{url[2]}}{% if p %}?p={{p}}{% endif %}"><span itemprop="title">{{ten}}</span></a></span> » <span><a class="reg_link">Like Bình Luận</a></span></div>
+{% if login %}
+{% if login in nicklike %}
+<div class="gmenu">Bạn đã like bài viết này rồi</div>
+{% elseif login == nick %}
+<div class="gmenu">Bạn không thể like bài viết của chính bạn</div>
+{% elseif get('user_'~login,'level') == 'right9s' or get('user_'~login,'level') == 'right8s' or get('user_'~login,'level') == 'right7s' or get('user_'~login,'level') == 'right6s' and login != nick %}
+{{up('forum_'~url[1]~'_'~like~'_like',login,'up')}}
+{{add('user_'~nick,'tinnhiem',get('user_'~nick,'tinnhiem')|trim+1)}}
+{{up('tb_chua_xem_'~nick,'forum-tinnhiem-'~url[1]~'-'~like~'-'~login~'-'~nick~'-'~"now"|date('U'),'up')}}
+{% set comment = {"name":"bot","time":"now"|date('U'), "comment":"[src]http://mblogbb.viwap.com/images/tn.png[/src] [b]"~get('user_'~login,'nick')~"[/b] vừa cộng một điểm tín nhiệm cho [b]"~get('user_'~nick,'nick')~"[/b] trong một chủ đề gần đây. [url=http://m.blogbb.gq/threads/"~url[1]~"/]Xem chi tiết[/url]."} %}
+{% set save = save_data( "event", comment|json_encode ) %}
+<div class="gmenu"> Cộng điểm tín nhiệm cho <b>{{nick}}</b> thành công!</div>
+<script language="javascript" type="text/javascript">
+window.location.href="http://m.blogbb.gq/{{url[0]}}/{{url[1]}}/{{url[2]}}{% if p %}&p={{p}}#post{{total}}{% endif %}";
+</script> 
+{% else %}
+{{up('forum_'~url[1]~'_'~like~'_like',login,'up')}}
+{{add('user_'~nick,'like',get('user_'~nick,'like')|trim+1)}}
+{% if login != nick %}
+{{up('tb_chua_xem_'~nick,'forum-like-'~url[1]~'-'~like~'-'~login~'-'~nick~'-'~"now"|date('U'),'up')}}
+{% endif %}
+{% set comment = {"name":"bot","time":"now"|date('U'), "comment":"[src]http://mblogbb.viwap.com/images/like.png[/src] [b]"~get('user_'~login,'nick')~"[/b] vừa thích trong một bài viết trong một chủ đề gần đây. [url=http://m.blogbb.gq/threads/"~url[1]~"/]Xem chi tiết[/url]."} %}
+{% set save = save_data( "event", comment|json_encode ) %}
+<div class="gmenu">Like bài viết thành công</div>
+<script language="javascript" type="text/javascript">
+window.location.href="http://m.blogbb.gq/{{url[0]}}/{{url[1]}}/{{url[2]}}{% if p %}&p={{p}}#post{{total}}{% endif %}";
+</script> 
+{% endif %}
+{% else %}
+<div class="gmenu">Bạn chưa đăng nhập</div>
+{% endif %}

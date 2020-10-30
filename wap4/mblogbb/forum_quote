@@ -1,0 +1,62 @@
+{% from 'func.twig' import login,up,add,get,level %}
+{% from 'time.twig' import ago %}
+{% set login = login()|trim %}
+{% set timecmt = get('user_'~login,'timecmt')|trim|default(0) %}
+{% set idcmt = get_get('quote') %}
+{% set total = (get('forum_'~url[1]~'_info','total')|trim+1) %}
+{% set totaln = get('forum_'~url[1]~'_info','total') %}
+{% set nick = get('forum_'~url[1]~'_'~totaln,'nick') %}
+{% set time = get('forum_'~url[1]~'_'~idcmt,'time')|trim %}
+{% set ten = get('forum_'~url[1]~'_info','ten') %}
+{% set block = get('forum_'~url[1]~'_info','block')|default('no')|trim %}
+{% set nd = get('forum_'~url[1]~'_'~idcmt,'nd') %}
+<div class="phdr"><a href="/">Trang chủ</> » <a href="/forums">Diễn đàn</a> » <a href="/forums">Trích dẫn bài viết</a></div>
+<div class="note"><b>TOPIC:</b> {{ten}}</div>
+{% if login %}
+{% if block == 'no' %}
+{% if login != nick %}
+{% if "now"|date('U')-timecmt > 20 %}
+{% if request_method()|lower == "post" %}
+{% set ndmoi = get_post('ndmoi') %}
+{% if ndmoi|length >= 3 and ndmoi|length <= 15000 %}
+{% set data = {"nick":login,"idbv":url[1],"total":total,"nd":"[quote]@"~nick~": "~nd|replace({"[quote]":"<","[/quote]":">"})|striptags|trim|slice(0,300)~"[/quote]"~ndmoi,"time":"now"|date('U')}|json_encode %}
+{{up('show_forum',url[1],'up')}}
+{{up('forum_'~url[1]~'_'~total,data)}}
+{{add('forum_'~url[1]~'_info','total',total)}}
+{{up('forum_'~url[1]~'_show',total,'up')}}
+{{add('user_'~login,'timecmt',"now"|date('U'))}}
+{{add('user_'~login,'cmt',get('user_'~login,'cmt')|trim+1)}}
+{{add('user_'~login,'xu',get('user_'~login,'xu')|trim+50)}}
+{{add('user_'~login,'db',get('user_'~login,'db')|trim+1)}}
+{{add('tb_chu_de_moi','last',true)}}
+{{add('tb_chu_de_moi','topicid',url[1])}}
+{{add('info','baiviet',get('info','baiviet')|trim+1)}}
+{% if login != nick %}
+{{up('tb_chua_xem_'~nick,'forum-cmt-'~url[1]~'-'~idcmt~'-'~login~'-'~nick~'-'~"now"|date('U'),'up')}}
+{% endif %}
+{% set comment = {"name":"bot","time":"now"|date('U'), "comment":"[src]http://mblogbb.viwap.com/images/say.png[/src] [b]"~get('user_'~login,'nick')~"[/b] vừa bình luận trong một bài viết gần đây. [url=http://m.blogbb.gq/threads/"~url[1]~"/]Xem chi tiết[/url]."} %}
+{% set save = save_data( "event", comment|json_encode ) %}
+<div class="rmenu">Trả lời bình luận thành công</div>
+<script language="javascript" type="text/javascript">
+window.location.href="http://m.blogbb.gq/{{url[0]}}/{{url[1]}}/{{url[2]}}{% if p %}&p={{p}}#post{{total}}{% endif %}";
+</script> 
+
+{% else %}
+<div class="rmenu">Nội dung phải có độ dài từ lớn hơn 3 và nhỏ hơn 15000 kí tự </div>
+{% endif %}
+{% else %}
+<div class="gmenu"><p><b>{{nick}}</b> <span class="gray">({{ago(time)}})</span></p><p><h3>Trích dẫn</h3><form action="" method="post"><textarea rows="3">{{nd|replace({"[quote]":"<","[/quote]":">"})|striptags|trim|slice(0,300)}}</textarea><br/><small>Chỉ có 200 ký tự được hiển thị, văn bản khác sẽ được cắt để xem trong phần chi tiết.</small></p><p><h3>Bài viết</h3></p><p><textarea name="ndmoi" rows="3"></textarea></p><input type="submit" value="Gửi" style="width: 107px; cursor: pointer;"></form></div>
+{% endif %}
+{% else %}
+<div class="gmenu">Bạn không thể thêm bình luận thường xuyên, vui lòng chờ trong <span color="red">{{20-("now"|date('U')-timecmt)}}</span> giây nữa</div>
+{% endif %}
+{% else %}
+<div class="gmenu">Bạn không thể trả lời bình luận của chính bạn</div>
+{% endif %}
+{% else %}
+<div class="rmenu">Chủ đề đã đóng cửa</div>
+{% endif %}
+{% else %}
+<div class="menu">Bạn chưa đăng nhập</div>
+{% endif %}
+<div class="phdr"><a href="/{{url[0]}}/{{url[1]}}/{{url[2]}}{% if p %}&p={{p}}#post{{total}}{% endif %}">Trở lại</a></div>

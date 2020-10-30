@@ -1,0 +1,18 @@
+{% macro botchat(content,user) %}{% spaceless %}
+{% set data = {"ê bot| bot ơi":"BOT đây| Ai kêu ta đó| kêu cc| Đang chán. Kêu gì? ","hello bot| hi bot| chào bot":"Chào [you] nhé :zuivl:| BOT chào [you] !","bye bot":"Tạm biệt [you]| bye [you] ~~!","bot ngu":"ngu cái cc nhé| [you] ngu vcl| Ngu cai gi?","dmm| dkm bot| dkmm bot| bot loz| bot chó| chó bot| đ!t mẹ mày| fuck":"Chửi cái dmm| láo vừa thôi |đ!t chị [you]| Goắt đu diu đu :troll:, phúc mi roài quỵt :yaoming:","wei tei":"[you] vừa quay trúng giải đặc biệt với con số 99 :pirat: Chúc mừng bạn được 1 vé bay ra đảo miễn phí, thời hạn là 99 năm :haha: ","ờ":"ờ clmm| thím [you] ăn j để em cúng ạ :baby4:","nhac| music":"nếu [you] muốn yêu cầu bài hát tại mục quà tặng âm nhạc thì liên hệ với admin nhé.","web đẹp| wap đẹp| đẹp vl":"thế cơ á :yao:| đẹp bình thường [you] ạ :zuivl:","xin code":"bot không cho [you] đâu nha :haha:","host à":"bot cũng không biết nữa :buon:","ngu học":"Sông có thể cạn. Núi có thể mòn. NHƯNG Việc [you] ngu nhất 4um thì không gì có thể cãi được :haha:","mẹ":"It is Maria Ozawa, the legendary ... Bitch :yaoming:","bố| cha| dady":"My dady is [you]","bot| chịch":"Ơi, [you] động dục rồi hả :lol:| Goắt đu diu goăn, phúc mi rồi quỵt, hử :baby26:| Gọi cái xê xê, đang định nhảy cầu cũng bị gọi| I..am ah... ...Ah... Ah...... h..er...e ...Á á á .... ứ .. ứ... ứ ỨỨỨỨ......","trym":"Theo kết quả nghiên cứu của các nhà khoa học trên thế giới là không nên nói bậy. Theo thông tin vừa nhận được thì ông [you] đã mất hết bộ răng của mình khi nói đến [b]trym[/b]| Có thể bạn chưa biết, trym là từ viết tắt của [b]Tao rất yêu mày[/b]","khánh ơi| admin":"sếp đi ị rồi :poop:| đưa 5k đây anh gọi admin cho| sếp đang nhậu :phanno: [you] có gì thì tâm sự với bot này :buon:","shit| shjt":"Này :poop: thì :poop: shit :poop: này :poop:. :rip: do bội thực :poop: chửa :poop:","balans":"Ôlala. Xin chúc mừng [you] quay được giải đặc biệt của chương trình quay số may mắn. Bạn nhận được 9 tỷ xu. :troll:","hú":"hú [you]","láo":"láo cái quần què [you]","dat2013":"@dat2013 là ai z :buon:| @dat2013 bá chủ 4um :haha:| @dat2013 ơi bot yêu thím nhìu lém :love:"} %}
+{% for bot,you in data %} 
+{% set rbot=bot|trim|split('|') %} 
+{% set ryou=you|trim|split('|') %} 
+ 
+ 
+{% for bbot in rbot %} 
+{% if bbot|trim|lower in content|trim|lower %}
+{% from 'func.twig' import get,add %}
+{% set traloi %}{{random(ryou)|replace({ ('[you]'): ('@'~user~'')})}}{% endset %}
+{% set comment = {"name":'bot',"time":"now"|date('U'), "comment":" "~traloi} %}
+{% set save = save_data( "chat", comment|json_encode ) %}
+{{add('user_bot','cmt',get('user_bot','cmt')|trim+1)}}
+{% endif %} 
+{% endfor %} 
+{% endfor %}
+{% endspaceless %}{% endmacro %}

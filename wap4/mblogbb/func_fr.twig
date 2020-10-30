@@ -1,0 +1,270 @@
+{% macro breadcrumb(url) %}
+{% from 'func.twig' import add,login,up,get,rwurl %}
+{% use '_blocks' %}
+{% set bvlink='http://m.blogbb.gq/'~get_uri_segments()|join('/') %}  
+{% set ten = get('forum_'~url~'_info','ten') %}
+{% set mota = get('forum_'~url~'_info','mota') %}
+{% set view = get('forum_'~url~'_info','view') %}
+{% set ipv = get('forum_'~url~'_info','ip_view') %}
+{% set ipx = ip() %}
+{% set idbv = get('forum_'~url~'_info','idbv') %}
+{% set id = get('forum_'~url~'_info','id') %}
+{% set nameid = get('category_'~id,'ten') %}
+{% set idc = get('category_'~id,'idc') %}
+{% set nameidc = get('category_'~idc,'ten') %}
+{% set tags = get('forum_'~url~'_info','tags') %}
+{% set tiento = get('forum_'~url~'_info','tiento') %}
+{% set time = get('forum_'~url~'_info','time')|trim %}
+{% set total = get('forum_'~url~'_info','total') %}
+{% set block = get('forum_'~url~'_info','block') %}
+{% set category=ten|split(']')|first|split('[')|last|raw %}
+{% set title=ten|split(']',2)|last|raw %}
+{% set getview = get_data('view_'~url,1,1).0 %}
+{# đếm view by khanhirg #}
+{% if get_data_count('view_'~url)==0 %}
+{% if getview.id %}
+{% set trankhanh = update_data_by_id('view_'~url,getview.id,getview.data+1) %}
+{% else %}
+{% set trankhanh = save_data('view_'~url,'1') %}
+{% endif %}
+{% endif %}
+{% if ipv != ipx %}
+{% set views = update_data_by_id('view_'~url,getview.id,getview.data|trim+1) %}
+{{add('forum_'~url~'_info','view',getview.data|trim)}}
+{{views}}
+{{add('forum_'~url~'_info','ip_view',ipx)}}
+{% else %}
+{{add('forum_'~url~'_info','view',get('view_'~url)|trim)}}
+{% endif %}
+<div class="mainblok">
+<div class="phdr"><span itemscope itemtype="http://data-vocabulary.org/Breadcrumb" itemscope="itemscope"><a itemprop="url" href="{{block('link')}}"><span itemprop="title">Trang chủ</span></a></span> » <a href="/forums">Diễn đàn</a> » <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb" itemscope="itemscope"><a itemprop="url" href="{{block('link')}}/forums/{{id}}"><span itemprop="title">{{nameid}}</span></a></span></div>
+<div class="list1"><b style="color:#AD4105">{% if title != ten %}{{random(['<span class="badge" style="background:red">','<span class="badge" style="background:green">','<span class="badge" style="background:olive">','<span class="badge" style="background:blue">','<span class="badge" style="background:lightgreen">','<span class="badge" style="background:gray">','<span class="badge" style="background:silver">','<span class="badge" style="background:yellow">','<span class="badge" style="background:orange">','<span class="badge" style="background:violet">','<span class="badge" style="background:darkorange">','<span class="badge" style="background:darkviolet">','<span class="badge" style="background:darkgray">'])|raw}}{{category|raw}}</span> {% endif %}{{title|raw}}</b>
+<br/>
+<i class="fa fa-eye"></i> Lượt xem: <b>{{view|default(1)}}</b>
+<br/>
+<a id="up"></a><a href="#down"><img src="/images/down.png" alt="" class=""/></a> <span class="mxh"><a class="share fb" href="https://www.facebook.com/sharer/sharer.php?u={{bvlink}}" rel="nofollow" target="_blank" title="Chia sẻ lên FaceBook"><font color="white"><i class="fa fa-facebook"></i> FaceBook</font></a><a class="share gg" href="https://plus.google.com/share?url={{bvlink}}" rel="nofollow" target="_blank" title="Chia sẻ lên Google+"><font color="white"><i class="fa fa-google"></i> Google+</font></a><a class="share tw" href="https://twitter.com/home?status={{bvlink}}" rel="nofollow" target="_blank" title="Chia sẻ lên Twitter"><font color="white"><i class="fa fa-twitter"></i> Twitter</font></a></span>
+</div>
+
+{% if block == 'yes' %}
+<div class="rmenu">Chủ đề đã đóng cửa!</div>
+{% endif %}
+{% endmacro %}
+{% macro show_list(url) %}
+{% use '_blocks' %}
+{% from 'func.twig' import get,up,add,login,level,rwurl,size,account %}
+{% from 'bbcode.twig' import bbcode %}
+{% from 'time.twig' import ago %}
+{% from 'paging.twig' import paging %}
+{% set login = login()|trim %}
+{% set level = get('user_'~login,'level') %}
+{% set data = get('forum_'~url~'_show')|split('@')|reverse %}
+{% set per = '10' %}
+{% set total = data|length-1 %}
+{% set page_max=total//per %}
+{% if total//per != total/per %}
+{% set page_max=total//per+1 %}
+{% endif %}
+{% set p=get_get('p')|default(1) %}
+{% if p matches '/[a-zA-z]|%/' or p<1 %}
+{% set p=1 %}
+{% endif %}
+{% if p>page_max %}
+{% set p=page_max %}
+{% endif %}
+{% set st=p*per-per %}
+{% set at=(st+per) %}
+{% if at>total %}
+{% set at=total %}
+{% endif %}
+{% for i in st..at %}
+{% set ten = get('forum_'~url~'_'~data[i]|trim,'nick') %}
+{% set tenn = get('forum_'~url~'_'~data[i]|trim,'name') %}
+{% set status = get('user_'~ten,'status')|trim %}
+{% set lv = get('user_'~ten,'level')|trim %}
+{% set chude = get('user_'~ten,'cmt')|trim|default(0) %}
+{% set online = get('user_'~ten,'on')|trim %}
+{% set nd = get('forum_'~url~'_'~data[i]|trim,'nd') %}
+{% set time = get('forum_'~url~'_'~data[i]|trim,'time')|trim %}
+{% set timeedit = get('forum_'~url~'_'~data[i]|trim,'timeedit')|trim %}
+{% set nickedit = get('forum_'~url~'_'~data[i]|trim,'nickedit')|trim %}
+{% set nicklike = get('forum_'~url~'_'~data[i]|trim~'_like')|split('@') %}
+{% set demlike = nicklike|length-1 %}
+{% set idcmt = get('forum_'~url~'_'~data[i]|trim,'total')|trim %}
+{% set quote1 = '[bbcode_container][bbcode_quote][quote_container][bbcode_quote_contain] [/bbcode_quote_contain]' %}
+{% set quote2 = '[/quote_container][/bbcode_quote][/bbcode_container]' %}
+{% set likebv = data[i]|trim %}
+{% set thank = get_post('thank') %}
+{% if loop.first==false %}
+<div class="mainblok">
+{% if login and get('user_'~login,'css') == 'mobile' %}
+{% else %}
+<div class="phdr" id="post{{idcmt}}"><table cellpadding="0" cellspacing="0" width="100%"><tr><td>{{time|date('d.m.Y / H:i', 'Asia/Ho_Chi_Minh')}}</td><td align="right"><a href="#post{{idcmt}}" title="Link to post">#<b>{{i}}</b></a></td></tr></table></div>
+{% endif %}
+{% set like = get('user_'~ten,'like') %}
+{% if ten %}
+{% set all = chude|default(0) %} 
+{%if (all >= 0) and (all <= 19)%} 
+{%set level,capbac='1',"Chưa nhập môn"%} 
+{%elseif (all >=20) and (all <= 49)%} 
+{%set level,capbac='2',"Lính mới"%} 
+{%elseif (all >= 50) and (all <= 99)%} 
+{%set level,capbac='3',"Tập sự trung cấp"%} 
+{%elseif (all >= 100) and (all <= 149)%} 
+{%set level,capbac='4',"Tập sự cao cấp"%} 
+{%elseif (all >= 150) and (all <= 199)%} 
+{%set level,capbac='5',"Tân binh"%} 
+{%elseif (all >= 200) and (all <= 249)%} 
+{%set level,capbac='6',"Chiến binh"%} 
+{%elseif (all >= 250) and (all <= 299)%} 
+{%set level,capbac='7',"Chiến binh cao cấp"%} 
+{%elseif (all >= 300) and (all <= 349)%} 
+{%set level,capbac='8',"Siêu nhân cấp 1"%} 
+{%elseif (all >= 350) and (all <= 399)%} 
+{%set level,capbac='9',"Siêu nhân cấp 2"%} 
+{%elseif (all >= 400) and (all <= 499)%} 
+{%set level,capbac='10',"Siêu nhân cấp 3"%} 
+{%elseif (all >= 500) and (all <= 699)%} 
+{%set level,capbac='11',"Bậc thầy"%} 
+{%elseif (all >= 700) and (all <= 999)%} 
+{%set level,capbac='12',"Bậc thầy cấp 2"%} 
+{%elseif (all >= 1000) and (all <= 1399)%} 
+{%set level,capbac='13',"Bậc thầy cấp 3"%} 
+{%elseif (all >= 1400) and (all <= 1799)%} 
+{%set level,capbac='14',"Cổ tích BlogBB"%} 
+{%elseif (all >= 1800) and (all <= 2299)%} 
+{%set level,capbac='15',"Cổ tích BlogBB cấp 2"%} 
+{%elseif (all >= 2300) and (all <= 2899)%} 
+{%set level,capbac='16',"Cổ tích BlogBB cấp 3"%} 
+{%elseif (all >= 2900) and (all <= 3699)%} 
+{%set level,capbac='17',"Tinh tú thần"%} 
+{%elseif (all >= 3700) and (all <= 4599)%} 
+{%set level,capbac='18',"Tinh tú thần cấp 2"%} 
+{%elseif (all >= 4600) and (all <= 5599)%} 
+{%set level,capbac='19',"Tinh tú thần cấp 3"%} 
+{%elseif (all >= 5600) and (all <= 6699)%} 
+{%set level,capbac='20',"Thần thoại sơ cấp"%} 
+{%elseif (all >= 6700) and (all <= 7899)%} 
+{%set level,capbac='21',"Thần thoại trung cấp"%} 
+{%elseif (all >= 7900) and (all <= 9199)%} 
+{%set level,capbac='22',"Thần thoại cao cấp"%} 
+{%elseif (all >= 9200) and (all <= 10599)%} 
+{%set level,capbac='23',"Anh hùng"%}
+{%elseif (all >= 10600)%} 
+{%set level,capbac='24',"Huyền thoại BlogBB"%}
+{%endif%}
+{% if login and get('user_'~login,'css') == 'mobile' %}
+<div class="list-f1"><table style="padding: 0;border-spacing: 0;"><tr><td><img class="fr" src="{{get('user_'~ten,'avt')}}" width="48" height="48" alt="{{get('user_'~ten,'nick')}}" />&#160;</td><td> {% if online > ('now'|date('U')-300) %}<img src="/images/online.gif">{% else %}<img src="/images/offline.gif">{% endif %} <a href="/account/{{ten}}">{{account(ten)}}</a> <br /><div class="status"><img src="http://tanovigame.viwap.com/images/{{level}}.gif" alt="Level" /> <b>{{chude|default(0)}}</b>  <img src="/images/like.png" alt="Like" /> <b>{{get('user_'~ten,'like')}}</b>&nbsp;&nbsp;<img src="/images/tinnhiem.png" alt="TN" /> <b>{{get('user_'~ten,'tinnhiem')|default(0)}}
+</b></div></td></tr></table></div>
+{% else %}
+<div class="newsx">
+<table style="cellpadding:0;cellspacing:0;"><tr><td style="text-align:center"><img src="{{get('user_'~ten,'avt')}}" style="border:1px solid #5dbef7;width:50px;height:50px" alt="{{ten}}" />&#160;</td><td>{% if online > ('now'|date('U')-300) %}<img src="/images/online.gif">{% else %}<img src="/images/offline.gif">{% endif %} <a href="/account/{{ten}}">{{account(ten)}}</a> 
+<br/><img src="/images/{{get('user_'~ten,'gt')}}.png" alt="" class="icon-inline"/> <b itemprop="title">{{level(lv)}}</b><br/><img src="http://tanovigame.viwap.com/images/{{level}}.gif" alt="Level" /> <b>{{chude|default(0)}}</b>&nbsp;&nbsp;<img src="/images/like.png" alt="Like" /> <b>{{get('user_'~ten,'like')}}</b><br/><img src="/images/balans.png" alt="Xu" /> <b>{{get('user_'~ten,'xu')}}</b>&nbsp;&nbsp;<img src="/images/tinnhiem.png" alt="TN" /> <b>{{get('user_'~ten,'tinnhiem')|default(0)}}
+</b><br/>
+<b><span class="gray">{{capbac|raw}}</span></b>
+</td></tr></table>
+</div>
+{% endif %}
+{% endif %}
+{% set datas = nd|split(' ') %}
+{% set s = 999999999 %}
+{% if idcmt == 1 and datas|length > s %}
+{% set total = datas|length-1 %}
+{% set page=total//s %}
+{% if total//s != total/s %}
+{% set page=total//s+1 %}
+{% endif %}
+{% set ps=get_get('bv')|default(1) %}
+{% if ps matches '/[a-zA-z]|%/' or p<1 %}
+{% set ps=1 %}
+{% endif %}
+{% if ps>page %}
+{% set ps=page %}
+{% endif %}
+{% set st=ps*s-s %}
+{% set at=(st+s) %}
+{% if at>total %}
+{% set at=total %}
+{% endif %}
+<div class="list1">{% for i in st..at %}{{bbcode(datas[i])}}{% if loop.first == false %} {% endif %}{% endfor %}
+{% elseif ten %}
+<div class="{% if login and get('user_'~login,'css') == 'mobile' %}list-f2{% else %}list1{% endif %}">
+{% if login and get('user_'~login,'css') == 'mobile' %}<div><font color="gray" style="font-size: 12px"><table cellpadding="0" cellspacing="0" width="100%"><tr><td><i class="fa fa-clock-o"></i> {{ago(time)}}</td><td align="right"><a href="#post{{idcmt}}" title="Link to post">#<b>{{i}}</b></a></td></tr></table></font></div>{% endif %}
+{% if get('user_'~ten,'block') == 'yes' %}<font color="gray">nội dung bị ẩn</font>{% else %}{{bbcode(nd)}}{% endif %}
+{% endif %}
+<br/>
+{% if demlike >= 1 %}<div class="demthank"><button class="button_like"><i class="fa fa-heart"></i> {{demlike}}</button> {% if demlike == 1 %}<a href="/account/{{nicklike[0]|trim}}">{{account(nicklike[0]|trim)}}</a>{% elseif demlike == 2 %}<a href="/account/{{nicklike[0]|trim}}">{{account(nicklike[0]|trim)}}</a> và <a href="/account/{{nicklike[1]|trim}}">{{account(nicklike[1]|trim)}}</a>{% else %}<a href="/account/{{nicklike[0]|trim}}">{{account(nicklike[0]|trim)}}</a> , <a href="/account/{{nicklike[1]|trim}}">{{account(nicklike[1]|trim)}}</a> và <a href="">{{demlike-2}} người khác</a>{% endif %} thích điều này</div>{% endif %}
+<div class="chuky">{{bbcode(status|default('I L0v3 viỆt Nam'))}}</div>
+{% if login %}<table cellpadding="0" cellspacing="0" width="100%" class="sub"><tr>{% if login and get('user_'~login,'nick') != get('user_'~ten,'nick') %}<td align="left"><a href="?quote={{idcmt}}{% if p %}&p={{p}}{% endif %}" id="nutlike">Quote</a> <a href="?like={{idcmt}}{% if p %}&p={{p}}{% endif %}" id="nutlike">Like</a></td>{% endif %}{% if login == ten or get('user_'~login,'level') == 'right9s' %}<td align="right"><a href="?edit={{idcmt}}{% if p > 1 %}&p={{p}}{% endif %}" id="nutlike">Edit</a> {% if idcmt != 1 %}<a href="?delete={{idcmt}}{% if p > 1 %}&p={{p}}{% endif %}" id="nutlike">Delete</a>{% endif %}{% endif %}</td></tr></table>{% endif %}</div>
+{% if idcmt == 1 and datas|length > s %}
+{{paging('forum/'~url~'/'~rwurl(get('forum_'~url~'_info','ten'))~'.html?bv',ps,page)}}
+{% endif %}
+{% endif %}
+</div>
+{% endfor %}
+{% endmacro %}
+{% macro form(url) %}
+{% from 'func.twig' import login,get %}
+{% set login = login()|trim %}
+{% set block = get('forum_'~url~'_info','block') %}
+{% if login and get('user_'~login,'css') == 'mobile' %}<br/>{% endif %}
+<div class="mainblok">
+<div class="phdr">Bình luận</div>
+{% if login %}
+{% if block != 'yes' and get('user_'~login,'block') != 'yes' %}
+<div class="note"><b>Chú ý:</b> Viết tiếng Việt có dấu để tôn trọng người đọc và đừng quên bấm nút Like để ủng hộ người đăng bài nhé!</div>
+<div class="list1"><form action="" method="post"><textarea name="nd" rows="8"></textarea><br/><input type="submit" name="submit" value="Viết" style="width: 107px; cursor: pointer;"> </form></div>
+{% else %}
+<div class="rmenu" align="center">Bạn không thể bình luận</div>
+{% endif %}
+{% else %}
+<div class="rmenu"><font color="red">Vui lòng đăng nhập để tham gia bình luận!</font></div>
+{% endif %}
+</div>
+{% endmacro %}
+{% macro vote(url) %}
+{% from 'func.twig' import login,up,add,get,level %}
+{% set login = login()|trim %}
+{% set level = get('user_'~login,'level')|trim %}
+{% set vote = get('forum_'~url~'_info','vote')|trim %}
+{% set nick = get('forum_'~url~'_info','first')|trim %}
+{% set data %}{% for i in 1..vote %}{{get('forum_'~url~'_vote_'~i|trim)|replace({" ":""})}}{% endfor %}{% endset %}
+{% set data = data|split('@') %}
+{% set total = data|length-1 %}
+{% set vurl = get_get('rate')|default(0) %}
+{% set namevote = get('forum_'~url~'_info','vote_name')|trim %}
+{% if vote > 0 %}
+{% if vurl or login in data or login == nick %}
+<div class="mainblok">
+<div class="list1">
+<h5>{{namevote}}</h5>
+<small>
+{% for i in 1..vote %}
+{% set opt = get('forum_'~url~'_info','vote_'~i)|trim %}
+{% set demvote = get('forum_'~url~'_vote_'~i|trim)|split('@')|length-1 %}
+{% set pt = ((demvote*100)/total)|round %}
+{% if pt <= '25' %}
+{% set bg = '1' %}
+{% elseif pt <= '50' %}
+{% set bg = '2' %}
+{% elseif pt <= '75' %}
+{% set bg = '3' %}
+{% else %}
+{% set bg = '4' %}
+{% endif %}
+<div>{{opt}} [{{demvote}}]</div>
+<img src="http://ovigame.tk/forum/vote_img.php?img={{pt}}">
+{% endfor %}
+</small>
+</div>
+<div class="list3">Lượt bình chọn: {{total}}</div>
+{% else %}
+<div class="gmenu"><h5>{{namevote}}</h5><form action ="" method="get">
+{% for i in 1..vote %}
+{% set opt = get('forum_'~url~'_info','vote_'~i)|trim %}
+<p><input type="radio" value="{{i}}" name="vote" />{{opt}}</p>
+{% endfor %}
+<input type="submit" value="Bình chọn"></form><a href="?rate=ok"><button>Xem kết quả</button></a></div>
+</div>
+{% endif %}
+{% endif %}
+{% endmacro %}

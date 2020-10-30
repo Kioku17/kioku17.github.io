@@ -1,0 +1,185 @@
+{% block head %}
+{% set cms = get_data('cms_setting')[0].data|json_decode %}
+{% from 'func.twig' import login,up,get,add,level,account %}
+{% from 'func_show_fr.twig' import forum_cmtn %}
+{% set login = login()|trim %}
+{% set user = get_data('user_'~login)[0].data|json_decode %}
+{% set url=get_uri_segments() %}
+{# online tổng #}
+{%if not get_data('online_total')%}{%set save=save_data('online_total','@')%}{%endif%}{%set onlinee=get_data('online_total').0.data%}{%if (now|date('U')-onlinee|split('@')[onlinee|split('@')|length-2]|split('_').1)>300%}{%set sol=onlinee|split('@')[onlinee|split('@')|length-2]%}{%endif%}{{update_data_by_id('online_total',get_data('online_total').0.id,('@'~ip()~'_'~now|date('U'))~onlinee|replace({('@'~ip()~'_'~onlinee|split('@'~ip()~'_').1|split('@').0~'@'):'@'})|replace({('@'~sol~'@'):'@'}))}}
+{# kết thúc #}
+{% set mail = get('new_mail_'~login)|split('@') %}
+{% set totalmail = mail|length-1 %}
+{% set thongbao = get('tb_chua_xem_'~login)|split('@') %}
+{% set totaltb = thongbao|length-1 %}
+{% set myalbum = get('album_'~login)|split('@') %}
+{% set myimg = myalbum|length-1 %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+ <meta http-equiv="X-UA-Compatible" content="IE=edge">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<meta name="HandheldFriendly" content="true">
+<meta name="MobileOptimized" content="width">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta name="Generator" content="Server Wap4, http://{{cms.url}}">
+<meta name="google-site-verification" content="RuHbPIyK0zKlghmT0RCzIg5OcelNR6fu24FNy43gPAk" />
+<meta name="keywords" content="{{cms.keys}}">
+<meta name="description" content="{{cms.desc}}">
+<meta name="og:description" content="{{cms.keys}}">
+<meta property="og:image" content="http://{{cms.url}}{{cms.img}}" />
+<link rel="dns-prefetch" href="https://i.imgur.com">
+<link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+<link rel="dns-prefetch" href="https://ajax.googleapis.com">
+<link rel="dns-prefetch" href="http://netdna.bootstrapcdn.com">
+<title>
+{{title|default(cms.title)}} | BlogBB
+</title>
+<meta name="title" content="{{title|default(cms.title)}} | BlogBB" />
+<meta name="copyright" content="Copyright &copy;2018 BlogBB" />
+<link rel="shortcut icon" href="http://{{cms.url}}{{cms.favicon}}">
+<meta name="robots" content="noodp,index,follow" />
+<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" media="all,handheld"/>
+<link type="text/css" rel="stylesheet" href="{{dir.css}}/{% if login %}{{user.css|default('default')}}{% else %}{{cms.css}}{% endif %}.css" media="all,handheld"/>
+<link type="text/css" rel="stylesheet" href="{{dir.css}}/balloon.css" media="all,handheld"/>
+ <script> (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','https://www.google-analytics.com/analytics.js','ga'); ga('create', 'UA-105337981-1', 'auto'); ga('send', 'pageview'); </script>
+</head>
+{% if login and user.css == 'mobile' %}
+<body>
+{% else %}
+<body style="max-width:800px;margin: 2px auto;">
+<div class="body">
+{% endif %}
+{% if login and user.css == 'mobile' %}
+<div class="header">
+<a href="http://{{cms.url}}/main.php"><i style="padding: 10px;" class="fa fa-home fa-2x"></i> M.BlogBB.GQ</a>
+{% else %}
+<div class="mainblok">
+<div class="lg"> <a href="http://{{cms.url}}/main.php"><span><i><b class="vang"><font color="#099">M</font>.<font color="blue">BlogBB</font>.<font color="orange">GQ</font></b></i></span></a></div>
+{% endif %}
+{% if login %}
+{{add('user_'~login,'on','now'|date('U', 'Asia/Ho_Chi_Minh'))}}
+{{up('show_online',login,'up')}}
+{% if login and user.css == 'mobile' %}
+<script type="text/javascript">function toggle(){var ele=document.getElementById("dropdown-toggle");if(ele.style.display=="block"){ele.style.display = "none";}else{ele.style.display = "block";}}</script><a style="float: right !important;margin-right: 15px;padding-top: 15px;padding-bottom: 15px;" href="javascript:toggle();"> <img src="{{user.avt}}" width="20" height="20" style="border:1px solid gray;" alt="{{user.id}}"> {{account(login)}} <b class="fa fa-angle-down"></b></a><span class="dropdown-toggle" id="dropdown-toggle"><li><a href="#taisan"><b>{{user.xu|trim}}</b> Xu</a></li><li><a href="/account"> Cá nhân</a></li><li>{% if totaltb >= '1' %}<a href="/users/thongbao.php?act=chua_xem">  <b>Thông báo <span class="badge" style="background-color:red;color:white;font-weight:bold">{{totaltb}}</span></b></a>{% else %}<a href="/users/thongbao.php"> Thông báo</a>{% endif %}</li><li><a href="/games">Khu giải trí</a></li><li><a href="/mini">Tiện ích</a></li><li><a href="/album/{{login}}">Album ({{myimg|default(0)}})</a></li>{% if get('user_'~login,'level') == 'right9s' %}<li><a href="/panel/cms"><span style="font-weight:bold; color:red;">Admin Panel</span></a></li>{% endif %}<li><a href="/exit.php">Thoát</a></li></span></div>
+<div class="main">
+    <a id="top">&nbsp;</a>
+{{forum_cmtn()}}
+{% else %}
+<div class="newsx">
+<a href="/account"><b>User CP</b></a> | {% if totaltb >= '1' %}<a href="/users/thongbao.php?act=chua_xem"><b>Thông báo <span class="badge" style="background-color:red;color:white;font-weight:bold">{{totaltb}}</span></b></a>{% else %}<a href="/users/thongbao.php"><b>Thông báo</b></a>{% endif %} | <a href="/exit.php"><b>Thoát</b></a> {% if user.level == 'right9s' %}| <a href="/panel/cms"><span style="font-weight:bold; color:red;">Admin Panel</span></a>{% endif %}
+<hr/>
+<table style="width:100%;cellpadding:0;cellspacing:0;">
+<tr>
+<td style="width:60px">
+<img src="{{user.avt}}" style="border:1px solid #5dbef7;width:50px;height:50px" alt="avatar" />
+</td><td>
+{{account(login)}}
+<br/>Bài viết: <b>{{user.cmt}}</b>
+<br/>Điểm tín nhiệm: <b>{{user.tinnhiem|default(0)}}</b>
+<br/>Tài sản: <b>{{user.xu|trim}}</b>
+<br/>Lượt thích: <b>{{user.like}}</b>
+<br/>Thông: <b>{{user.da_thong|default(0)}}</b> - Bị thông: <b>{{user.bi_thong|default(0)}}</b>
+</td></tr></table>
+<hr/>
+<a href="/album/{{login}}"><span style="font-weight:bold; color:green;">Ảnh của tôi ({{myimg|default(0)}})</span></a> | <a href="/guild"><span style="font-weight:bold; color:blue;">Hội nhóm</span></a> | 
+<a href="/games"><span style="font-weight:bold; color:darkviolet;">Khu giải trí</span></a>
+</div>
+{% endif %}
+{% if totalmail > '1' %}
+<div class="rmenu"><img src="/images/mail-inbox.png"> Bạn có <b>{{totalmail}}</b> tin nhắn mới. <a href="/messenge" >Xem danh sách >> </a></div>{% elseif totalmail == '1' %}<div class="rmenu"><img src="/images/mail-inbox.png"> Bạn có <b>1</b> tin nhắn mới. <a href="/messenge/{{mail[0]}}">Đọc >> </a></div>{% endif %}
+{% else %}
+<div class="list1">
+<form action="/login.php" method="post"><input type="text" name="user" value="" maxlength="50" size="5" class="name" placeholder="Tài khoản" autofocus> <input type="password" name="pass" maxlength="50" size="5" class="pass" placeholder="Mật khẩu" autofocus><input type="submit" value="Đăng nhập" /></form>
+</div><div class="list1"><a rel="nofollow" href="http://{{cms.url}}/login.php" title="login"><b>Đăng nhập</b></a> &#124; <a rel="nofollow" href="http://{{cms.url}}/registration.php?act=faq" title="registration"><span style="color:red"><b>Đăng ký</b></span></a> &#124; <a rel="nofollow" href="http://{{cms.url}}/users?act=skl.php" title="Quên Mật Khẩu">Quên Mật Khẩu?</a></div>
+{% endif %}
+{% if login and user.css == 'mobile' %}<div class="maintxt">{% else %}</div>{% endif %}
+{% endblock %}
+{% block end %}
+{% set cms = get_data('cms_setting')[0].data|json_decode %}
+{% from 'func.twig' import get,login %}
+{% set login = login()|trim %}
+{% set user = get_data('user_'~login)[0].data|json_decode %}
+{% set thoigian %}{% set thu={'Monday':'T.2','Tuesday':'T.3','Wednesday':'T.4','Thursday':'T.5','Friday':'T.6','Saturday':'T.7','Sunday':'CN'} %}
+{{thu[time|date('l','Asia/Ho_Chi_Minh')]}}, {{time|date("d/m/Y, H:i:s", "Asia/Ho_Chi_Minh")}}{% endset %}
+{% if login and user.css == 'mobile' %}
+</div></div>
+<div class="ftm" style="text-align:left">Mobile's Theme Version 1.5</div>
+<div><br/><center><b>&copy;2018 M.BlogBB.GQ</b></center></div>
+{% else %}
+<div style="clear:both"></div>
+<div class="titend"><a href="http://{{cms.url}}"><b><font color="white"><i class="fa fa-home"></i> Trang Chủ</font></b></a><span style="float:right"><a href="http://{{cms.url}}/sitemap.xml"><font color="white"><i class="fa fa-sitemap"></i> Sitemap</font></a> - <a href="http://{{cms.url}}/threads/11/faq-noi-quy-dien-dan-m-blogbb-gq.html"><font color="white"><i class="fa fa-shield"></i> Nội quy</font></a></span></div>
+   <div class="list1" style="text-align: center;">
+    <form action="/search" method="get">
+                <input type="text" name="id" value="" placeholder="Nhập từ khoá..." /><br /><input type="submit" value="Tìm Kiếm" />
+    </form>
+</div>
+    <div class="list1"><table width="100%" cellpadding="0" cellspacing="0"><tbody><tr><td width="auto" style="text-align: left;">{{thoigian}}</td><td width="auto" style="float: right;"><i class="fa fa-wordpress"></i> <a href="http://blogbb.gq"><span style="color: red;">BlogBB</span></a></td></tr></tbody></table></div>
+{% endif %}
+{% include 'map' %}
+{% if login %}
+<script type="text/javascript" src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+{#<script src="{{dir.js}}/turbo.js"></script>
+<script>
+$(document).ready(pageLoadTransition);
+$(document).on('page:load', pageLoadTransition);
+</script>#}
+<script>
+// Tự làm mới 
+	setInterval(function() {
+		$('#reset').html('<i class="fa fa-refresh fa-spin" aria-hidden="true"></i> Loading...');
+$.get("chat.php", function(data){ 
+$("#result").html(data); 
+});
+$('#thongke').load('thongkeonl.php');
+	}, 5000);
+function load_ajax(){ 
+$.ajax({ 
+url : "chat.php", 
+type : "post", 
+dataType:"text", 
+data : { 
+msg : $("#msg").val()
+}, 
+beforeSend:function(){ 
+$('#clickme').val('Đang gửi...'); 
+}, 
+success : function (data){ 
+$("#result").html(data); 
+$('#clickme').val('Đã gửi!!'); 
+$("#msg").val(''); 
+}
+}); 
+} 
+$.get("chat.php", function(data){ 
+$("#result").html(data); 
+});       
+</script>
+{# {% else %}
+<link type="text/css" rel="stylesheet" href="{{dir.css}}/video.css" media="all,handheld"/>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script> #}
+{% endif %}
+{% if login and user.css == 'mobile' %}
+{% include 'chuong_mail' %}
+{% else %}
+<script type="text/javascript" src="http://{{cms.url}}/js/responsive.js">
+{% endif %}
+</div>
+</body>
+</html>
+{% endblock %}
+{% block share %}
+{% from 'func.twig' import get %}
+{% set url = get_uri_segments() %}
+<div class="phdr">Chia sẻ</div>
+<div class="list1">
+Link: <br />
+<input type="text" value="{{current_url}}">
+<br />
+Bbcode: <br />
+<input type="text" value="[url={{current_url}}]{{get('forum_'~url[1]~'_info','ten')}}[/url]">
+</div>
+{% endblock %}
+{% block link %}{% from 'func.twig' import get %}http://{{get('cms_setting','url')}}{% endblock %}

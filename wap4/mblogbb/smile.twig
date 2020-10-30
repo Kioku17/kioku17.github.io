@@ -1,0 +1,11 @@
+ {% macro smile(msg) %}
+{% set smile=':) :( :D :P :v :pirat: :check: :phanno: :zuivl: :love: :wow: :haha: :buon: :thich: :e1: :e10: :e11: :e12: :e13: :e14: :e15: :e16: :e17: :e18: :e19: :e2: :e20: :e21: :e22: :e23: :e24: :e25: :e26: :e27: :e3: :e4: :e5: :e6: :e7: :e8: :e9: :O_o: :alien: :barefoot: :biggrin: :cautious: :coffee: :confused: :cool: :cry: :devilish: :eek: :frown: :geek: :giggle: :inlove: :laugh: :mad: :ninja: :notworthy: :poop: :redface: :roflmao: :rolleyes: :sick: :sleep: :smile: :sneaky: :peechless: :thumbsdown: :thumbsup: :tongue: :unsure: :whistling: :wink: :x3: :baby1: :baby2: :baby3: :baby4: :baby5: :baby6: :baby7: :baby8: :baby9: :baby10: :baby12: :baby13: :baby14: :baby15: :baby16: :baby17: :baby18: :baby19: :baby20: :baby21: :baby22: :baby23: :baby24: :baby25: :baby26: :baby27: :baby28: :baby29: :baby30: :baby31: :baby32: :baby33: :baby34: :baby35: :baby36: :baby37: :baby38: :baby39: :baby11: :baby40: :baby41: :baby42: :baby43: :baby44: :baby45: :baby46: :baby47: :baby48: :baby49: :baby50: :baby52: :baby52: :baby53: :baby54: :baby55: :baby56: :baby57: :baby58: :buonngu: :choang: :chay: :hh01: :hh02: :hh03: :hh04: :hh05: :hh06: :hh07: :hh08: :hh09: :hh10: :hh11: :hh12: :hh13: :hh14: :hh15: :hh16: :hh17: :hh18: :hh19: :hh20: :hh21: :ym: :yaoming: :troll: :lol: :2lol: :fu: :fa: :clgt: :yao: :flags :rip: :tb: :loa:'|split(' ') %}
+{% for smile in smile %}
+{% set img=smile|replace({':': ""}) %}
+{% set img %}
+<img src="/images/{{img|replace({')':'v1','(':'v2'})}}.png" alt="{{img}}"/>
+{% endset %}
+{% set msg=msg|replace({(smile): (img)}) %}
+{% endfor %}
+{{msg|raw}} 
+ {% endmacro %}

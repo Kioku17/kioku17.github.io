@@ -1,0 +1,8 @@
+{% set title = 'Bảng Mã Màu' %}
+{% use '_blocks' %}
+{{block('head')}}
+<div class="mainblok">
+<div class="phdr"><b>Bảng mã màu</b></div>
+<style>.demo{padding:25px;font-size:18px;color:white;text-align:center}</style><div class="demo" style="background:#F44336">RED<br />#F44336</div><div class="demo" style="background:#E91E63">PINK<br />#E91E63</div><div class="demo" style="background:#9C27B0">PURPLE<br />#9C27B0</div><div class="demo" style="background:#673AB7">DEEP PURPLE<br />#673AB7</div><div class="demo" style="background:#3F51B5">INDIGO<br />#3F51B5</div><div class="demo" style="background:#2196F3">BLUE<br />#2196F3</div><div class="demo" style="background:#03A9F4">LIGHT BLUE<br />#03A9F4</div><div class="demo" style="background:#00BCD4">CYAN<br />#00BCD4</div><div class="demo" style="background:#009688">TEAL<br />#009688</div><div class="demo" style="background:#4CAF50">GREEN<br />#4CAF50</div><div class="demo" style="background:#8BC34A">LIGHT GREEN<br />#8BC34A</div><div class="demo" style="background:#CDDC39">LIME<br />#CDDC39</div><div class="demo" style="background:#FFEB3B">YELLOW<br />#FFEB3B</div><div class="demo" style="background:#FFC107">AMBER<br />#FFC107</div><div class="demo" style="background:#FF9800">ORANGE<br />#FF9800</div><div class="demo" style="background:#FF5722">DEEP ORANGE<br />#FF5722</div><div class="demo" style="background:#607D8B">BLUE GRAY<br />#607D8B</div><div class="demo" style="background:#795548">BROWN<br/>#795548</div><div class="demo" style="background:#9E9E9E">GRAY<br/>#9E9E9E</div>
+</div>
+{{block('end')}}

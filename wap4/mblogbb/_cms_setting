@@ -1,0 +1,44 @@
+{% from 'func.twig' import get,add,up,del,login %}
+{% set login = login()|trim %}
+{% set user = 'user_'~login %}
+{% set rights = get(user,'level') %}
+{% use '_blocks' %}
+{% set title = 'Quản lý mã nguồn Forum' %}
+{% if rights == 'right9s' %}
+<div class="phdr"><b>{{title}}</b></div>
+<form action="" method="post">
+<div class="list1">Domain (tên miền):<br/><input type="text" name="url" value="{{get('cms_setting','url')}}"></div>
+<div class="list1">Title:<br/><input type="text" name="title" value="{{get('cms_setting','title')}}"></div>
+<div class="list1">Description:<br/><input type="text" name="desc" value="{{get('cms_setting','desc')}}"></div>
+<div class="list1">Keywords:<br/><input type="text"
+ name="keys" value="{{get('cms_setting','keys')}}"></div>
+<div class="list1">Style (Vd: default, mobile...): <br/><input type="text" name="css" value="{{get('cms_setting','css')}}"></div>
+<div class="list1">Avatar:<br/><input type="img" name="img" value="{{get('cms_setting','img')}}"></div>
+<div class="list1">Favicon:<br/><input type="text" name="favicon" value="{{get('cms_setting','favicon')}}"></div>
+<div class="list1">Phong cách phòng chat:<br/><input type="number" name="chatbox" value="{{get('cms_setting','chatbox')}}"><br/><b>1</b> -> Autoload<br/><b>2</b> -> Reload</div>
+<div class="menu"><input type="submit" id="nutlike" value="Thay đổi"/></div></form>
+{% if request_method()|lower=="post" %}
+{% if get_data_count('cms_setting') == '0' %}
+{% set status=save_data('cms_setting',{"title":get_post('title'),"desc":get_post('desc'),"keys":get_post('keys'),"url":get_post('url'),"img":get_post('img'),"favicon":get_post('favicon'),"css":get_post('css'),'chatbox':get_post('chatbox')}|json_encode) %}
+{% else %}
+{% set status %}
+{% if get('cms_setting','title') != get_post('title') %}{{ add('cms_setting','title',get_post('title')) }}{% endif %}
+{% if get('cms_setting','desc') != get_post('desc') %}{{ add('cms_setting','desc',get_post('desc')) }}{% endif %}
+{% if get('cms_setting','keys') != get_post('keys') %}{{ add('cms_setting','keys',get_post('keys')) }}{% endif %}
+{% if get('cms_setting','url') != get_post('url') %}{{ add('cms_setting','url',get_post('url')) }}{% endif %}
+{% if get('cms_setting','img') != get_post('img') %}{{ add('cms_setting','img',get_post('img')) }}{% endif %}
+{% if get('cms_setting','favicon') != get_post('favicon') %}{{ add('cms_setting','favicon',get_post('favicon')) }}{% endif %}
+{% if get('cms_setting','css') != get_post('css') %}{{ add('cms_setting','css',get_post('css')) }}{% endif %}
+{% if get('cms_setting','chatbox') != get_post('chatbox') %}{{ add('cms_setting','chatbox',get_post('chatbox')) }}{% endif %}
+{% endset %}
+{% endif %}
+{{status}} <div class="note">Thay đổi thành công!</div> <meta http-equiv="refresh" content="1;http://{{get('cms_setting','url')}}/panel/cms">
+{% endif %}
+<div class="phdr"><b>Cấu trúc diễn đàn</b></div>
+<div class="list1"><img src="/images/next.png"> <a href="/panel">Quản lý chuyên mục</a></div>
+<div class="list1"><img src="/images/next.png"> <a href="/news?panel=ok">Quản lý tin tức</a></div>
+<div class="list1"><img src="/images/next.png"> <a href="/users">Danh sách thành viên</a></div>
+<div class="list1"><img src="/images/next.png"> <a href="/panel/register">Tạo tài khoản thành viên</a></div>
+{% else %}
+<div class="rmenu">Tính hack ak, mơ đi em ^_^# !</div>
+{% endif %}

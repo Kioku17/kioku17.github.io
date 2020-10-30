@@ -1,0 +1,112 @@
+{% from 'func.twig' import login %}
+{% set login = login()|trim %}
+{% set game = get_get('game') %}
+{% set tool = get_get('tool') %}
+{% set mh = get_post('mh') %}
+{% set height = get_post('height') %}
+{% set weight = get_post('weight') %}
+{% set nhanvat = get_post('nv') %}
+{% if game == 'avatar' %}
+{% set title = 'Lấy ảnh nhân vật Avatar' %}
+{% elseif game == 'ninjaschool' %}
+{% set title = 'Lấy ảnh nhân vật Ninja School' %}
+{% elseif tool == 'chupanh' %}
+{% set title = 'Chụp ảnh màn hình wap/web online' %}
+{% endif %}
+{% use '_blocks' %}
+{{block('head')}}
+{% if game or tool %}
+<div class="mainblok">
+{% if tool == 'chupanh' %}
+<div class="phdr"><b>Chụp màn hình Wap/Web »</b></div>
+<div class="list1">
+{% if request_method()|lower == 'post' %}
+Ảnh chụp màn hình của web <b>{{mh}}</b>
+<br />
+<center><img src="http://mini.s-shot.ru/{{weight}}x{{height}}/{{weight}}/png/?{{mh}}" alt="{{mh}}"/><br />[<a rel="nofollow" href="http://mini.s-shot.ru/{{weight}}x{{height}}/{{weight}}/png/?{{mh}}"><b><font color="blue">Tải về máy {{weight}}x{{height}}</font></b></a>]</center>
+</div>
+<div class="list1">Link ảnh:<br/>
+<textarea row="2">http://mini.s-shot.ru/{{weight}}x{{height}}/{{weight}}/png/?{{mh}}</textarea><br/>BBCODE:<br/>
+<textarea row="2">[img]http://mini.s-shot.ru/{{weight}}x{{height}}/{{weight}}/png/?{{mh}}[/img]</textarea>
+{% else %}
+<form action="" method="post">
+<i><h2>Tìm ảnh màn hình wap/web</h2></i>
+<br />
+URL Web (chứa cả <i>http hoặc</i> <i>https</i>):
+<br />
+<input type="text"name="mh" value="http://" size="15" />
+<br />
+Chiều rộng:
+<br />
+<input type="text"name="weight" value="1200" size="15" />
+<br />
+Chiều dài:
+<br />
+<input type="text"name="height" value="1500" size="15" />
+<br />
+<input type="submit" value="Chụp ảnh"></form>
+{% endif %}
+</div>
+{% endif %}
+{% if game == 'avatar' %}
+<div class="phdr"><b>Lấy ảnh nhân vật game Avatar »</b></div>
+<div class="list1">
+{% if request_method()|lower == 'post' %}
+Ảnh trong game Avatar của nhân vật <b>{{nhanvat}}</b>
+<br />
+<img src="http://27.0.14.78/services/avatar/image2/{{nhanvat}}.gif" alt="{{nhanvat}}"/><br /><a rel="nofollow" href="http://27.0.14.78/services/avatar/image2/{{nhanvat}}.gif"><b><font color="red">[Tải về máy]</font></b></a>
+{% else %}
+<form action="" method="post">
+<i><h2>Lấy ảnh nhân vật game Avatar v2.x.x online</h2></i>
+<br />
+Nhập tên nhân vật: (Lưu ý: Nhập chính xác tên nhân vật trong game của bạn)
+<br />
+<input type="text"name="nv" value="twin2014" size="15" />
+<br />
+<input type="submit" value="Đồng ý"></form>
+{% endif %}
+</div>
+{% elseif game == 'ninjaschool' %}
+<div class="phdr"><b>Lấy ảnh nhân vật game Ninja School »</b></div>
+<div class="list1">
+{% if request_method()|lower == 'post' %}
+Ảnh trong game NSO của nhân vật <b>{{nhanvat}}</b>
+<br />
+<img src="http://27.0.14.78/services/ninja/image/{{nhanvat}}.gif" alt="{{nhanvat}}"/><br /><a rel="nofollow" href="http://27.0.14.78/services/ninja/image/{{nhanvat}}.gif"><b><font color="red">[Tải về máy]</font></b></a>
+{% else %}
+<form action="" method="post">
+<i><h2>Lấy ảnh nhân vật game Ninja School Online</h2></i>
+<br />
+Nhập tên nhân vật: (Lưu ý: Nhập chính xác tên nhân vật trong game của bạn)
+<br />
+<input type="text"name="nv" value="twin2014" size="15" />
+<br />
+<input type="submit" value="Đồng ý"></form>
+{% endif %}
+</div>
+{% endif %}
+</div>
+{% else %}
+<div class="mainblok">
+<div class="phdr"><b>Tiện ích</b></div>
+<div class="list1">» <a href="/cron"> Tool chạy <b>CronJob</b></a></div>
+<div class="list1">» <a href="/mini?game=avatar"> Lấy ảnh nhân vật game <b>Avatar</b></a></div>
+<div class="list1">» <a href="/mini?game=ninjaschool"> Lấy ảnh nhân vật game <b>Ninja School</b></a></div>
+<div class="list1">» <a href="/bank?act=rut-gon-link"> Rút gọn URL</a></div>
+<div class="list1">» <a href="/mini?tool=chupanh"> Chụp ảnh màn hình <b>wap/web</b></a></div>
+<div class="list1">» <a href="/lich.php"> Xem lịch <b>DD/MM/YY</b></a></div>
+<div class="list1">» <a href="/tu-vi-12-cung-hoang-dao.php"> Xem cung hoàng đạo</a></div>
+<div class="list1">» <a href="/zip.html"> Tool nén <b>Code</b> online</a></div>
+<div class="list1">» <a href="/color-code"> Bảng <b>mã nàu đẹp</b> - Design Website</a></div>
+<div class="list1">» <a href="/tieq-viet"> Công cụ chuyển đổi tiếng Việt -> tiếq Việt</a></div>
+<div class="list1">» <a href="/md5.php"> Tool mã hóa <b>MD5</b> online</a></div>
+</div>
+<div class="mainblok">
+<div class="phdr"><b>Công cụ toán học</b></div>
+<div class="list1">» <a href="/maytinh.php"> Máy tính phép toán !</a></div>
+<div class="list1">» <a href="/phuong-trinh-bac2-mot-an"> <b> Giải PT</b> bậc 2 ẩn x</a></div>
+<div class="list1">» <a href="/songuyento.php"> Kiểm tra số nguyên tố</a></div>
+<div class="list1">» <a href="/kiem-tra-thang.php"> Kiểm tra số ngày của tháng</a></div>
+</div>
+{% endif %}
+{{block('end')}}

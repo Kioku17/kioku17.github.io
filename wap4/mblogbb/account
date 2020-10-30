@@ -1,0 +1,300 @@
+{% use '_blocks' %}
+{% from 'func.twig' import rwurl,get,login,add,up,level,account %}
+{% import 'func.twig' as func %}
+{% from 'ip.history.php' import history %}
+{% set thongtin = get_get('thongtin') %}
+{% if login() %}
+{% set login=login()|trim %}
+{% endif %}
+{% set url=get_uri_segments() %}
+{% if url[2] == 'edit.php' and login %}
+{% set title = 'Hồ sơ | Cập nhật thông tin' %}
+{% elseif url[2] == 'ip.history.php' and login %}
+{% set title = 'Lịch sử IP đã truy cập' %}
+{% else %}
+{% set title = 'Hồ sơ' %}
+{% endif %}
+ {{ block( 'head' ) }}
+<div class="mainblok">
+ {% from 'time.twig' import  ago %}
+{% if not url[1] and not login or url[1] and get_data_count('user_'~rwurl(url[1])) == 0 %}
+<div class="rmenu">Tài khoản này không tồn tại.</div></div>
+{% else %}
+{% if login and not url[1] %}
+{% set user='user_'~login %}
+ {% set tk=login %}
+{% else %}
+{% set user='user_'~rwurl(url[1]) %}
+ {% set tk=rwurl(url[1]) %}
+{% endif %}
+{% set on = get(user,'on')|trim %}
+{% if login == tk and url[2] == 'edit.php' %}
+{% include 'edit.php' %}
+{% elseif login == tk and url[2] == 'ip.history.php' %}
+{{history()}}
+{% else %}
+{% set lv = get(user,'level') %}
+{% if login %}
+<div class="phdr"><b>Hồ sơ</b></div>
+{% if login == tk %}
+<div class="{% if login and get('user_'~login,'css') == 'mobile' %}rmenu{% else %}newsx{% endif %}"><a href="/account/{{tk}}/edit.php"><font color="violet">Chỉnh sửa</font></a></div>
+{% elseif login != tk and get('user_'~login,'level') == 'right9s' and tk != 'admin' %}
+<div class="newsx"><a href="/account/{{tk}}?thongtin=cpanel"><font color="green">Edit rights</font></a> | <a href="/panel/member/{{tk}}"><font color="orange">Band</font></a></div>
+{% endif %}
+{% set all = get(user,'cmt') %} 
+{%if (all >= '0') and (all <= '19')%} 
+{%set level,capbac='1',"Chưa nhập môn"%} 
+{%elseif (all >='20') and (all <= '49')%} 
+{%set level,capbac='2',"Lính mới"%} 
+{%elseif (all >= '50') and (all <= '99')%} 
+{%set level,capbac='3',"Tập sự trung cấp"%} 
+{%elseif (all >= '100') and (all <= '149')%} 
+{%set level,capbac='4',"Tập sự cao cấp"%} 
+{%elseif (all >= '150') and (all <= '199')%} 
+{%set level,capbac='5',"Tân binh"%} 
+{%elseif (all >= '200') and (all <= '249')%} 
+{%set level,capbac='6',"Chiến binh"%} 
+{%elseif (all >= '250') and (all <= '299')%} 
+{%set level,capbac='7',"Chiến binh cao cấp"%} 
+{%elseif (all >= '300') and (all <= '349')%} 
+{%set level,capbac='8',"Siêu nhân cấp 1"%} 
+{%elseif (all >= '350') and (all <= '399')%} 
+{%set level,capbac='9',"Siêu nhân cấp 2"%} 
+{%elseif (all >= '400') and (all <= '499')%} 
+{%set level,capbac='10',"Siêu nhân cấp 3"%} 
+{%elseif (all >= '500') and (all <= '699')%} 
+{%set level,capbac='11',"Bậc thầy"%} 
+{%elseif (all >= '700') and (all <= '999')%} 
+{%set level,capbac='12',"Bậc thầy cấp 2"%} 
+{%elseif (all >= '1000') and (all <= '1399')%} 
+{%set level,capbac='13',"Bậc thầy cấp 3"%} 
+{%elseif (all >= '1400') and (all <= '1799')%} 
+{%set level,capbac='14',"Cổ tích BlogBB"%} 
+{%elseif (all >= '1800') and (all <= '2299')%} 
+{%set level,capbac='15',"Cổ tích BlogBB cấp 2"%} 
+{%elseif (all >= '2300') and (all <= '2899')%} 
+{%set level,capbac='16',"Cổ tích BlogBB cấp 3"%} 
+{%elseif (all >= '2900') and (all <= '3699')%} 
+{%set level,capbac='17',"Tinh tú thần"%} 
+{%elseif (all >= '3700') and (all <= '4599')%} 
+{%set level,capbac='18',"Tinh tú thần cấp 2"%} 
+{%elseif (all >= '4600') and (all <= '5599')%} 
+{%set level,capbac='19',"Tinh tú thần cấp 3"%} 
+{%elseif (all >= '5600') and (all <= '6699')%} 
+{%set level,capbac='20',"Thần thoại sơ cấp"%} 
+{%elseif (all >= '6700') and (all <= '7899')%} 
+{%set level,capbac='21',"Thần thoại trung cấp"%} 
+{%elseif (all >= '7900') and (all <= '9199')%} 
+{%set level,capbac='22',"Thần thoại cao cấp"%} 
+{%elseif (all >= '9200') and (all <= '10599')%} 
+{%set level,capbac='23',"Anh hùng"%}
+{%elseif (all >= '10600')%} 
+{%set level,capbac='24',"Huyền thoại BlogBB"%}
+{%endif%}
+{% if login and get('user_'~login,'css') == 'mobile' %}
+<div><div class="abia"><img src="{{get(user,'abia')|default('/images/tym.png')}}" alt="" style="max-height: 200px;min-height: 200px;width:95px;min-width: 100%;max-width: 100%;" /><div class="abia2"><div class="abia3"><img src="{{get(user,'avt')}}" alt="" style="min-width: 100%" /></div></div></div><div style="clear: both;"><div style="padding: 1px 10px;background: #EEEEEE; min-height: 70px;border-bottom: 1px solid #CCCCCC;"><div style="overflow:hidden;clear:both; padding: 4px 10px;background:#ededed;color:#505050;z-index: 2;margin-left:100px;">{{account(tk)}} {% if on > ('now'|date('U')-300) %}<img src="/images/online.gif">{% else %}<img src="/images/offline.gif">{% endif %} <br /><img src="/images/{{get(user,'gt')}}.png" alt="" class="icon-inline"/> <b>{{level(get(user,'level'))}}</b><br /><img src="http://tanovigame.viwap.com/images/{{level}}.gif" alt="Level" /> <b>{{get(user,'cmt')|default(0)}}</b>&nbsp;&nbsp;<img src="/images/like.png" alt="Like" /> <b>{{get(user,'like')}}</b><br/> <img src="/images/balans.png" alt="Xu" /> <b>{{get(user,'xu')}}</b>&nbsp;&nbsp;<img src="/images/tinnhiem.png" alt="TN" /> <b>{{get(user,'tinnhiem')|default(0)}}
+</b></div></div></div></div>
+{% else %}
+<div class="user">
+<table style="cellpadding:0;cellspacing:0;"><tr><td style="text-align:center"><img src="{{get(user,'avt')}}" style="border:1px solid #5dbef7;width:50px;height:50px" alt="{{get(user,'nick')}}" />&#160;</td><td>{% if on > ('now'|date('U')-300) %}<img src="/images/online.gif">{% else %}<img src="/images/offline.gif">{% endif %} {% set icon = get(user,'icon') %}
+{% if icon %}<img src="/images/{{icon}}.png">{% endif %} <a href="/account/{{get(user,'nick')}}"><b itemprop="name" class="{{get(user,'level')}}">{{get(user,'nick')}}</b></a> <b><font color="black">ID: {{get(user,'id')}}</font></b>
+<br/><img src="/images/{{get(user,'gt')}}.png" alt="" class="icon-inline"/> <b itemprop="title">{{level(get(user,'level'))}}</b><br/><img src="http://tanovigame.viwap.com/images/{{level}}.gif" alt="Level" /> <b>{{get(user,'cmt')|default(0)}}</b>&nbsp;&nbsp;<img src="/images/like.png" alt="Like" /> <b>{{get(user,'like')}}</b><br/><img src="/images/balans.png" alt="Xu" /> <b>{{get(user,'xu')}}</b>&nbsp;&nbsp;<img src="/images/tinnhiem.png" alt="TN" /> <b>{{get(user,'tinnhiem')|default(0)}}
+</b></td></tr></table>
+{% if login == tk %}
+<div class="sub">
+<p>
+<font color="gray">Browser</font>: <small>{{ user_agent() }}</small><br/><font color="gray">IP</font> [<a><font color="gray">?</font></a>]: <a title="{{ip()}}"><small>{{ip()}}</small></a><font color="red">*</font><br/><a href="/account/{{tk}}/ip.history.php">Lịch sử IP truy cập</a>
+</p>
+</div>
+{% endif %}
+</div>
+{% endif %}
+{% if login == tk %}
+<div class="list1">
+Tài khoản: {{tk}}
+</div>
+{% endif %}
+{% if not thongtin %}
+<div class="list1">Họ tên: {{get(user,'fullname')|default('Chưa cập nhật')}}
+</div>
+<div class="list1">
+Ngày sinh:
+ {{get(user,'ns')|default('Chưa cập nhật')}}
+</div>
+<div class="list1">
+Giới tính: {% if get(user,'gt') == 'boy' %}Nam{% else %}Nữ{% endif %}
+</div>
+<div class="list1">
+Tham gia: {{ago(get(user,'reg')|trim)}}
+</div>
+ {% if on < ('now'|date('U')-300) %}
+<div class="list1">
+Hoạt động cuối: {{ago(on)}}
+</div>
+{% endif %}
+{% endif %}
+{% if login and login != tk %}
+<div class="list1"><a href="/messenge/{{tk}}">Gửi tin nhắn</a> | <a href="?thongtin=thongass">Thông Ass</a>{% if get('farm_id_'~tk,'sodat') >= '6' %} | <a href="/farm?u={{tk}}">Thăm nông trại</a>{% endif %}</div>
+{% if thongtin == 'thongass' and login != tk %}
+{% set name = tk %}
+{% set number = get_post('type') %}
+{% if number == '1' %}
+{% set number = '1' %}
+{% set dungcu = 'Dầu nhớt' %}
+{% set cout = '3' %}
+{% elseif number == '2' %}
+{% set number = '2' %}
+{% set dungcu= 'Comffo 1 lần xả' %}
+{% set cout = '10' %}
+{% elseif number== '3' %}
+{% set number = '3' %}
+{% set dungcu= 'Dầu Ăn Neptune' %}
+{% set cout = '20' %}
+{% elseif number== '4' %}
+{% set number = '4' %}
+{% set dungcu='Tay' %}
+{% set cout = '5' %}
+{% endif %}
+{% if request_method()|lower == "post" %}
+{% if get('user_'~login,'xu') < cout %}
+<div class="rmenu">Thiếu tiền má ơi</div>
+{% endif %}
+
+{% set rand = random(1..4) %}
+{% if rand == '1' %}
+{% set min = 'nhập viện vì trĩ :haha:' %}
+{% elseif rand == '2' %}
+{% set min = 'có thai ngay lập tức :phanno:' %}
+{% elseif rand == '3' %}
+{% set min = 'Ass bị nở hoa :yao:' %}
+{% elseif rand == '4' %}
+{% set min = 'không sao cả vì ass đã dính keo con chuột :ym:' %}
+{% endif %}
+
+{% if rand == '1' or rand == '2' or rand == '3' or rand == '4'%}
+<div class="chuky">Thông Thành Công ! Trở về trang chủ và xem kết quả đi nào :D</div>
+{{ add('user_'~login,'xu',get('user_'~login,'xu')|trim-cout) }}
+{{ add('user_'~login,'da_thong',get('user_'~login,'da_thong')|trim+1) }}
+{{ add('user_'~tk,'bi_thong',get('user_'~tk,'bi_thong')|trim+1) }}
+{% set comment = {"name":"bot","time":"now"|date('U'), "comment":"[b][red][TB][/red][/b] @"~login~" vừa thông @"~tk~" bằng "~dungcu~" đã khiến cho @"~tk~" "~min} %}
+{% set save = save_data( "chat", comment|json_encode ) %}
+{% else %}
+<div class="chuky">Thông Thành Công ! Trở về trang chủ và xem kết quả đi nào :D</div>
+{{ add('user_'~login,'xu',get('user_'~login,'xu')|trim-cout) }}
+{{ add('user_'~login,'da_thong',get('user_'~login,'da_thong')|trim+1) }}
+{{ add('user_'~tk,'bi_thong',get('user_'~tk,'bi_thong')|trim+1) }}
+{% set comment = {"name":"bot","time":"now"|date('U'), "comment":"[b][red][TB][/red][/b] "~get('user_'~login,'nick')~" vừa thông "~get('user_'~tk,'nick')~" bằng "~dungcu~" đã khiến cho "~get('user_'~tk,'nick')~" "~min} %}
+{% set save = save_data( "chat", comment|json_encode ) %}
+{% endif %}
+
+{% else %}
+<div class="list3"> Chào <b>{{get('user_'~login,'nick')}}</b>, thí chủ muốn thông <b>{% if get('user_'~tk,'gt') == 'boy' %}sư huynh{% else %}muội muội{% endif %}</b> bằng cách nào nhỉ? {% if get('user_'~tk,'gt') == 'boy' %}Sư huynh{% else %}Muội muội{% endif %} đây sẽ hỗ trợ hết mức có thể cho thí chủ :))<br/>
+<form action="" method="post">
+<select name="type">
+  <option value="1">Dầu nhớt [3 Xu]</option>
+  <option value="2">Comffo 1 lần xả [10 Xu]</option>
+  <option value="3">Dầu Ăn Neptune [20 Xu]</option>
+  <option value="4">Dùng Tay [5 Xu]</option>
+</select><br /><input type="submit" value="Thông" id="nutlike"></form>
+</div>
+{% endif %}
+{% endif %}
+
+{% if get('user_'~login,'level') == 'right9s' and thongtin == 'cpanel' and tk != 'admin' %}
+{% set rights = get_post('rights') %}
+{% set level = get('user_'~tk,'level') %}
+{% if request_method()|lower == 'post' %}
+{% if rights != level %}
+<div class="rmenu">Cập nhật thông tin quyền lợi cho <b>{{tk}}</b> thành công!</div>
+{% endif %}
+{% if rights %}
+{% if rights != level %}
+{{add('user_'~tk,'level',rights)}}
+{% endif %}
+{% endif %}
+{% else %}
+<form method="post" action="">
+<div class="list1">
+<b>Chỉnh sửa chức vụ:</b>
+<br />
+{% for i in 0..9 %}
+{% set ii = 'right'~i~'s' %}
+<input type="radio" name="rights" value="right{{i}}s" {% if level == 'right'~i~'s' %}checked="checked" {% endif %}/> <b>{% if i=='9' %}<span class="{{ii}}">Giám sát</span>{% elseif i=='8' %}<span class="{{ii}}">Quản lý</span>{% elseif i=='7' %}<span class="{{ii}}">SMod</span>{% elseif i=='6' %}<span class="{{ii}}">Mod</span>{% elseif i=='5' %}<span class="{{ii}}">Thần Thông Thái</span>{% elseif i=='4' %}<span class="{{ii}}">Hot Boy</span>{% elseif i=='3' %}<span class="{{ii}}">TMod</span>{% elseif i=='2' %}<span class="{{ii}}">Photoshop</span>{% elseif i=='1' %}<span class="{{ii}}">Hot Girl</span>{% else %}Thành viên{% endif %}</b> <br />
+{% endfor %}
+<input type="submit" value="ok luôn">
+</form>
+</div>
+{% endif %}
+{% endif %}
+{% elseif login and login == tk %}
+<div class="list1"><a href="/exit.php">Đăng xuất</a></div>
+{% endif %}
+</div>
+{# tường nhà #}
+{% if login == tk or login != tk %}
+<div class="mainblok">
+<div class="phdr"><b>Tường nhà</b></div>
+{% from 'paging.twig' import paging %}
+{% from 'bbcode.twig' import bbcode %}
+{% from 'bot' import bot %}
+{% set s = '<a href="/smile">[Smile]</a>' %}
+{% if get('user_'~login,'block') == 'yes' %}
+<div class="rmenu"> Tài khoản của bạn đã bị khóa, vui lòng liên hệ với BQT để tìm hiểu lý do và ân xá để lấy lại. BQT xin trân trọng thông báo!</div>
+{% else %}
+{% if login == tk %}
+{% set name = login %}
+{% elseif login != tk %}
+{% set name = tk %}
+{% endif %}
+{% set mem_info = get_data('user_'~name)[0].data|json_decode %}
+{% if get_data('wall_user_'~name)|length == 0 %}
+{% set create = save_data('wall_user_'~name, ' ') %}
+{% endif %}
+{% set total = get_data('wall_user_'~name)|last.data|split('-||-')|length-1 %}
+{% if request_method()|lower == "post" %}
+{% if login and get_post('msg') != NULL %}
+{% set comment = {"name" :login,"time":"now"|date('U'), "comment": get_post( 'msg' )|replace({'-||-':'-|||-'}) }|json_encode %}
+{% set save = update_data_by_id('wall_user_'~name, get_data('wall_user_'~name)|last.id, get_data('wall_user_'~name)|last.data ~ '-||-' ~ comment) %}
+{% if login != tk %}
+{% set n = login %}
+{% set z = tk %}
+{% if total|trim > 9 %}
+{{func.del_data('wall_user_'~name, 1)}}
+{% endif %}
+{% endif %}
+{% endif %}
+<script language="javascript" type="text/javascript">
+window.location.href="/account/{{name}}";
+</script> 
+{% endif %}
+<div class="list1">
+<form
+method="post" action="">
+<textarea type="text" name="msg" rows="3" placeholder="Nội dung bình luận..."></textarea><br />
+<input type="submit" value=" Viết " class="btn btn-primary"/>
+</form>
+</div>
+{% if total|trim < 1 or total|trim == 0 %}
+<div class="rmenu"> Chưa có ai viết lên tường của {{func.account(name)}}. Bạn hãy là người đầu tiên !</div>
+{% elseif total|trim == 1 %}
+<div class="list1">{{func.get_key('wall_user_'~name, 2, 'name', 'comment', 'time')}}</div>
+{% elseif total|trim > 9 %}
+{% for i in total..total-9 %}
+<div class="list1">{{func.get_key('wall_user_'~name, i+1, 'name', 'comment', 'time')}}</div>
+{% endfor %}
+{% else %}
+{% for i in total..1 %}
+<div class="list1">{{func.get_key('wall_user_'~name, i+1, 'name', 'comment', 'time')}}</div>
+{% endfor %}
+
+{% endif %}
+{% endif %}
+</div>
+{% endif %}
+{# kết thúc #}
+{% else %}
+<div class="rmenu">Vui lòng đăng nhập để sử dụng chức năng này!</div>
+{% endif %}
+{% endif %}
+{% endif %}
+{{block('end')}}

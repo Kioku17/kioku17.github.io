@@ -1,0 +1,20 @@
+{% from 'func.twig' import add,get,up,lever,history,timeon %}
+{% from 'time.twig' import ago %}
+<div class="phdr"><b><a href="/users">Thành viên</a> » Ai đang trực tuyến?</b></div>
+{% set dem = 'on' %}
+{% set data=[] %}{% for i in 1..100 %}{% set data=get_data('id_user',100,i)|merge(data) %}{% endfor %}
+{% set listxu %}{% for i in data %}{% set user = i.data %}{% set xu = get('user_'~user,dem)|trim|default(0) %}{{xu}}#{% endfor %}{% endset %}
+{% set listname %}{% for i in data %}{% set user = i.data %}{% set name = get('user_'~user,'nick')|trim %}{% set xu = get('user_'~user,dem)|trim|default(0) %}{{name}}#{{xu}}.{% endfor %}{% endset %}
+{% set listtop %}{% for i in listxu|split('#')|sort|reverse %}{% for top in listname|split('.') %}{% if '#'~i in top %}{{top}}.{% endif %}{% endfor %}{% endfor %}{% endset %}
+{% set list=[] %}{% for i in listtop|split('.') %}{% if i not in list %}{% set list=list|merge([i]) %}{% endif %}{% endfor %}
+{% for i in list|slice(0,10) %}
+{% set khanh = i|split('#') %}
+{% set lv = get('user_'~khanh[0],'lever')|trim %}
+{% set idfb = get('user_'~khanh[0],'idfb')|trim %}
+{% set history = get('user_'~khanh[0],'history')|trim %}
+{% set ip = get('user_'~khanh[0],'ip')|trim %}
+{% set agent = get('user_'~khanh[0],'agent')|trim %}
+{% if loop.last==false %}
+{% if khanh[1] > ('now'|date('U')-300) %}<div class="gmenu">{% else %}<div class="menu">{% endif %}<table cellpadding="0" cellspacing="0" width="100%"><tr valign="top"><td width="38"><img src="https://graph.facebook.com/{{idfb}}/picture?" width="32" height="32" alt="{{khanh[0]}}" /></td><td><div><a href="/profile/{{khanh[0]}}"><b class="user_{{lv}}">{{khanh[0]}}</b></a> {% if khanh[1] > ('now'|date('U')-300) %}<img src="http://hoitu.viwap.com/images/on.gif">{% else %}<img src="http://hoitu.viwap.com/images/off.gif">{% endif %} ({{get('user_'~idfb,'name')|default('Noname')}})</div><div>({{ago(khanh[1]|trim)|trim}}){% if ip and agent %} - {{history(history)}}<br/>{{agent}} - {{ip}}{% endif %}</div></td><td align="right"><div>{{lever(lv)}}</div></td></tr></table></div>
+{% endif %}
+{% endfor %}

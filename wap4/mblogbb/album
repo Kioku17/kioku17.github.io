@@ -1,0 +1,90 @@
+{% from 'func.twig' import add,login,up,get,del %}
+{% from 'time.twig' import ago %}
+{% from 'paging.twig' import paging %}
+{% from 'bbcode.twig' import bbcode %}
+{% from 'album' import album %}
+{% use('_blocks') %}
+{% set login = login()|trim %}
+{% set url=get_uri_segments() %}
+{% macro album() %}
+{% from 'func.twig' import add,login,up,get,del %}
+{% from 'time.twig' import ago %}
+{% from 'paging.twig' import paging %}
+{% from 'bbcode.twig' import bbcode %}
+{% set login = login()|trim %}
+{% set url=get_uri_segments() %}
+{% if url[0] == 'album'%}
+{% set per = '10' %}
+{% else %}
+{% set per = '1' %}
+{% endif %}
+{% if url[0] == 'album' and url[1] == login %}
+{% set album = get('album_'~login) %}
+{% else %}
+{% set album = get('album') %}
+{% endif %}
+{% set data = album|split('@') %}
+{% set total=data|length-1 %}
+{% set page_max=total//per %}
+{% if total//per != total/per %}
+{% set page_max=total//per+1 %}
+{% endif %}
+{% set p=get_get('p')|default(1) %}
+{% if p matches '/[a-zA-z]|%/' or p<1 %}
+{% set p=1 %}
+{% endif %}
+{% if p>page_max %}
+{% set p=page_max %}
+{% endif %}
+{% set st=p*per-per %}
+{% if total == '0' %}
+<div class="list1">Chưa có ảnh nào được upload!</div>
+{% else %}
+{% for t in data|slice(0,total)|slice(st,per) %}
+{% set timeup = t|split('_')[3]|trim %}
+{% set author = t|split('_')[2]|trim %}
+{% set linkimg = t|split('_')[1]|trim %}
+{% set img = t|split('_')[0]|trim %}
+<div class="list1">
+<a href="{{linkimg}}"><embed src="{{linkimg}}" style="border:1px solid gray;width:90px;height:100px"></a>
+<br/>
+<small><i class="gray">By <b>{{get('user_'~author,'nick')}}</b> {% if get_get('img') == linkimg %}- Upload time: {{ago(timeup)}}{% else %}({{ago(timeup)}}){% endif %}</i> {% if get_get('img') == linkimg %}<a href="?img"><input type="button" value="Hide"></a>{% else %}<a href="?img={{linkimg}}"><input type="button" value="Show"></a>{% endif %}</small>
+{% if get_get('img') == linkimg %}
+<br/>
+Link:<br/>
+<textarea>{{linkimg}}</textarea>
+BBcode:<br/>
+<textarea>[src]{{linkimg}}[/src]</textarea>
+{% endif %}
+</div>
+{% endfor %}
+{% endif %}
+{% if url[0] == 'album' and url[1] == login %}
+<div class="rmenu"><a href="/album">Quay lại</a></div>
+{% endif %}
+{% if url[0] == 'album' and not url[1] %}
+{{paging(url[0]~'?p',p,page_max)}}
+{% elseif url[0] == 'album' and url[1] == login %}
+{{paging('album/'~login~'?p',p,page_max)}}
+{% endif %}
+{% endmacro %}
+{% if url[0] == 'album' %}
+{% set title='Ảnh thành viên' %}
+{% set myalbum = get('album_'~login)|split('@') %}
+{% set myimg = myalbum|length-1 %}
+{{block('head')}}
+<div class="mainblok">
+<div class="phdr"><a href="/">Trang chủ</a> » <b>Upload Ảnh</b></div>
+<div class="news"><a href="/album/{{login}}"><b>Ảnh của tôi ({{myimg|default(0)}})</b></a> | <a href="/album.php">Upload</a></div>
+</div>
+{% endif %}
+<div class="mainblok">
+<div class="phdr"><b>Ảnh Thành Viên</b>{% if url[0] == 'album' and url[1] == login %} » <b>Ảnh của tôi</b>{% endif %}</div>
+{{album()}}
+{% if url[0] == 'album' and not url[1] %}
+{% set album = get('album')|split('@') %}
+{% set totalimg = album|length-1 %}
+<div class="phdr">Tổng số: {{totalimg|default(0)}}</div>
+{% endif %}
+</div>
+{% if url[0] == 'album' %}{{block('end')}}{% endif %}

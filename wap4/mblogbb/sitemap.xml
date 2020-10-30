@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+{% set data=get_data('sitemap')[0].data|json_decode %}{% set list=data.list %}{% set cpanel=get_data('cpanel')[0].data|json_decode %}{% if cpanel.sitemap>0 %} {% set list %}{% for i in 1..cpanel.sitemap %} {% set sad=get_data('sitemap'~i)[0].data|json_decode %}{{data.list}}{{sad.list}}{% endfor %}{% endset %}{% endif %}
+{% set list=list~'' %}
+{% set total=data.total-1 %} {% if cpanel.sitemap>0 %}{% set site1=get_data('sitemap'~cpanel.sitemap)[0].data|json_decode %} {% set total=150*cpanel.sitemap+site1.total-cpanel.sitemap-1 %} {% endif %}
+{% for i in 0..total %}{% set list1=list|split('_-_')[i] %}
+{% set sad %}<url>
+  <loc>{{list1|split('-_-')[0]}}</loc>
+  <changefreq>daily</changefreq>
+  <priority>{{list1|split('-_-')[2]}}</priority>
+</url>{% endset %}{{sad}}{% endfor %}
+</urlset>

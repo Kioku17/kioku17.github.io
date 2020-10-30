@@ -1,0 +1,134 @@
+{% from 'func.twig' import login,up,add,get,rwurl %}
+{% use '_blocks' %}
+{% set login = login()|trim %}
+{% from 'func_fr.twig' import breadcrumb,form,show_list,tags,ccm,vote %}
+{% from 'func_show_fr.twig' import ccm %}
+{% from 'time.twig' import ago %}
+{% from 'bbcode.twig' import bbcode %}
+{% from 'paging.twig' import paging %}
+{% use '_blocks' %}
+{% set url = get_uri_segments() %}
+{% set act = get_get('act') %}
+{% set edit = get_get('edit') %}
+{% set like = get_get('like') %}
+{% set quote = get_get('quote') %}
+{% set delete = get_get('delete') %}
+{% set rename = get_get('rename') %}
+{% set vote = get_get('vote') %}
+{% set ten = get('forum_'~url[1]~'_info','ten') %}
+{% set nd = get('forum_'~url[1]~'_1','nd') %}
+{% set view = get('forum_'~url[1]~'_info','view') %}
+{% set nicktop = get('forum_'~url[1]~'_info','first') %}
+{% set idbv = get('forum_'~url[1]~'_info','idbv') %}
+{% set id = get('forum_'~url[1]~'_info','id') %}
+{% set nameid = get('category_'~id,'ten') %}
+{% set ghim = get('forum_'~url[1]~'_info','ghim') %}
+{% set data = get('forum_'~url[1]~'_show')|split('@') %}
+{% set per = '10' %}
+{% set total = data|length-1 %}
+{% set page_max=total//per %}
+{% if total//per != total/per %}
+{% set page_max=total//per+1 %}
+{% endif %}
+{% set p=get_get('p')|default(1) %}
+{% if p matches '/[a-zA-z]|%/' or p<1 %}
+{% set p=1 %}
+{% endif %}
+{% if p>page_max %}
+{% set p=page_max %}
+{% endif %}
+{% set img = get('forum_'~url[1]~'_info','img') %}
+{% if not img %}
+{% set img = nd|split('[img]')[1]|split('[/img]')[0]|default('http://mblogbb.viwap.com/images/caykhechin.png') %}
+{% endif %}
+{% set title = ten %}
+{{block('head')}}
+{% if act == 'stick' %}
+{#Stick#}
+<div class="mainblok">
+{% include 'forum_stick' %}
+</div>
+{% elseif act == 'ghim' %}
+<div class="mainblok">
+{% include 'forum_ghim' %}
+</div>
+{% elseif act == 'rename' %}
+<div class="mainblok">
+{% include 'forum_rename' %}
+</div>
+{% elseif act == 'block' %}
+<div class="mainblok">
+{% include 'forum_block' %}
+</div>
+{% elseif act == 'addvote' %}
+<div class="mainblok">
+{% include 'forum_addvote' %}
+</div>
+{% elseif act == 'deletevote' %}
+<div class="mainblok">
+{% include 'forum_deletevote' %}
+</div>
+{% elseif act == 'delete' %}
+{#Xoa chủ đề#}
+<div class="mainblok">
+{% include 'forum_del' %}
+</div>
+{% elseif act == 'edit' %}
+<div class="mainblok">
+{% include 'edit_cm' %}
+</div>
+{% elseif edit %}
+{#Chỉnh sửa cmt #}
+<div class="mainblok">
+{% include 'forum_edit' %}
+</div>
+{% elseif delete %}
+{#Xóa cmt#}
+<div class="mainblok">
+{% include 'forum_delete' %}
+</div>
+{% elseif like %}
+{#like cmt#}
+<div class="mainblok">
+{% include 'forum_like' %}
+</div>
+{% elseif quote %}
+{#quote cmt#}
+<div class="mainblok">
+{% include 'forum_quote' %}
+</div>
+{% else %}
+{# mở post #}
+{% if request_method()|lower == "post" %}
+{% include 'forum_save' %}
+{{breadcrumb(url[1])}}
+{{show_list(url[1])}}
+{# không phải post #}
+{% else %}
+{{breadcrumb(url[1])}}
+{{vote(url[1])}}
+{{show_list(url[1])}}
+{% endif %}
+{# kết thúc post #}
+{{form(url[1])}}
+<div class="mainblok">
+<div class="phdr"><a id="down"></a><a href="#up"><img src="/images/up.png" alt="" class=""/></a> <b><i class="fa fa-bar-chart-o"></i> Tổng số: {{total}}</b></div>
+{% set tag = get('forum_'~url[1]~'_info','ten')|replace({',':''})|split(' ') %}
+<div class="list1">Tags cloud: {% for i in tag %}<a href="/search?id={{i}}"><span class="badge" style="background:#{{loop.index}}9{{random(['a','b','c','d','e','f','g','h'])}}6f{{loop.index}};">{{i}}</span></a> {% endfor %}</div>
+{{paging('threads/'~url[1]~'/'~rwurl(ten)~'.html?p',p,page_max)}}
+{% if get('user_'~login,'level') == 'right9s' %}
+<div class="list1"><a href="?act=ghim">{% if ghim=='no' or not ghim %}Gán chủ đề VIP{% else %}Gỡ bỏ chủ đề VIP{% endif %}</a></div>
+<div class="list1"><a href="?act=delete{% if p > 1 %}&p={{p}}{% endif %}">Xóa chủ đề</a></div>
+<div class="list1"><a href="?act=edit{% if p > 1 %}&p={{p}}{% endif %}">Đổi chuyên mục</a></div>
+{% set block = get('forum_'~url~'_info','block')|trim %}
+<div class="list1"><a href="?act=addvote">Thêm bình chọn</a></div>
+<div class="list1"><a href="?act=deletevote">Xóa bình chọn</a></div>
+<div class="list1"><a href="?act=editvote">Sửa bình chọn</a></div>
+<div class="list1"><a href="?act=block">{% if block == 'yes' %}Mở chủ đề{% elseif block != 'yes' %}Khóa chủ đề{% endif %}</a></div>
+{% endif %}
+{% if get('user_'~login,'level') == 'right9s' or get('user_'~login,'level') == 'right8s' or login == nicktop %}
+<div class="list1"><a href="?act=rename">Đổi tên chủ đề</a></div>
+{% endif %}
+</div>
+{% endif %}
+{# KẾT THÚC GET #}

@@ -1,0 +1,19 @@
+{% from 'func.twig' import add,login,up,get %}
+{% use '_blocks' %}
+{% set url = get_uri_segments() %}
+{% set data = get('forum_'~url[1]~'_info','ten')|length %}
+{% if data > '2' %}
+{% include 'forum_show' %}
+{% else %}
+{% set title = 'Bài viết không tồn tại !' %}
+{{block('head')}}
+<div class="mainblok">
+<div class="phdr"><b>Oh noo...</b></div>
+<div class="list1" align="center"><img src="/images/404page.png"></div>
+<div class="phdr"><b>Bạn đang truy cập vào trang lỗi</b></div>
+<div class="list1">Bài viết không tồn tại hoặc đã bị xóa trước đó, vui lòng quay lại trang trước!<br/>
+<a href="javascript:history.go(-1);" id="nutlike">Quay lại</a> <a href="/main.php">Trang chủ</a>
+</div>
+</div>
+{% endif %}
+{{block('end')}}

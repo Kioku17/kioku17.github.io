@@ -1,0 +1,30 @@
+{% from 'func.twig' import add,get,up,level,account %}
+{# top thần nông #}
+<div class="mainblok">
+<div class="phdr">Top Thần Nông »</div>
+{% set data=[] %}{% for i in 1..100 %}{% set data=get_data('id_users',100,i)|merge(data) %}{% endfor %}
+{% set listxu %}{% for i in data %}{% set user = i.data %}{% set xu = get('farm_id_'~user,'sodat')|trim %}{{xu}}#{% endfor %}{% endset %}
+{% set listname %}{% for i in data %}{% set user = i.data %}{% set xu = get('farm_id_'~user,'sodat')|trim %}{{user}}#{{xu}}.{% endfor %}{% endset %}
+{% set listtop %}{% for i in listxu|split('#')|sort|reverse %}{% for top in listname|split('.') %}{% if '#'~i in top %}{{top}}.{% endif %}{% endfor %}{% endfor %}{% endset %}
+{% set list=[] %}{% for i in listtop|split('.') %}{% if i not in list %}{% set list=list|merge([i]) %}{% endif %}{% endfor %}
+{% for i in list|slice(0,11) %}
+{% set khanh = i|split('#') %}
+{% set lv = get('user_'~khanh[0],'level')|trim %}
+{% set names = get('user_'~khanh[0],'nick')|trim %}
+{% if loop.last==false %}
+ <div class="menu">
+            <table cellpadding="0" cellspacing="0" width="100%">
+                <tr valign="top">
+                    <td width="42"><img src="{{get('user_'~khanh[0],'avt')}}" width="40" height="40" alt="{{get('user_'~khanh[0],'nick')}}"></td>
+                    <td><div><img src="http://mblogbb.viwap.com/images/top{{loop.index}}.png" title="top{{loop.index}}"> <a href="/account/{{khanh[0]}}">{{account(khanh[0])}}</a></div><div>Cấp {{khanh[1]|default(1)}}</div></td>
+                    <td align="right"><div>{% if login != khanh[0] %}
+<a href="/farm?u={{khanh[0]}}">Thăm nông trại</a>
+{% endif %}</div><div></div></td>
+                </tr>
+            </table>
+        </div>
+{% endif %}
+{% endfor %}
+</div>
+<div class="mainblok">
+<div class="{% if login and get('user_'~login,'css') == 'mobile' %}func{% else %}menu-list{% endif %}"><a href="/farm">Quay lại nông trại</a></div>

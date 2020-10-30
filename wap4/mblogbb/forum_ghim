@@ -1,0 +1,26 @@
+{% from 'func.twig' import login,up,add,get,lever %}
+{% set login = login()|trim %}
+{% set level = get('user_'~login,'level')|trim %}
+{% set url = get_uri_segments() %}
+{% set nick = get('forum_'~url[1]~'_info','first') %}
+{% set ghim = get('forum_'~url[1]~'_info','ghim')|default('no') %}
+<div class="phdr"><span itemscope itemtype="http://data-vocabulary.org/Breadcrumb" itemscope="itemscope"><a itemprop="url" href="/"><span itemprop="title">Trang Chủ</span></a></span> » <a href="/forums">Diễn đàn</a> » <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb" itemscope="itemscope"><a itemprop="url" href="/{{url[0]}}/{{url[1]}}/{{url[2]}}{% if p %}&p={{p}}{% endif %}"><span itemprop="title">{{ten}}</span></a></span> » <span><a class="reg_link">{% if ghim =='no' %}Gán chủ đề VIP{% else %}Gỡ chủ đề VIP{% endif %}</a></span></div>
+{% if login == nick or level in ['right9s','right8s','right7s'] %}
+{% if request_method()|lower == "post" %}
+{% if ghim == 'no' %}
+{{add('forum_'~url[1]~'_info','ghim','1')}}
+<div class="rmenu">Ghim chủ đề thành công</div>
+{% else %}
+{{add('forum_'~url[1]~'_info','ghim','0')}}
+<div class="rmenu">Đã gỡ chủ đề VIP :)</div>
+{% endif %}
+{% else %}
+{% if ghim == 'no' %}
+<div class="menu">Bạn có muốn ghim chủ đề này không? <br/><form action="" method="post"><input type="submit" value=" Gán VIP "></form></div>
+{% else %}
+<div class="menu">Bạn có muốn gỡ VIP cho chủ đề này không? <br/><form action="" method="post"><input type="submit" value=" Gỡ VIP"></form></div>
+{% endif %}
+{% endif %}
+{% else %}
+<div class="gmenu">Bạn không có quyền hạn này</div>
+{% endif %}

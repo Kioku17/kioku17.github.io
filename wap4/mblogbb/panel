@@ -1,0 +1,23 @@
+{% set url=get_uri_segments() %}
+{% use '_blocks' %}
+{% set title = 'Admin Panel - Quản lý mã nguồn Twig-ForumBB' %}
+{% from 'func.twig' import login,get,add,up %}
+{% set login = login()|trim %}
+{% set right = get_get('right') %}
+{{block('head')}}
+<div class="mainblok">
+{% if login and get('user_'~login,'level') == 'right9s' and url[1] == 'member' %}
+{% include 'member' %}
+{% elseif login and get('user_'~login,'level') == 'right9s' and url[1] == 'cms' %}
+{% include '_cms_setting' %}
+{% elseif login and get('user_'~login,'level') == 'right9s' and url[1] == 'qua-tang-am-nhac' %}
+{% include '_cms_music' %}
+{% elseif login and get('user_'~login,'level') == 'right9s' and not url[1] %}
+{% include 'category-created' %}
+{% elseif login and get('user_'~login,'level') == 'right9s' and url[1] == 'register' %}
+{% include '_cms_register' %}
+{% else %}
+<div class="rmenu">Bạn không có quyền truy cập vào đây!</div>
+{% endif %}
+</div>
+{{block('end')}}

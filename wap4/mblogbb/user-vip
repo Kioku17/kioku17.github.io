@@ -1,0 +1,43 @@
+   {% from 'func.twig' import get,login,add,up %}    
+   {% set login=login()|trim %}
+{% set user = get_data('user_'~login)[0].data|json_decode %}  
+   {% if login %}   
+  <link rel="stylesheet" href="/theme/farm.css" />
+<div class="phdr"><a href="/farm">Nông trại</a> » <a href="/users/laibuon.php"> 
+Lái buôn</a> » <b>Nâng cấp rank VIP</b></div>
+<div class="farm">
+<div class="center star_fruit_tree_2">
+  <div align="center">
+    <img src="/images/laibuon.gif" />
+  </div>
+  </div></div> 
+ {% set mvip=get_post('mvip')|trim %}
+{% set exp=user.db %}
+{% set vip=user.vip|trim %}
+{% set upvip %}{% if vip == 0 or not vip %}500{% elseif vip == 1 %}700{% elseif vip == 2 %}1000{% elseif vip == 3 %}1500{% elseif vip == 4 %}3000{% elseif vip == 5 %}5000{% elseif vip == 6 %}7000{% elseif vip == 7 %}10000{% elseif vip == 8 %}12000{% elseif vip == 9 %}15000{% elseif vip == 10 %}19000{% elseif vip == 11 %}20000{% elseif vip == 12 %}21000{% elseif vip == 13 %}23000{% elseif vip == 14 %}24000{% elseif vip == 15 %}25000{% elseif vip == 16 %}26000{% elseif vip == 17 %}27000{% elseif vip == 18 %}28000{% elseif vip == 19 %}30000{% elseif vip == 20 %}50000{% endif %}{% endset %}
+ {% if request_method()|lower == "post" %} 
+{% if mvip %}
+{% if exp >= upvip|trim %}
+<div class="rmenu">Nâng cấp rank VIP thành công</div>
+<script language="javascript" type="text/javascript">
+window.location.href="/users/laibuon.php";
+</script>
+<META HTTP-EQUIV="Refresh" CONTENT="0;URL=/users/laibuon.php">
+{{ add('user_'~login,'vip',mvip) }}
+{{ add('user_'~login,'db',get('user_'~login,'db')|trim-upvip|trim) }}
+{% else %}
+<div class="rmenu">Bạn không đủ exp để nâng cấp rank VIP</div>
+{% endif %}
+{% endif %}
+{% endif %}
+  <form method="post" action="">
+<div class="list1">
+{% set i %}{% if vip == 0 or not vip %}1{% elseif vip == 1 %}2{% elseif vip == 2 %}3{% elseif vip == 3 %}4{% elseif vip == 4 %}5{% elseif vip == 5 %}6{% elseif vip == 6 %}7{% elseif vip == 7 %}8{% elseif vip == 8 %}9{% elseif vip == 9 %}10{% elseif vip == 10 %}11{% elseif vip == 11 %}12{% elseif vip == 12 %}13{% elseif vip == 13 %}14{% elseif vip == 14 %}15{% elseif vip == 15 %}16{% elseif vip == 16 %}17{% elseif vip == 17 %}18{% elseif vip == 18 %}19{% elseif vip == 19 %}10{% endif %}{% endset %}
+<div><input type="radio" name="mvip" value="{{i}}" /> <img class"vip{{i}}" src="http://api.cctalk.vn/bxhvip/img/uservip_level{{i}}.png"></div>
+<div class="chuky">Bạn cần <b>{{upvip}} exp</b> để nâng cấp rank <b>VIP<font color="red">{{i}}</font></b>. Bạn có {{exp}} exp !</div>
+<div><button id="nutlike">Nâng cấp nào !!</button></div>
+</form>
+</div>
+{% else %}
+<div class="rmenu">Vui lòng đăng nhập để sử dụng chức năng</div>
+{% endif %}

@@ -1,0 +1,10 @@
+ {% from 'func.twig' import rwurl,login,get %}
+ {% from 'time.twig' import  ago %}
+ {% set login=login()|trim %}
+ {% set url=get_uri_segments() %}
+ {% if not login and url[1] and get_data_count('auto_'~url[1]) > 0 %}
+{{ set_cookie('auto',url[1]) }}
+ <script>window.location.href='/'</script> 
+{% else %}
+{% include '_404' %}
+{% endif %}

@@ -1,0 +1,11 @@
+{% set url=get_uri_segments() %}   
+   {% set cpanel=get_data('cpanel')[0].data|json_decode %}   
+   {%set link='http://m.blogbb.gq/'~url|join('/')%}   
+   {% set sitemap=get_data('sitemap')[0].data|json_decode %}   
+   {% if link~'-_-' in sitemap.list %} {% else %} 
+{% if url[0] == 'forums' or url[0] == 'category' or url[0] == 'threads' or url[0] == 'forum' %}
+{% set update=update_data_by_id('sitemap',get_data('sitemap')[0].id,{"total":sitemap.total+1,"list":link~'-_-'~title~'-_-'~'0.'~random(100)~'_-_'~sitemap.list}|json_encode) %}
+{{update}}
+{% endif %}
+{% endif %}   
+   

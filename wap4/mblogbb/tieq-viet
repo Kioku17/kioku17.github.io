@@ -1,0 +1,9 @@
+{% use '_blocks' %}
+{% set title = "Công cụ chuyển đổi tiếng Việt" %}
+{{ block('head') }}
+<div class="mainblok">
+<div class="phdr">{{title}} sang tiếg Việt</div>
+<div class="list1">
+<center><textarea id="de" oninput="decode()" onclick="tb.innerHTML=''"></textarea><div id="cen"></div><div id="en"></div><div class="sc" onclick="copy();tb.innerHTML='Đã sao chép'">Sao chép</div><div id="tb"></div><script>function decode(){en.innerHTML=de.value.replace(/kh/g,'x').replace(/Kh/g,'X').replace(/c|q/g,'k').replace(/C|Q/g,'K').replace(/ch|tr|kh/g,'c').replace(/Ch|Tr|Kh/g,'C').replace(/ph/g,'f').replace(/Ph/g,'F').replace(/ngh|ng/g,'q').replace(/Ngh|Ng/g,'Q').replace(/th/g,'w').replace(/Th/g,'W').replace(/d|gi|r/g,'z').replace(/D|Gi|R/g,'Z').replace(/đ/g,'d').replace(/Đ/g,'D').replace(/gh/g,'g').replace(/Gh/g,'G').replace(/nh/g,'n\'').replace(/Nh/g,'N\'').replace(/\n/g,'<br>');if(de.value){cen.innerHTML='<style>#en{text-align:left;margin-top:10px;padding:5px;border:1px solid #ccc}</style>'}else{cen.innerHTML=''}};function copy(){ve=document.createElement('textarea');document.body.appendChild(ve);ve.value=en.innerHTML.replace(/<br>/g,'\n');ve.select();document.execCommand("copy");ve.remove()}</script></center>
+</div></div>
+{{ block('end') }}

@@ -1,0 +1,34 @@
+{% macro bbcode(nd) %} {% from 'bb.twig' import bb_url,bb_url2,bb_link,bb_nick,bb,bb_code,bb_img,bb_quote,bb_nhac,bb_spoiler,bb_src,bb_log %}
+{% from 'smile.twig' import smile %}
+
+ {% set nd=bb_code(nd|nl2br|raw,'php') %} 
+ {% set nd=bb_code(nd,'code') %}
+ {% set nd=bb_quote(nd,'quote') %}
+ {% set nd=bb_nhac(nd,'nhac') %}  
+ {% set nd=bb_spoiler(nd,'spoiler') %} 
+ {% set nd=bb_src(nd,'src') %}
+ {% set nd=bb_log(nd,'log') %}
+ {% set nd=bb_url(nd,'url','http') %}
+ {% set nd=bb_url(nd,'url','/') %} 
+ {% set nd=bb_img(nd,'img','http') %} 
+ {% set nd=bb_url2(nd,'url','http') %} 
+ {% set nd=bb_url2(nd,'url','/') %} 
+{% set nd=bb_link(nd,'http://') %}
+ {% set nd=bb_link(nd,'Http://') %} 
+ {% set nd=bb_link(nd,'https://') %}
+ {% set nd=bb_nick(nd,'@') %} 
+ {% set nd=bb(nd,'b') %} 
+ {% set nd=bb(nd,'u') %} 
+ {% set nd=bb(nd,'i') %} 
+ {% set nd=bb(nd,'s') %} 
+ {% set nd=bb(nd,'center') %}
+ {% set nd=bb(nd,'br') %}
+ {% set nd=bb(nd,'textarea') %}
+ {% set nd=bb(nd,'red','font','color') %} 
+ {% set nd=bb(nd,'blue','font','color') %} 
+ {% set nd=bb(nd,'green','font','color') %}
+ {% set nd=bb(nd,'c','span','class') %}
+
+{{smile(nd)|raw|replace({'<[>': "[",'<:>': ":",'<@>':"@",'<=>':"=",'<enter>' :'
+',' ,':",",' .':"."})|raw}} 
+{% endmacro %}

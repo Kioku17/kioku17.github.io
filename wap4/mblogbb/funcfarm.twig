@@ -1,0 +1,56 @@
+ {% macro status(item,time,end_time,water_time) %}{% spaceless %}
+	{% if item %}
+		{% if time == 0 %}
+		6
+{% else %}
+{% set timeU = "now"|date('U') %}
+		{% set time_count = timeU - time %}
+		{% set water_time = timeU - water_time %}
+		{% set interval = (end_time - time) / 6 %}
+		{% set w_interval = 2 * interval %}
+		{% if timeU >= end_time %}
+			5_{{water_time > w_interval ? '1' : '0'}}
+{% elseif time_count >= interval * 5 %}
+			4_{{water_time > w_interval ? '1' : '0'}}
+		{% elseif time_count >= interval * 4 %}
+			3_{{water_time > w_interval ? '1' : '0'}}
+		{% elseif time_count >= interval * 2 %}
+			2_{{water_time > w_interval ? '1' : '0'}}
+		{% elseif time_count >= interval %}
+			1_0
+		{% else %}
+		0_0
+{% endif %}
+{% endif %}
+	{% else %}
+		0
+	{% endif %}
+{% endspaceless %}{% endmacro %} 
+  
+  {% macro timer(time, mod) %}{% spaceless %}
+	{% if time <= 0 %} {% set time = 0 %} {% endif %}
+	{% set h = (time / 3600)|round(0,'floor') %}
+	{% set m = ((time - h * 3600) / 60)|round(0,'floor') %}
+	{% set s = time-h * 3600 - m * 60 %}
+	{% if mod %}
+		{{(h ? h~' giờ' : '')~(m ? (h ? ' ':'')~m~' phút' : '')~(mod == 2 ? (s ? (h or m ? ' ':'')~s~' giây' : '') : '' )}}
+	{% else %}
+	{{h~':'~(m < 10 ? '0' : '')~m~':'~(s < 10 ? '0' : '')~s}}
+{% endif %}
+{% endspaceless %}{% endmacro %}
+                                             
+       {% macro nangsuat(ns, time, end_time, water_time) %}{% spaceless %}
+	{% if end_time == 0 %}0{% else %}
+	{% set time_1 = (end_time - time) / 3 %}
+	{% set time_2 = "now"|date('U') - water_time %}
+	{% if time_2 >= time_1 %}
+		{% set ns = ns-((100 * (time_2 - time_1) * 0.9 / time_1)|round(0,'floor')) %}
+		{% if ns < 10 %}  {% set ns = 10 %} {% endif %}
+	{% else %}
+		{% set time_2 = min("now"|date('U'), end_time) - water_time %}
+		{% set ns = ns+((100 * time_2 * 3.6 / time_1)|round(0,'ceil')) %}
+		{% if ns > 100 %}  {% set ns = 100 %} {% endif %}
+      {% endif %}
+	{{ns}}
+{% endif %}
+  {% endspaceless %}{% endmacro %}

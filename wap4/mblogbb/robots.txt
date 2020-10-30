@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /panel/
+Disallow: /account/
+Allow: /
+Sitemap: http://<domain.com>/sitemap.xml

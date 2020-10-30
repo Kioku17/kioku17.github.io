@@ -1,0 +1,53 @@
+{% macro bot(nd,bot) %}
+{% from 'func.twig' import get,add,login %}
+{% set login = login()|trim %}
+{% set log = get('user_'~login,'nick') %}
+{% set ten = get_post('ten') %}
+{% set kq=random(10) %}
+{% set so=random(1000) %}
+{% set rand1 = random(0..3) %}
+{% set rand2 = random(10..100) %}
+{% set rand3 = random(200..300) %}
+{% if login %}
+{% if 'trom' in nd|lower %}
+{% if get('user_'~login,'cmt') <= '49' %}
+{% set comment = {"name":bot,"time":"now"|date('U'), "comment":"@"~log~" cần phải có ít nhất 50 bài viết trong diễn đàn mới có thể tiến hành ăn trộm!"} %}
+{% set save = save_data( "chat", comment|json_encode ) %}
+{% elseif rand1 == '0' %}
+{{ add('user_'~login,'xu',get('user_'~login,'xu')|trim-rand3) }}
+{% set comment = {"name":bot,"time":"now"|date('U'), "comment":"@"~log~" giở thói ăn cắp vặt, :pirat: bị [b]BOT Cảnh Sát[/b] bắt được, phạt trừ "~rand3~" xu vào tài khoản :haha:"} %}
+{% set save = save_data( "chat", comment|json_encode ) %}
+{% else %}
+{{ add('user_'~login,'xu',get('user_'~login,'xu')|trim+rand2) }}
+{% set comment = {"name":bot,"time":"now"|date('U'), "comment":"@"~log~" nhân lúc [b]BOT[/b] không để ý đã giở thói ăn cắp vặt, chôm được "~rand2~" xu :buon:"} %}
+{% set save = save_data( "chat", comment|json_encode ) %}
+{% endif %}
+{% endif %}
+{% if 'quay' in nd|lower %}
+{% if get('user_'~login,'xu') >='150' %}
+{% if kq =='1' %}
+{{ add('user_'~login,'xu',get('user_'~login,'xu')|trim+400) }}
+{% set comment = {"name":bot,"time":"now"|date('U'), "comment":"@"~login~" quay được số "~so~"! Xin chúc mừng bạn đã quay được giải nhất của chương trình quay số may mắn! Phần thưởng 400 xu! :loa:"} %}
+{% set save = save_data( "chat", comment|json_encode ) %}
+{% elseif kq=='2' %}
+{{ add('user_'~login,'xu',get('user_'~login,'xu')|trim+250) }}
+{% set comment = {"name":bot,"time":"now"|date('U'), "comment":"@"~login~" quay được số "~so~"! Xin chúc mừng bạn đã quay được giải nhì của chương trình quay số may mắn! Phần thưởng 250 xu! :loa:"} %}
+{% set save = save_data( "chat", comment|json_encode ) %}
+{% elseif kq=='3' %}
+{{ add('user_'~login,'xu',get('user_'~login,'xu')|trim+150) }}
+{% set comment = {"name":"bot","time":"now"|date('U'), "comment":"@"~login~" quay được số "~so~"! Xin chúc mừng bạn đã quay được giải ba của chương trình quay số may mắn! Phần thưởng 150 xu! :loa:"} %}
+{% set save = save_data( "chat", comment|json_encode ) %}
+{% elseif kq=='4' %}
+{{ add('user_'~login,'xu',get('user_'~login,'xu')|trim+rand2) }}
+{% set comment = {"name":"bot","time":"now"|date('U'), "comment":"@"~login~" quay được số "~so~"! Xin chúc mừng bạn đã quay được giải khuyến khích của chương trình quay số may mắn! Phần thưởng "~rand2~" xu! :loa:"} %}
+{% set save = save_data( "chat", comment|json_encode ) %}
+{% else %}
+{{ add('user_'~login,'xu',get('user_'~login,'xu')|trim-50) }}
+{% set comment = {"name":bot,"time":"now"|date('U'), "comment":"Hehe @"~login~" quay được số "~so~" chúc may mắn lần sau! BOT đã lấy của @"~login~" 50 xu làm chi phí ăn nhậu :troll:
+"} %}
+{% set save = save_data( "chat", comment|json_encode ) %}
+{% endif %}
+{% endif %}
+{% endif %}
+{% endif %}
+{% endmacro %}

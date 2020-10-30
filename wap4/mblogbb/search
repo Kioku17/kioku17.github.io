@@ -1,0 +1,49 @@
+{% from 'func.twig' import login,up,add,get,del,rwurl %}
+{% from 'paging.twig' import paging %}
+{% use '_blocks' %}
+{% set title='Tìm kiếm' %}
+{{block('head')}}
+<div class="mainblok">
+<div class="phdr"><b>Tìm kiếm</b></div>
+<div class="list1"><form action="" method="get">Từ khóa:<br/><input type="text" name="id" value="{{get_get('id')}}"><input type="submit" value=" Tìm kiếm "></form></div>
+{% set data = get('show_forum')|split('@') %}
+{% set data1 %}{% for i in data %}{% set ten = get('forum_'~i|trim~'_info','ten') %}{% set key = get_get('id') %}
+{% if key|length>'0' and key|lower in ten|trim|lower %}{% if loop.last==false %}{{i|trim}}.{% endif %}{% endif %}{% endfor %}{% endset %}
+{% set dem = data1|split('.')|length-1 %}
+{% if dem > '0' %}
+<div class="phdr"> Kết quả tìm kiếm ({{dem}})</div>
+{% else %}
+{% if get_get('id')|length > 0 %}
+<div class="rmenu"> Không tìm thấy kết quả nào </div>
+{% endif %}
+{% endif %}
+ {% set data=data1|split('.') %}
+ {% set total=data|length-1 %} 
+{% set per = '10' %}
+ {% set page_max=total//per %}
+{% if total//per != total/per %}
+{% set page_max=total//per+1 %}
+{% endif %}
+ {% set url=get_get('p') %}
+{% set p=url|default('1') %} 
+
+{% if p matches '/[a-zA-z]|%/' or p<1 %}
+{% set p=1 %}
+{% endif %}
+{% if p>page_max %}
+{% set p=page_max %}
+{% endif %}
+{% set st=p*per-per %}
+ {% for id in data|slice(0,total)|slice(st,per) %}
+{% set link = 'forum_'~id|trim~'_info' %}
+{% set ten = get(link,'ten') %}
+{% set category=ten|split(']')|first|split('[')|last|raw %}
+{% set title=ten|split(']',2)|last|raw %}
+<div class="list1"><a href="/threads/{{id|trim}}/{{rwurl(ten)}}.html">{% if title != ten %}{{random(['<span class="badge" style="background:red">','<span class="badge" style="background:green">','<span class="badge" style="background:olive">','<span class="badge" style="background:blue">','<span class="badge" style="background:lightgreen">','<span class="badge" style="background:gray">','<span class="badge" style="background:silver">','<span class="badge" style="background:yellow">','<span class="badge" style="background:orange">','<span class="badge" style="background:violet">','<span class="badge" style="background:darkorange">','<span class="badge" style="background:darkviolet">','<span class="badge" style="background:darkgray">'])|raw}}{{category|raw}}</span>{% endif %} {{title|raw}}</a></div>
+{% endfor %}
+{% if page_max>per %}
+{% set page_max=per %} 
+ {% endif %} 
+ {{ paging('search?id='~get_get('id')~'&p',p,page_max) }}
+</div>
+{{block('end')}}

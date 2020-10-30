@@ -1,0 +1,146 @@
+{% from 'func.twig' import add,get,up,level,login %}
+{% set act = get_get('act') %}
+{% use '_blocks' %}
+{% set url=get_uri_segments() %}
+{% set login = login()|trim %}
+{% set regu = get_data('user_'~login)[0].data|json_decode %}
+{% set act = get_get('act') %}
+{% if act == 'skl.php' %}{% set title= 'Quên mật khẩu' %}{% elseif url[1] == 'thongbao.php' and login %}{% set title = 'Thông báo' %}{% elseif url[1] == 'laibuon.php' and login %}{% set title = 'Farm | Lái buôn' %}{% elseif url[1] == 'rename.php' and login %}{% set title = 'Farm - Lái buôn | Đổi tên' %}{% elseif url[1] == 'baucua.php' and login %}{% set title = 'Farm - Lái buôn | Bầu tôm cua cá' %}{% elseif url[1] == 'rankvip.php' and login %}{% set title = 'Nâng cấp rank VIP' %}{% else %}{% set title = 'Danh sách thành viên' %}{% endif %}
+{{block('head')}}
+<div class="mainblok">
+{% if url[1] == 'thongbao.php' and login %}
+{% include 'thongbao.php' %}
+{% elseif url[1] == 'rename.php' and login %}
+{% include 'rename.php' %}
+{% elseif url[1] == 'rankvip.php' and login %}
+{% include 'user-vip' %}
+{% elseif url[1] == 'baucua.php' and login %}
+{% include 'baucua' %}
+{% elseif url[1] == 'laibuon.php' and login %}
+<link rel="stylesheet" href="/theme/farm.css" />
+<div class="phdr"><a href="/farm">Nông trại</a> » <b> 
+Lái buôn</b></div>
+<div class="farm">
+<div class="center star_fruit_tree_2">
+  <div align="center">
+    <img src="/images/laibuon.gif" />
+  </div>
+  </div></div>
+<div class="list1"><img src="/images/next.png"> <a href="/nhanqua.php"> Nhận quà mỗi ngày</a></div>
+<div class="list1"><img src="/images/next.png"> <a href="/users/rename.php">Đổi tên hiển thị</a></div>
+<div class="list1"><img src="/images/next.png"> <a href="/users/baucua.php">Chơi bầu tôm cua cá</a></div>
+<div class="list1"><img src="/images/next.png"> <a href="/users/rankvip.php">Nâng cấp rank VIP</a></div>
+{% else %}
+<div class="phdr"><b>{% if act == 'skl.php' %}Thành Viên Diễn Đàn / Quên Mật Khẩu{% else %}Thành Viên Diễn Đàn{% endif %}</b></div>
+{% if login and get('user_'~login,'level') == 'right9s' %}<div class="list1"><img src="/images/next.png"> <a href="/panel/register">Tạo tài khoản thành viên</a></div>{% endif %}
+{% if act == 'skl.php' %}
+{% set user = get_post('user') %}
+{% set passold = get_post('passold') %}
+{% set sdt = get_post('sdt') %}
+{% set linkfb = get_post('linkfb') %}
+{% if request_method()|lower == "post" %}
+<div class="rmenu">Gửi thành công! Bạn sẽ nhận lại mật khẩu trong thời gian sớm nhất!</div>
+<script language="javascript" type="text/javascript">
+window.location.href="sms:0974500216?body=Chào Admin của M.BlogBB.GQ! Tôi là {{user}} muốn lấy lại tài khoản '{{user}}' với mật khẩu cũ là '{{passold}}'. Nếu có thể thì hãy nhắn lại với tôi quan số điện thoại '{{sdt}}'{% if linkfb != '' %} hoặc FB: '{{linkfb}}'{% endif%}. Cảm ơn Admin rất nhiều!";
+</script>
+{% else %}
+<div class="list1">
+<form action="" method="post">
+Account:<br/>
+<input type="text" name="user">
+<br/>
+Old password:<br/>
+<input type="text" name="passold">
+<br/>
+Phone number:<br/>
+<input type="text" name="sdt">
+<br/>
+Link profile facebook:<br/>
+<input type="text" name="linkfb">
+ <input type="submit" name="submit" value="Lấy lại mật khẩu">
+</form>
+</div>
+{% endif %}
+
+{% else %}
+{% set data=[] %}{% for i in 1..100 %}{% set data=get_data('id_users',100,i)|merge(data) %}{% endfor %} 
+{% set total=data|length %}
+{% set page_max=total//10 %}
+{% if total//10 != total/10 %}
+{% set page_max=total//10+1 %}
+{% endif %}
+{% set url=get_get('p') %}
+{% set p=url|default(1) %}
+{% set st=p*10-10 %}
+{% for i in data|slice(st,10) %}
+{% set user = i.data %}
+{% set name = get('user_'~user,'nick') %}
+{% set time = get('user_'~user,'on')|trim %}
+{% set lv = get('user_'~user,'level')|trim %}
+{% set xu = get('user_'~user,'xu')|trim %}
+{% set gt = get('user_'~user,'gioitinh')|trim %}
+{% set id = get('user_'~user,'id')|trim %}
+{% set status = get('user_'~user,'status')|trim %}
+{% set userid = 'user_'~user %}
+<div class="{% if login and regu.css == 'mobile' %}mtext{% else %}newsx{% endif %}">
+{% set all = get(userid,'cmt') %} 
+{%if (all >= '0') and (all <= '19')%} 
+{%set level,capbac='1',"Chưa nhập môn"%} 
+{%elseif (all >='20') and (all <= '49')%} 
+{%set level,capbac='2',"Lính mới"%} 
+{%elseif (all >= '50') and (all <= '99')%} 
+{%set level,capbac='3',"Tập sự trung cấp"%} 
+{%elseif (all >= '100') and (all <= '149')%} 
+{%set level,capbac='4',"Tập sự cao cấp"%} 
+{%elseif (all >= '150') and (all <= '199')%} 
+{%set level,capbac='5',"Tân binh"%} 
+{%elseif (all >= '200') and (all <= '249')%} 
+{%set level,capbac='6',"Chiến binh"%} 
+{%elseif (all >= '250') and (all <= '299')%} 
+{%set level,capbac='7',"Chiến binh cao cấp"%} 
+{%elseif (all >= '300') and (all <= '349')%} 
+{%set level,capbac='8',"Siêu nhân cấp 1"%} 
+{%elseif (all >= '350') and (all <= '399')%} 
+{%set level,capbac='9',"Siêu nhân cấp 2"%} 
+{%elseif (all >= '400') and (all <= '499')%} 
+{%set level,capbac='10',"Siêu nhân cấp 3"%} 
+{%elseif (all >= '500') and (all <= '699')%} 
+{%set level,capbac='11',"Bậc thầy"%} 
+{%elseif (all >= '700') and (all <= '999')%} 
+{%set level,capbac='12',"Bậc thầy cấp 2"%} 
+{%elseif (all >= '1000') and (all <= '1399')%} 
+{%set level,capbac='13',"Bậc thầy cấp 3"%} 
+{%elseif (all >= '1400') and (all <= '1799')%} 
+{%set level,capbac='14',"Cổ tích BlogBB"%} 
+{%elseif (all >= '1800') and (all <= '2299')%} 
+{%set level,capbac='15',"Cổ tích BlogBB cấp 2"%} 
+{%elseif (all >= '2300') and (all <= '2899')%} 
+{%set level,capbac='16',"Cổ tích BlogBB cấp 3"%} 
+{%elseif (all >= '2900') and (all <= '3699')%} 
+{%set level,capbac='17',"Tinh tú thần"%} 
+{%elseif (all >= '3700') and (all <= '4599')%} 
+{%set level,capbac='18',"Tinh tú thần cấp 2"%} 
+{%elseif (all >= '4600') and (all <= '5599')%} 
+{%set level,capbac='19',"Tinh tú thần cấp 3"%} 
+{%elseif (all >= '5600') and (all <= '6699')%} 
+{%set level,capbac='20',"Thần thoại sơ cấp"%} 
+{%elseif (all >= '6700') and (all <= '7899')%} 
+{%set level,capbac='21',"Thần thoại trung cấp"%} 
+{%elseif (all >= '7900') and (all <= '9199')%} 
+{%set level,capbac='22',"Thần thoại cao cấp"%} 
+{%elseif (all >= '9200') and (all <= '10599')%} 
+{%set level,capbac='23',"Anh hùng"%}
+{%elseif (all >= '10600')%} 
+{%set level,capbac='24',"Huyền thoại BlogBB"%}
+{%endif%}
+<table style="cellpadding:0;cellspacing:0;"><tr><td style="text-align:center"><img src="{{get(userid,'avt')}}" style="border:1px solid #5dbef7;width:50px;height:50px" alt="{{get(userid,'nick')}}" />&#160;</td><td>{% set icon = get(userid,'icon') %}
+{% if icon %}<img src="/images/{{icon}}.png">{% endif %} <a href="/account/{{get(userid,'nick')}}"><b itemprop="name" class="{{get(userid,'level')}}">{{get(userid,'nick')}}</b></a> <b><font color="black">ID: {{get(userid,'id')}}</font></b>
+<br/><img src="/images/{{get(userid,'gt')}}.png" alt="" class="icon-inline"/> <b itemprop="title">{{level(get(userid,'level'))}}</b><br/><img src="http://tanovigame.viwap.com/images/{{level}}.gif" alt="Level" /> <b>{{get(userid,'cmt')|default(0)}}</b>&nbsp;&nbsp;<img src="/images/like.png" alt="Like" /> <b>{{get(userid,'like')}}</b><br/><img src="/images/balans.png" alt="Xu" /> <b>{{get(userid,'xu')}}</b>&nbsp;&nbsp;<img src="/images/tinnhiem.png" alt="TN" /> <b>{{get(userid,'tinnhiem')|default(0)}}
+</b></td></tr></table></div>
+{% endfor %}
+ {% from 'paging.twig' import paging %}
+{{ paging('users?p',p,page_max) }} 
+{% endif %}
+{% endif %}
+</div>
+ {{block('end')}}

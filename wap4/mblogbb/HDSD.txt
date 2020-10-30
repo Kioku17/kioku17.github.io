@@ -1,0 +1,32 @@
+I. Up code xong, vào custom data tạo các entry sau:
+1.
+- Entry: info
+- Data: {"category":0,"forum":0,"baiviet":0,"mail":0,"napthe":0}
+2.
+- Entry: cms_setting
+- Data: {"title":"tên trang web","desc":"mô tả trang web","keys":"từ khóa trang web","url":"tên miền","img":"ảnh mặc đinh","favicon":"biểu tượng trang","css":"default","chatbox":"1"}
+Cập nhật cms setting: đăng kí 1 tài khoản mới, vào custom data tìm entry user_<tên tài khoản> (VD: user_adm) set quyền lên giám sát (right9s), sau đó vào đường link: http://<domain.com>/panel/cms để thiết lập, tạo chuyên mục
+3.
+- Entry: qua_tang_am_nhac
+- Data: {"baihat":null,"nhac":null,"nguoigui":null,"loinhan":null,"date":"30"}
+4.
+- Entry: sitemap
+- Data: {"total":0,"list":""}
+5.
+- Entry: news
+- Data: news_Tiêu đề_Tác giả_Nội dung @
+
+II.
+1. Vào file bank tìm:
+{"nick":"bot","idbv":"43"
+{{up('forum_43_
+{{add('forum_43_info
+{{up('forum_43_show
+Sau đó, sửa bot thành con bot chat, 43 thành id bài viết mà con bot chat thông báo dịch vụ ngân hàng của khu giải trí
+2. Vào file bot, bot-chat, bot-thay-phan và 1 số file khác, sau đó tìm và sửa lại:
+"name":"bot" => "name":"tên tài khoản con bot chat"
+user_bot => user_<tên tài khoản con bot chat>
+"name":"onlyyou" => "name":"tên tài khoản con bot thầy phán"
+user_onlyyou => user_<tên tài khoản con bot thầy phán>
+III. Vào main file list, xóa hết code cũ, chèn
+{% include 'index.php' %}

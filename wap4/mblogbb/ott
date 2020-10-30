@@ -1,0 +1,80 @@
+{% use '_blocks' %}   
+   {% set title='Khu giải trí | Oẳn tù tì' %}   
+ {% from 'func.twig' import rwurl,up,get,add,login %}
+   {{ block('head') }}   
+   {% set login=login()|trim %}
+<div class="mainblok">
+  <div class="phdr"><b>Khu Giải Trí</b> » Oẳn tù tì</div>
+{% if login %}
+{% set cuoc = get_post('muccuoc') %}
+{% set chon = get_post('chon') %}
+{% set act= get_get('act') %}
+{% set xu=get('user_'~login,'xu') %}
+{% set nick=get('user_'~login,'nick') %}
+{% set ketqua=random(['thua','thang','hoa']) %}
+
+
+{% if xu <= '100' %}<div class="rmenu">Bạn không đủ xu</div>
+{% else %}
+{%if act==''%}
+<div class="list1">
+Số tiền của bạn: <b style="color:red">{{xu}} xu</b>
+<hr> Oẳn tù tì với <span style="color:darkorange;font-weight:bold;">Bot Ẹp Zai</span>
+<form action="ott?act=ok" method="post">
+<b>Lựa chọn của bạn là:</b>
+<br><input type="radio" name="chon" value="bua"> Búa <img src="http://iforumvn.xyz/games/img/ott/bua.png" style="width:25px;" alt="ott">
+<br><input type="radio" name="chon" value="keo"> Kéo <img src="http://iforumvn.xyz/games/img/ott/keo.png" style="width:25px;" alt="ott">
+<br><input type="radio" name="chon" value="bao"> Bao <img src="http://iforumvn.xyz/games/img/ott/bao.png" style="width:25px;" alt="ott"><br><br><b>Nhập số tiền cược:</b> Tối thiểu là 1.000 xu, tối đa là 10.000 xu
+<br><input type="text" name="muccuoc" maxlength="5"><br><input type="submit" name="submit" value="Đồng ý"></form>
+
+{%else%}
+
+
+{% if (cuoc <= 100 or cuoc > xu)%}
+<div class="rmenu">Số tiền cược không hợp lệ!!<br/><a href="/ott">Quay lại</a></div>
+{%else%}
+{%if chon==''%}<div class="rmenu">Lựa chọn không hợp lệ!!<br/><a href="/ott">Quay lại</a></div>{%else%}
+{%if ketqua=='thang'%}
+<div class="chuky">Thật bất ngờ, bạn quả nhiên có công lực thâm hậu, đã thắng ông trùm OTT <span style="color:blue;font-weight:bold;">BOT</span>^^
+<br>Kết quả đã chọn: <b>{{chon}}</b> vs <b>{{chon|replace({'keo':'bao','bao':'bua','bua':'keo'})|raw}}</b>
+<br>Bạn được cộng <b>{{cuoc}}</b> xu vào tài khoản, thừa thắng xông lên đê :))</div>
+<div class="list1">» <a href="/ott">Quay lại</a></div>
+{% set comment = {"name":"bot","time":"now"|date('U'), "comment":"[red][OTT][/red] Bot không ngờ @[b]"~get('user_'~login,'nick')~"[/b] có võ công thâm hậu đến vậy. Bot đã tặng "~cuoc~" xu cho pro!"} %}
+{% set save = save_data( "event", comment|json_encode ) %}
+{{ add('user_'~login,'xu',get('user_'~login,'xu')|trim+cuoc) }}
+{%elseif ketqua=='hoa'%} <div class="chuky">Hai bạn có lẽ đã đạt đến cảnh giới linh cảm tương thông ^^, hòa nhau vì có chung đáp án là <b>{{chon}}</b>, quay lại chiến tiếp nha</div>
+<div class="list1">» <a href="ott">Quay lại</a></div>
+{% set comment = {"name":"bot","time":"now"|date('U'), "comment":"[red][OTT][/red] @[b]"~get('user_'~login,'nick')~"[/b], anh tưởng chú thế nào... Hóa ra cũng gà như anh thôi... chơi tiếp nào baby :))"} %}
+{% set save = save_data( "event", comment|json_encode ) %}
+{%elseif ketqua=='thua'%} 
+<div class="chuky">Đã yếu còn ra gió, công lực của bạn quá kém nên đã thua ông trùm OTT <span style="color:blue;font-weight:bold;">BOT</span>^^
+<br>Kết quả đã chọn: <b>{{chon}}</b> vs <b> {{chon|replace({'keo':'bua','bao':'keo','bua':'bao'})|raw}}</b>
+<br>Bạn bị trừ <b>{{cuoc}}</b> xu vào tài khoản, cay quá làm lại phát nữa nha :D</div>
+{% set comment = {"name":"bot","time":"now"|date('U'), "comment":"[red][OTT][/red] @[b]"~get('user_'~login,'nick')~"[/b] đã yếu còn ra gió chơi oẳn tù tì với Bot. Bot tạm xin "~cuoc~" xu cược của thím đi ăn nhậu :yaoming:"} %}
+{% set save = save_data( "event", comment|json_encode ) %}
+{{ add('user_'~login,'xu',get('user_'~login,'xu')|trim-cuoc) }}
+<div class="list1">» <a href="ott">Quay lại</a></div>
+{%endif%}
+{%endif%}
+{%endif%}
+{%endif%}
+{%endif%}
+
+
+{% else %}
+<div class="rmenu">Vui lòng đăng nhập để chơi game</div>
+{% endif %}
+</div>
+<div class="phdr"><b>Luật chơi »</b></div><div class="list1">
+Luật chơi khá dễ chắc ai cũng biết:<br><b>Kéo</b> thắng <b>Bao</b><br><b>Bao</b> thắng <b>Búa</b><br><b>Búa</b> thắng <b>Kéo</b>
+<br>Kết quả là hòa nếu 2 lựa chọn giống nhau
+<br><b>VD:</b><br>Nếu bạn chọn <b>Kéo</b>, đối phương chọn <b>Bao</b> thì bạn thắng
+<br>Nếu bạn chọn <b>Búa</b>, đối phương chọn <b>Bao</b> thì bạn thua
+<br><b>Bước 1</b>: Chọn <b>Búa</b>, <b>Kéo</b> hoặc <b>Bao</b> và nhập số tiền muốn đặt cược
+<br><b>Bước 2</b>: Nhấp vào <b>Đồng ý</b> để bắt đầu oẳn tù tì
+<br>- Nếu bạn thua bạn sẽ bị trừ số tiền = số tiền đã cược
+<br>- Nếu bạn thắng bạn sẽ nhận được số tiền = số tiền đã cược
+<br>- Nếu hai bạn hoà nhau thì sẽ không ai mất tiền
+<br>Chúc các bạn chơi vui vẻ!</div></div>
+</div>
+ {{ block('end') }}

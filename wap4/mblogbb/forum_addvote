@@ -1,0 +1,38 @@
+{% from 'func.twig' import login,up,add,get,level,del %}
+{% set login = login()|trim %}
+{% set level = get('user_'~login,'level')|trim %}
+{% set nick = get('forum_'~url[1]~'_info','first') %}
+{% set namevote = get('forum_'~url[1]~'_info','vote_name') %}
+<div class="phdr"><span itemscope itemtype="http://data-vocabulary.org/Breadcrumb" itemscope="itemscope"><a itemprop="url" href="/"><span itemprop="title">Trang chủ</span></a></span> » <a href="/forums">Diễn đàn</a> » <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb" itemscope="itemscope"><a itemprop="url" href="/{{url[0]}}/{{url[1]}}/{{url[2]}}{% if p %}?p={{p}}{% endif %}"><span itemprop="title">{{ten}}</span></a></span> » <span><b>Thêm bình chọn</b></span></div>
+{% if login %}
+{% if nick == login or level == 'right9s' %}
+<div class="gmenu">Bình chọn là 1 tính năng giúp bạn tương tác với thành viên , cho phép thành viên được bình chọn ý kiến của mình trong diễn đàn</div>
+<div class="gmenu">Bạn có thể thêm 1 hoặc nhiều lựa chọn bằng cách nhập dữ liệu vào ô nhập lựa chọn, tối đa 10 lựa chọn</div>
+{% if request_method()|lower == "post" %}
+{% set nd = get_post('vote') %}
+{% set name = get_post('name') %}
+{% set vote = get('forum_'~url[1]~'_info','vote')|trim|default(0)+1 %}
+{#open#}
+{% if vote > 10 %}
+<div class="rmenu">Bình chọn quá số lượng cho phép</div>
+{% elseif name|length >= '51' or name|length <= '4' %}
+<div class="rmenu">Tên bình chọn không vượt quá 50 or dưới 5 kí tự</div>
+{% elseif nd|length >= '51' or nd|length <= '1' %}
+<div class="rmenu">Nội dung lựa chọn không vượt quá 50 or dưới 2 kí tự</div>
+{% else %}
+{{add('forum_'~url[1]~'_info','vote_name',name)}}
+{{add('forum_'~url[1]~'_info','vote_'~vote,nd)}}
+{{add('forum_'~url[1]~'_info','vote',vote)}}
+<div class="rmenu">Thêm thành công</div>
+<div class="menu"><a href="{{url[0]}}/{{url[1]}}/{{url[2]}}?act=addvote">Quay lại để thêm lựa chọn khác</a></div>
+{% endif %}
+{#close#}
+{% else %}
+<div class="menu"><form action="" method="post">Nhập tên bình chọn:<br/><input type="text" name="name" value="{{namevote}}"><br/>Nhập lựa chọn:<br/><input type="text" name="vote" value=""><br/><input type="submit" value="THÊM"></form> </div>
+{% endif %}
+{% else %}
+<div class="gmenu">Bạn không có quyền thực hiện tính năng này</div>
+{% endif %}
+{% else %}
+<div class="gmenu">Bạn chưa đăng nhập</div>
+{% endif %}

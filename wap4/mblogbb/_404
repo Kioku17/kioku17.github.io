@@ -1,0 +1,14 @@
+{% from 'func.twig' import get,login %}
+{% use('_blocks') %}
+{% set login = login()|trim %}
+{% set title = '404! Bạn đang truy cập vào trang lỗi' %}
+{{block('head')}}
+<div class="mainblok">
+<div class="phdr"><i class="fa fa-info-circle"></i> Lỗi Tải Trang</div>
+<div class="menu"><i class="fa fa-hand-o-right"></i> Bạn đang cố tình truy cập link cấm hoặc không thuộc quyền quản lý của wapsite.</div>
+<div class="menu"><i class="fa fa-hand-o-right"></i> Trang bạn yêu cầu bị xóa hoặc không có trên hệ thống của chúng tôi.</div>
+<div class="menu"><i class="fa fa-hand-o-right"></i> Trang bạn yêu cầu gặp sự cố lỗi do hệ thống và toàn bộ server.</div>
+<div class="menu"><i class="fa fa-hand-o-right"></i> Lỗi tải Trang do trình duyệt của bạn không được hỗ trợ.</div>
+<div class="menu"><i class="fa fa-asterisk"></i> <b>Lưu ý:</b> Khi gặp sự cố này, vui lòng báo cho admin biết để được  khắc phục sớm nhất! Xin cảm ơn! </div>
+</div>
+{{block('end')}}

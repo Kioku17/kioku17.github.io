@@ -1,0 +1,21 @@
+{% from 'func.twig' import login,up,add,get,level %}
+{% set login = login()|trim %}
+{% set rate = get('forum_'~url[1]~'_info','vote')|trim %}
+{% set nick = get('forum_'~url[1]~'_info','first') %}
+{% set data %}{% for i in 1..rate %}{{get('forum_'~url[1]|trim~'_vote_'~i)|replace({" ":""})}}{% endfor %}{% endset %}
+{% set data = data|split('@') %}
+<div class="phdr"><span itemscope itemtype="http://data-vocabulary.org/Breadcrumb" itemscope="itemscope"><a itemprop="url" href="/"><span itemprop="title">Trang chủ</span></a></span> » <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb" itemscope="itemscope"><a itemprop="url" href="/{{url[0]}}/{{url[1]}}/{{url[2]}}{% if p %}&p={{p}}{% endif %}"><span itemprop="title">{{ten}}</span></a></span> » <span><a class="reg_link">Bình chọn chủ đề</a></span></div>
+{% if login %}
+{% if login in data %}
+<div class="rmenu">Bạn đã vote rồi</div>
+{% elseif login == nick %}
+<div class="rmenu">Bạn là chủ topic, bạn không thể vote</div>
+{% elseif vote > rate %}
+<div class="gmenu">Lỗi dữ liệu</div>
+{% else %}
+{{up('forum_'~url[1]~'_vote_'~vote,login,'up')}}
+<div class="rmenu">Vote thành công</div>
+{% endif %}
+{% else %}
+<div class="gmenu">Bạn chưa đăng nhập</div>
+{% endif %}

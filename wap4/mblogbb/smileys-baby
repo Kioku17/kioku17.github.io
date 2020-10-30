@@ -1,0 +1,29 @@
+{% use '_blocks' %}
+{% set title='Biểu tượng Baby' %}
+{{ block('head') }}
+<div class="mainblok">
+ {% from 'paging.twig' import paging %} 
+{% set data = ':baby1: :baby2: :baby3: :baby4: :baby5: :baby6: :baby7: :baby8: :baby9: :baby10: :baby12: :baby13: :baby14: :baby15: :baby16: :baby17: :baby18: :baby19: :baby20: :baby21: :baby22: :baby23: :baby24: :baby25: :baby26: :baby27: :baby28: :baby29: :baby30: :baby31: :baby32: :baby33: :baby34: :baby35: :baby36: :baby37: :baby38: :baby39: :baby11: :baby40: :baby41: :baby42: :baby43: :baby44: :baby45: :baby46: :baby47: :baby48: :baby49: :baby50: :baby52: :baby52: :baby53: :baby54: :baby55: :baby56: :baby57: :baby58:'|split(' ') %}
+{% set total=data|length %}
+{% set page_max=total//15 %} 
+{% if total//15 != total/15 %} 
+{% set page_max=total//15+1 %} 
+{% endif %} 
+{% set url=get_uri_segments() %} 
+{% set p= get_get('p')|default(1) %}
+{% if p matches '/[a-zA-z]|%/' or p<1 %} 
+{% set p=1 %} 
+{% endif %}
+{% if p>page_max %} 
+{% set p=page_max %} 
+{% endif %} 
+{% set st=p*15-15 %}
+<div class="phdr"><b>Biểu tượng Baby ({{total}})</b></div>
+<div class="list1">
+{% for i in data|slice(st,15) %}
+<img src="/images/{{i|replace({')':'v1','(':'v2',':':''})}}.png" alt="{{img}}" /> {{i}}<br />
+{% endfor %}
+</div>
+ {{ paging('pages/smileys/baby.php?p',p,page_max) }}
+</div> 
+{{ block('end') }}

@@ -1,0 +1,29 @@
+{% use '_blocks' %}
+{% set title='Biểu tượng hài hước' %}
+{{ block('head') }}
+<div class="mainblok">
+ {% from 'paging.twig' import paging %} 
+{% set data = ':buonngu: :choang: :chay: :hh10: :hh02: :hh03: :hh04: :hh05: :hh06: :hh07: :hh08: :hh09: :hh10: :hh11: :hh12: :hh13: :hh14: :hh15: :hh18: :hh19: :hh16: :hh17: :hh20: :hh21:'|split(' ') %}
+{% set total=data|length %}
+{% set page_max=total//15 %} 
+{% if total//15 != total/15 %} 
+{% set page_max=total//15+1 %} 
+{% endif %} 
+{% set url=get_uri_segments() %} 
+{% set p= get_get('p')|default(1) %}
+{% if p matches '/[a-zA-z]|%/' or p<1 %} 
+{% set p=1 %} 
+{% endif %}
+{% if p>page_max %} 
+{% set p=page_max %} 
+{% endif %} 
+{% set st=p*15-15 %}
+<div class="phdr"><b>Biểu tượng hài hước ({{total}})</b></div>
+<div class="list1">
+{% for i in data|slice(st,15) %}
+<img src="/images/{{i|replace({')':'v1','(':'v2',':':''})}}.png" alt="{{img}}" /> {{i}}<br />
+{% endfor %}
+</div>
+ {{ paging('pages/smileys/haihuoc.php?p',p,page_max) }}
+</div> 
+{{ block('end') }}

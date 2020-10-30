@@ -1,0 +1,214 @@
+{% macro rwurl(data) %}{% spaceless %}
+{% set data = data|lower|trim|replace({'á':'a','à':'a','ả':'a','ã':'a','ạ':'a','ă':'a','ắ':'a','ằ':'a','ẳ':'a','ẵ':'a','ặ':'a','â':'a','ấ':'a','ầ':'a','ẩ':'a','ẫ':'a','ậ':'a','æ':'a','ä':'a','đ':'d','ð':'d','é':'e','è':'e','ẻ':'e','ẽ':'e','ẹ':'e','ê':'e','ế':'e','ề':'e','ể':'e','ễ':'e','ệ':'e','í':'i','ì':'i','ì':'i','ỉ':'i','ĩ':'i','ị':'i','ï':'i','î':'i','ó':'o','ò':'o','ỏ':'o','õ':'o','ọ':'o','ô':'o','ố':'o','ồ':'o','ổ':'o','ỗ':'o','ộ':'o','ơ':'o','ớ':'o','ờ':'o','ở':'o','ỡ':'o','ợ':'o','ö':'o','ø':'o','ú':'u','ù':'u','ủ':'u','ũ':'u','ụ':'u','ư':'u','ứ':'u','ừ':'u','ử':'u','ữ':'u','ự':'u','ü':'u','û':'u','ý':'y','ỳ':'y','ỷ':'y','ỵ':'y','ỹ':'y'}) %}
+{% set arr = data|split() %}
+{% set abc = ('1234567890qwertyuiopasdfghjklzxcvbnm') %}
+{% set azz %}{% for i in arr|keys %}{% if arr[i] in abc %}{{arr[i]}}{% else %}{% if arr[(i-1)] in abc %}-{% endif %}{% endif %}{% endfor %}{% endset %}
+{% set arr = azz|split()%}
+{% for i in arr|keys %}{% if arr[i]=='-' %}{% if arr[(i-1)] in abc and arr[(i+1)] in abc %}-{% endif %}{% else %}{{arr[i]}}{% endif %}{% endfor %}
+{% endspaceless %}{% endmacro %}
+{% macro login() %}{% spaceless %}{% set auto=get_cookie('auto') %}{% if get_data_count('auto_'~auto)>0 %}{{ get_data_by_id('auto_'~auto,get_data('auto_'~auto)|last.id).data|trim }}{% endif %}{% endspaceless %}{% endmacro %}
+{% macro get_key(key, i, v1, v2, v3) %}
+{% import 'func.twig' as func %}
+{% from 'bbcode.twig' import bbcode %}
+{% from 'time.twig' import ago %}
+{% set data = get_data(key)|last.data|split('-||-') %}
+{% if v1 and v2 and v3 %}
+{% set i1 = data[i-1]|json_decode[v1] %}
+{% set i2 = data[i-1]|json_decode[v2] %}
+{% set i3 = data[i-1]|json_decode[v3] %}
+{{func.account(i1)}}: {{bbcode(i2)}} <font color="gray">({{ago(i3)}})</font>
+{% else %}
+{{bbcode(data[i-1]|json_decode[v1])}}
+{% endif %}
+{% endmacro %}
+{% macro add_data(key, i, v, u) %}
+{% set data = get_data(key)|last.data|split('-||-') %}
+{% set up = data[i-1]|json_decode %}
+{% if up == NULL %}
+{% set up = [] %}
+{% endif %}
+{% set up = up|merge({(v):u})|json_encode %}
+{% set f = data[:i-1]|join('-||-') %}
+{% set l = data[i:]|join('-||-') %}
+{% set id = get_data(key)|last.id %}
+{% if f == NULL %}
+{% set data = [up,l] %}
+{% elseif l == NULL %}
+{% set data = [f,up] %}
+{% else %}
+{% set data = [f,up,l] %}
+{% endif %}
+{{ update_data_by_id(key, id, data|join('-||-')) }}
+{% endmacro %}
+{% macro del_data(key, i) %}
+{% set data = get_data(key)|last.data|split('-||-') %}
+{% set f = data[:i-1]|join('-||-') %}
+{% set l = data[i:]|join('-||-') %}
+{% set id = get_data(key)|last.id %}
+{% if f == NULL %}
+{% set data = [l] %}
+{% elseif l == NULL %}
+{% set data = [f] %}
+{% else %}
+{% set data = [f,l] %}
+{% endif %}
+{{ update_data_by_id(key, id, data|join('-||-')) }}
+{% endmacro %}
+{% macro get(key,v) %}{% spaceless %} 
+{% if v %}
+{{ get_data_by_id(key,get_data(key)|last.id).data|json_decode[v] }}
+{% else %}
+{{ get_data_by_id(key,get_data(key)|last.id).data|raw }}{% endif %}
+ {% endspaceless %}{% endmacro %}
+{% macro add(key,k,v) %}
+ {% set id=get_data(key)|last.id %}
+{{ update_data_by_id(key,id,get_data_by_id(key,id).data|json_decode|merge({(k):v})|json_encode) }}
+{% endmacro %}
+{% macro del(key,v,up) %} 
+{% set data = get_data_by_id(key,get_data(key)[0].id).data %} 
+{% set id = get_data(key)[0].id %} 
+{% if up %}
+{% set d=' '~v~' @ ' %}
+{% set data=data|replace({(d):""}) %}
+{{ update_data_by_id(key,id,data) }}
+{% else %}
+ {{ delete_data_by_id(key,id) }}
+{% endif %} 
+{% endmacro %}
+{% macro up(key,v,up) %} 
+{% set data = get_data_by_id(key,get_data(key)[0].id).data %} 
+{% set id = get_data(key)[0].id %} 
+{% if up %}
+{% set d=' '~v~' @ ' %}
+{% set data=data|replace({(d):""}) %}
+{% if get_data_count(key) == '0' %}
+{% set save=save_data(key,d) %}
+{% else %}
+{{ update_data_by_id(key,id,' '~v~' @ '~data) }}
+{% endif %}
+{% else %}
+{% set save=save_data(key,v) %}
+{% endif %} 
+{% endmacro %}
+{% macro auto() %}{% for i in 1..30%}{{ random('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') }}{% endfor %}{% endmacro %}
+{% macro level(l) %}{% if l=='right9s' %}<span class="{{l}}">Giám sát</span>{% elseif l=='right8s' %}<span class="{{l}}">Quản lý</span>{% elseif l=='right7s' %}<img src="/images/smod.gif">{% elseif l=='right6s' %}<img src="/images/mod.gif">{% elseif l=='right5s' %}<span class="{{l}}">Thần Thông Thái</span>{% elseif l=='right4s' %}<span class="{{l}}">Hot Boy</span>{% elseif l=='right3s' %}<span class="{{l}}">TMod</span>{% elseif l=='right2s' %}<span class="{{l}}">Photoshop</span>{% elseif l=='right1s' %}<span class="{{l}}">Hot Girl</span>{% else %}Thành viên{% endif %}{% endmacro %}
+{% macro size(byte) %}{% if byte >= '1073741824' %}{% set show = (byte|trim/1073741824)|round(2,'floor')~' GB' %}{% elseif byte >= '1048576' %}{% set show = (byte|trim/1048576)|round(2,'floor')~' MB' %}{% elseif byte >= '1024' %}{% set show = (byte|trim/1024)|round(2,'floor')~' Kb' %}{% else %}{% set show = byte~' byte' %}{% endif %}{{show}}{% endmacro %}
+{% macro dow(key,v,dow) %} 
+{% set data = get_data_by_id(key,get_data(key)|last.id).data %} 
+{% set id = get_data(key)|last.id %} 
+{% if dow %} 
+{% set d=' '~v~' @ ' %} 
+{% set data=data|replace({(d):""}) %} 
+{{ update_data_by_id(key,id,data~' '~v~' @ ') }} 
+{% else %} 
+{{ update_data_by_id(key,id,v) }} 
+{% endif %} 
+{% endmacro %} 
+
+{% macro adds(k,v) %}{% set entry = get_data(k).0 %} 
+{{update_data_by_id(k,entry.id,entry.data|json_decode|default({})|merge(v|default({}))|json_encode)}}
+{% endmacro %} 
+{% macro user(a,b) %}{% spaceless %}
+
+   {% set user=get_cookie('auto') %}
+
+  {% if b %} {% set key = 'user_'~a %} 
+
+{% set v = b %}
+
+  {% else %}
+
+  {% set key = 'user_'~get_data_by_id('user_'~user,get_data('user_'~user)|last.id).data|raw %}
+
+{% set v = a %}
+
+  {% endif %}
+
+  {{get_data_by_id(key,get_data(key)|last.id).data|json_decode[v]}}
+
+ {% endspaceless %}{% endmacro %}
+
+
+
+{% macro farm(a,b) %}{% spaceless %}
+
+   {% set user=get_cookie('auto') %}
+
+  {% if b %} {% set key = 'id_farm_'~a %} 
+
+{% set v = b %}
+
+  {% else %}
+
+  {% set key = 'id_farm_'~get_data_by_id('user_'~user,get_data('user_'~user)|last.id).data|raw %}
+
+{% set v = a %}
+
+  {% endif %}
+
+  {{get_data_by_id(key,get_data(key)|last.id).data|json_decode[v]}}
+
+ {% endspaceless %}{% endmacro %}
+
+{% macro config(data) %}{% spaceless %}
+ {% set key = 'db_config' %} 
+  {% if data %}
+  {{get_data_by_id(key,get_data(key)|last.id).data|json_decode[data]}}
+  {% else %}
+0
+  {% endif %}
+
+ {% endspaceless %}{% endmacro %}
+  
+ {% macro uplist(key,v,nd,up) %} 
+{% set data = get_data(key)[0].data|json_decode[v] %} 
+{% set id = get_data(key)|last.id %} 
+{% set d=' '~nd|trim~' @ ' %}
+{% set data=data|replace({(d):""}) %}
+     {% if up %}
+  {{ update_data_by_id(key,id,get_data_by_id(key,id).data|json_decode|merge({(v):' '~nd~' @ '~data})|json_encode) }}
+  {% else %}
+   {{ update_data_by_id(key,id,get_data_by_id(key,id).data|json_decode|merge({(v):data})|json_encode) }}
+  {% endif %}
+{% endmacro %}
+  
+  
+  
+  {% macro online(id) %}{% spaceless %}
+ {% set key = 'id_user_'~id %} 
+    {% set ttt = get_data_by_id(key|trim,get_data(key|trim)|last.id).data|json_decode['on'] %}
+{% if id ==2 %}1{% else %}{% if (ttt|trim+900) >= 'now'|date('U') %}1{% else %}0{% endif %}{% endif %}
+ {% endspaceless %}{% endmacro %}
+  
+  
+    {% macro account(user) %}{% spaceless %}
+{% from 'func.twig' import get,add,up,level %}
+{% set nick = get('user_'~user,'nick') %}
+{% set rights = get('user_'~user,'level') %}
+{% set tn = get('user_'~user,'tinnhiem') %}
+{% set icon = get('user_'~user,'icon') %}
+{% set icon2 = get('user_'~user,'icon2') %}
+{% set vip = get('user_'~user,'vip') %}
+{% set block = get('user_'~user,'block') %}
+{% if block == 'yes' %}<b><s><font color="black">{{nick}}</font></s></b>{% else %}{% if vip and vip|trim >= 1 %}<img class="vip{{vip}}" src="http://api.cctalk.vn/bxhvip/img/uservip_level{{vip}}.png" width="50px" title="VIP {{vip}}" alt="VIP {{vip}}">{% else %}{% if icon %}<img src="/images/{{icon}}.png" title="icon">{% endif %}{% if icon2 %}<img src="/images/{{icon2}}.png" title="icon">{% endif %}{% endif %} <b class="{{rights}}">{{nick}}</b>{% if tn|trim >= 100 %}<img src="/images/uytin.png" width="15" height="15" title="icon">{% endif %}{% endif %}
+ {% endspaceless %}{% endmacro %}
+ 
+{% macro banghoi(clan) %}{% if clan=='tramphongbang' %}<span class="{{clan}}">Trảm Phong Bang</span>{% elseif clan=='nguoivocam' %}<span class="{{clan}}">Người Vô Cảm</span>{% elseif clan=='clanyouandme' %}Clan You And Me{% elseif clan=='hoikhongsovo' %}Hội Không Sợ Vợ{% elseif clan=='hoideptrai' %}<span class="{{clan}}">Hội Đẹp Trai</span>{% elseif clan=='sieucapmanganhoi' %}<span class="{{clan}}">Siêu Cấp Mangan Hội</span>{% elseif clan=='leagueof4um' %}<span class="{{clan}}">League Of m4um - Liên Minh m4um</span>{% elseif clan=='dreamteam' %}<span class="{{clan}}">Dream Team</span>{% elseif clan=='hentai' %}<span class="{{clan}}">Hentai Hội</span>{% else %}Vô Gia Cư{% endif %}{% endmacro %}
+
+{% macro history(ufr, fr) %}
+{% set uid = get_data('user_'~fr)[0].data|json_decode %}
+{% if ufr == 'main.php' or ufr == 'index.php' or not ufr %}
+{% set tit='Trang chủ' %}
+{% elseif ufr == 'forums' or ufr == 'category' or ufr == 'threads' %}
+{% set tit='Diễn đàn' %}
+{% elseif ufr == 'users' and fr == 'online.php' %}
+{% set tit='Ở đây, trong danh sách này' %}
+{% elseif ufr == 'user' and not fr %}
+{% set tit='Danh sách thành viên' %}
+{% elseif ufr == 'account' and fr %}
+{% set tit='Trang cá nhân '~uid.nick %}
+{% elseif ufr == 'account' and not fr %}
+{% set tit='Trang cá nhân' %}
+{% endif %}
+<a href="/{{ufr}}{% if fr %}/{{fr}}{% endif %}">{{tit}}</a>
+{% endmacro %}

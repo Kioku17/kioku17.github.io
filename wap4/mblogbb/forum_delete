@@ -1,0 +1,25 @@
+{% from 'func.twig' import login,up,add,get,level,del %}
+{% use '_blocks' %}
+{% set login = login()|trim %}
+{% set lv = get('user_'~login,'level')|trim %}
+{% set nick = get('forum_'~url[1]~'_'~delete,'nick') %}
+<div class="phdr"><span itemscope itemtype="http://data-vocabulary.org/Breadcrumb" itemscope="itemscope"><a itemprop="url" href="{{block('link')}}"><span itemprop="title">Trang chủ</span></a></span> » <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb" itemscope="itemscope"><a itemprop="url" href="{{block('link')}}/forums/{{id}}"><span itemprop="title">{{nameid}}</span></a></span> » <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb" itemscope="itemscope"><a itemprop="url" href="{{block('link')}}/{{url[0]}}/{{url[1]}}/{{url[2]}}{% if p > 1 %}?p={{p}}{% endif %}"><span itemprop="title">{{ten}}</span></a></span> » <span><a class="reg_link">Xóa Bình Luận</a></span></div>
+{% if delete == '1' %}
+<div class="rmenu">Bạn không thể xóa commnent này </div>
+{% elseif get('user_'~login,'level') == 'right9s' and delete !='1' %}
+{% if request_method()|lower == "post" %}
+{{del('forum_'~url[1]~'_'~delete,'del')}}
+{{del('forum_'~url[1]~'_show',delete,'up')}}
+{% if nick %}
+{{add('user_'~nick,'cmt',get('user_'~nick,'cmt')|trim-1)}}
+{% endif %}
+{{add('info','baiviet',get('info','baiviet')|trim-1)}}
+<div class="list1">Xóa comment thành công</div>
+{% else %}
+<div class="list1">Bạn chắc chắn muốn xóa chứ ?</div>
+<div class="list1"><form action="" method="post"><input type="submit" value="  Delete  "><a href="/{{url[0]}}/{{url[1]}}/{{url[2]}}{% if p %}?p={{p}}{% endif %}" class="phdr"
+>Quay lại</a></form></div>
+{% endif %}
+{% else %}
+<div class="list1">Bạn không có quyền xóa comment của người khác</div>
+{% endif %}

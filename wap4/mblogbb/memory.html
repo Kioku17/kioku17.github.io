@@ -1,0 +1,194 @@
+    <!doctype html>
+    <html lang="en">
+    <head>
+    <meta charset="utf-8">
+    <title>Memory</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous">
+    </script>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=1">
+    <link rel="stylesheet prefetch" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+    <link rel="stylesheet prefetch" href="https://fonts.googleapis.com/css?family=Coda">
+    <link rel="stylesheet" href="/theme/memory.css">
+    </head>
+    <body>
+
+    <div class="container">
+    <header>
+ <div class="phdr">
+    <section class="score-panel">
+
+        <ul class="stars">
+    <li><i class="fa fa-star"></i></li>
+    <li><i class="fa fa-star"></i></li>
+    <li><i class="fa fa-star"></i></li>
+    </ul>
+    
+        <span class="moves">0</span> Moves
+        <div class="restart">
+        RESTART
+    <i class="fa fa-repeat"></i>
+            </div>
+
+        <span class="timer">
+
+       Time : 00:00:00
+
+        </span>
+    </section>
+    </header>
+</div>
+   <div class="modal">
+   <div class="modal-content">
+       <p class="modal-message">You win !</p>
+  <div class="modal-element">
+      <span>Time :</span>
+       </div>
+       <div class="modal-element">
+           <span>Moves :</span>
+       </div>
+       <div class="modal-element">
+           <span> Stars :</span> 
+        </div>
+       <div class="modal-element">
+           <span><a href="/memory">Reset</a></span> 
+        </div>
+       </div>
+    </div>
+   </div>
+   </body>
+    <script>
+    // Danh sách tất cả các thẻ bài
+    var Cards = ["fa fa-diamond","fa fa-paper-plane-o","fa fa-anchor","fa fa-bolt","fa fa-cube","fa fa-anchor","fa fa-leaf","fa fa-bicycle","fa fa-diamond","fa fa-bomb","fa fa-leaf","fa fa-bomb","fa fa-bolt","fa fa-bicycle","fa fa-paper-plane-o","fa fa-cube"];
+    // Một mảng trống trong đó các giá trị của các thẻ mở được đẩy để so sánh.
+    var OpenCards= [];
+    //Một mảng trống của thẻ nơi thẻ xáo trộn được lưu trữ.
+    var shuffleCards=[];
+    var tilesFlipped=0;
+    var numOfmoves=0;
+    // Function trộn một mảng thẻ.
+    function shuffle(array) {
+    var currentIndex = array.length, temporaryValue, randomIndex;
+    while (currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+    }
+    return array;
+    }
+    // trộn các mảng thẻ
+    shuffleCards = shuffle(Cards);
+    // Bắt đầu mã bộ hẹn giờ
+    var clearTime; 
+    var seconds = 0, minutes = 0, hours = 0;
+    var clearState; 
+    var secs, mins, gethours ; 
+    //Timer start function  
+    function startWatch( ) {
+    /* kiểm tra xem giây có bằng 60 và thêm +1 đến phút và đặt giây thành 0 */ 
+    if ( seconds === 60 ) { seconds = 0; minutes = minutes + 1; }
+    /* bạn sử dụng toán tử tenary để định dạng phút nên xem và thêm 0 đến phút nếu nhỏ hơn 10 */ 
+    mins = ( minutes < 10 ) ? ( '0' + minutes + ': ' ) : ( minutes + ': ' );
+    /* kiểm tra xem phút có bằng 60 hay không và thêm +1 đến giờ đặt phút thành 0 */ 
+    if ( minutes === 60 ) { minutes = 0; hours = hours + 1; }
+    /* bạn sử dụng toán tử tenary của javascript để định dạng số giờ sẽ trông như thế nào và thêm 0 đến hàng giờ nếu nhỏ hơn 10 */
+    gethours = ( hours < 10 ) ? ( '0' + hours + ': ' ) : ( hours + ': ' );
+    secs = ( seconds < 10 ) ? ( '0' + seconds ) : ( seconds ); 
+    // hiển thị đồng hồ bấm giờ
+    var time =gethours + mins + secs;
+    $('.container').find('.timer').html(time);
+    /* gọi bộ đếm giây sau khi hiển thị đồng hồ bấm giờ và số giây tăng thêm +1 để giữ nó */
+    seconds++; 
+    /* gọi setTimeout () để giữ cho bộ đếm thời gian hoạt động!! */ 
+    clearTime = setTimeout( "startWatch( )", 1000 ); } 
+    // Function được sử dụng để khởi động bộ hẹn giờ
+    function startTime( ) { 
+    /* kiểm tra xem giây, phút và giờ bằng 0 và bắt đầu hẹn giờ */ 
+    if ( seconds === 0 && minutes === 0 && hours === 0 ) {  
+    startWatch( );
+    } }
+
+// function để dừng thời gian
+    function stopTime( ) { 
+    /* kiểm tra xem giây, phút và giờ không bằng 0 */ 
+    if ( seconds !== 0 || minutes !== 0 || hours !== 0 ) { 
+    /* hiển thị toàn bộ thời gian trước khi đặt lại đồng hồ dừng */ 
+    var time = gethours + mins + secs;     
+    $('.container').find('.timer').html(time);
+    /*Thêm thời gian, di chuyển và xếp hạng sao cho phương thức You Win chỉ sau khi trò chơi hoàn tất */
+    var StarsModalElem=$('.modal-element').eq(2);
+    var MovesModalElem=$('.modal-element').eq(1);
+    var TimerModalElem=$('.modal-element').eq(0);
+    $('.stars').clone().appendTo(StarsModalElem);
+    $('.moves').clone().appendTo(MovesModalElem);
+    $('.timer').clone().appendTo(TimerModalElem);
+    /* xóa đồng hồ bấm giờ bằng cách sử dụng giá trị trả về setTimeout () 'clearTime' làm ID */ 
+    clearTimeout( clearTime ); }}  
+    
+
+    // Tạo phần tử HTML cho boong và thẻ
+    $('.container').append('<ul class="deck"></ul>');
+    for (var i = 0;i < Cards.length;i++) {
+    $('.deck').prepend('<li class="card"></li>'); 
+    }
+    $('.card').prepend('<i></i>');
+
+    for (var i = 0;i < Cards.length;i++) {
+    $('.card').eq(i).find('i').addClass(shuffleCards[i]);    
+    }
+
+    // Nhấp vào sk restar để khởi động lại trò chơi
+    $('.restart').click(function(){
+    location.reload();
+    });
+
+    //Trình xử lý sự kiện để lật thẻ khi được nhấp vào
+    $('.deck').on('click','.card',function (event) {
+    /*Bắt đầu hẹn giờ khi một thẻ được nhấp*/
+    startTime();
+    /*Điều kiện cần thiết để lật thẻ, nghĩa là thẻ chỉ có thể được lật nếu lớp = 'thẻ' hiện diện luôn đúng và chỉ có một thẻ khác được mở..*/
+    if ($(this).attr('class')==='card' && OpenCards.length<2){
+    /*Tên CLass của một thẻ mở được đẩy để mở mảng khi chỉ có một thẻ được mở.*/
+    if (OpenCards.length===0) {
+    $(this).toggleClass('open');
+    OpenCards.push($(this).children().attr('class'));
+    }
+    else if (OpenCards.length===1) {
+    $(this).toggleClass('open');
+    OpenCards.push($(this).children().attr('class'));
+    /*Comparison of two open cards-If matched */
+    if (OpenCards[0]=== OpenCards[1]) {
+    $('.card').filter($('.open')).toggleClass('open match');
+    tilesFlipped=tilesFlipped + 2;
+    numOfmoves=numOfmoves+1;
+    $('.moves').text(numOfmoves);
+    OpenCards= [];
+    }
+    else {
+    function flipBack () {
+    $('.card').filter($('.open')).toggleClass('open');
+    OpenCards = [];
+    numOfmoves=numOfmoves+1;
+    $('.moves').text(numOfmoves);
+    }
+    setTimeout(flipBack, 600);
+    }
+    }
+
+    if (numOfmoves >16 && numOfmoves < 25) {
+    var star3 =$('.stars').find('li').eq(2);
+    star3.css('color','black');
+    }
+    if (numOfmoves > 25) {
+    var star2 =$('.stars').find('li').eq(1);
+    star2.css('color','black');
+    }
+    if (tilesFlipped === Cards.length) {
+    stopTime();
+    $('.modal').css('display','block');
+    }     
+    }
+    });
+    </script>
+    </html>
