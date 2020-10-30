@@ -38,4 +38,6 @@ Như phía trên mình đã đề cập là code, và cách import chúng, còn 
 
 Cuối cùng, đừng quên chạy <strong>web/install</strong> để khởi tạo những entry gốc nhé.
 
+À, mình quên, nếu các bạn sử dụng bộ code này mà cảm thấy bị lỗi khi tải lên ảnh bìa & ảnh đại diện á, các bạn import lại file <strong>_avatar</strong> từ GPlay nhé.
+
 Chúc các bạn mạnh khỏe và thành công!
