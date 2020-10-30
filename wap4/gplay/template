@@ -1,0 +1,90 @@
+{% macro head(title, keys, desc) %}
+{% set url = get_uri_segments() %}
+{% import 'functions' as func %}
+{% set signin=func.signin()|trim %}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+{#<!DOCTYPE html>#}
+<html lang="vi">
+<head>
+{# meta tag #}
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+<meta name="HandheldFriendly" content="true" />
+<meta name="MobileOptimized" content="width" />
+<meta content="yes" name="apple-mobile-web-app-capable" />
+<meta property="og:site_name" content="GPlay">
+<meta name="author" content="AnonyJohn">
+<meta name="robots" content="index,follow">
+<meta name="googlebot" content="index,follow">
+<meta name="google" content="notranslate">
+<meta name="turbolinks-cache-control" content="no-cache">
+{# end meta #}
+<title>{{title|default('GPlay')}}</title>
+{# favicon #}
+<link rel="icon" href="http://authorbb.viwap.com/images/favicon-32x32.png" type="image/png" />
+<link rel="shortcut icon" href="http://authorbb.viwap.com/images/favicon.ico" type="image/x-icon" />
+<link rel="apple-touch-icon" href="http://authorbb.viwap.com/images/favicon-512x512.png" />
+{# end favicon #}
+{#<link rel="preload" href="/theme/style.css" as="style">#}
+<link rel="stylesheet" href="/theme/style.css" />
+{% if url[0]=='upload.php' %}
+<link rel="stylesheet" href="/theme/imgur.css" />
+{% elseif url[0]=='tools' and url[1]=='cron' %}
+<link rel="stylesheet" href="/theme/cron.css" />
+{% elseif url[0]=='url' %}
+<link rel="stylesheet" href="/theme/darkly.css" />
+{% endif %}
+</head>
+<body>
+{#<table style="width: 100%;" class="logo"><tr><td valign="bottom"><h1 class="logo-font">GPlay</h1></td><td align="right"><a><b>VN</b></a>&#160;<img src="/images/flags-vn.gif" alt=""/>&#160;</td></tr></table>#}
+<div class="nav-top"><a href="/"{% if url[0]=='' or url[0]=='index.php' %} class="active"{% endif %}>GPlay</a><a href="/upload.php"{% if url[0]=='upload.php' %} class="active"{% endif %}>Upload</a>{% if url[0]=='file' %}<a class="active">Lưu trữ</a>{% endif %}<a href="/tools"{% if url[0]=='tools' %} class="active"{% endif %}>Công cụ</a>{% if url[0]=='functions' %}<a class="active">Hệ thống</a>{% elseif signin and url[0]!='functions' %}<a href="/functions/sign-out.php">Đăng xuất</a>{% elseif not signin and url[0]!='functions' %}<a href="/functions/sign-in.php">Đăng nhập</a>{% endif %}</div>
+<div class="container">
+<div class="content">
+{% set time="now"|date("H:i","Asia/Ho_Chi_Minh") %}
+{% set gio=time|split(':')[0] %}
+{% if gio in 1..5 %}
+{% set chao='Dậy sớm thế, không ngủ hả!!' %}
+{% elseif gio in 6..9 %}
+{% set chao='Buổi Sáng Tốt Lành. Ngày Mới làm việc, học tập thành công.' %}
+{% elseif gio in 10..12 %}
+{% set chao='Ăn cơm rồi ngủ trưa để chiều còn đi học, đi làm nữa chứ mấy thým' %}
+{% elseif gio in 13..16 %}
+{% set chao='Buổi chiều học tập và làm việc vui vẻ nha!!!' %}
+{% elseif gio in 17..19 %}
+{% set chao='Ăn tối vui vẻ và ngon miệng nha mấy thým' %}
+{% elseif gio in 20..23 or gio=="0" %}
+{% set chao='Học tối, làm việc vui vẻ nhoá.Buổi tối tốt lành' %}
+{% endif %}
+<div class="list-group">
+<div class="list-group-item list-group-item-warning"><i class="fa fa-bell"></i> Giờ là: {{time}}. {{chao}}</div>
+</div>
+{% endmacro %}
+{% macro end() %}
+{% set run = get_data('notepad')[0].data|json_decode %}
+</div>
+</div>
+<div class="footer"><div class="footer-menu"><b>Số bản lưu</b> {{run.file}}, <b>IP:</b> {{ip()}}
+</div></div>
+{#<div class="footer-row" align="center">&copy;2018 Copyright by GPlay</div>#}
+{#<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/balloon-css/0.5.0/balloon.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/turbolinks/5.1.1/turbolinks.js"></script>
+<script>
+$(document).ready(pageLoadTransition);
+$(document).on('page:load', pageLoadTransition);
+</script>
+<script>
+(function(e,t,n,i,s,a,c){e[n]=e[n]||function(){(e[n].q=e[n].q||[]).push(arguments)}
+;a=t.createElement(i);c=t.getElementsByTagName(i)[0];a.async=true;a.src=s
+;c.parentNode.insertBefore(a,c)
+})(window,document,"galite","script","https://cdnjs.cloudflare.com/ajax/libs/ga-lite/2.0.1/ga-lite.min.js");
+
+galite('create', 'UA-123383139-1', 'auto');
+galite('send', 'pageview');
+</script>#}
+</body>
+{#<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+<script src="/js/loading.js"></script>#}
+</html>
+{% endmacro %}

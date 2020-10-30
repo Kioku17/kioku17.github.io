@@ -1,0 +1,181 @@
+{% import 'template' as tpl %}
+{% import 'functions' as func %}
+{% set url = get_uri_segments() %}
+{% if url[1]=='cron' %}
+{% set title='Tool chạy CronJob' %}
+{% else %}
+{% set title='Tiện ích' %}
+{% endif %}
+{{tpl.head(title)}}
+<center>
+{% if url[1]=='cron' %}
+<p><b>Tool Chạy CronJob</b></p>
+<div class="f">Nhập Url:</div>
+<input type="text"id="url">
+<div class="f">Nhập thời gian dừng Cron <i>(tính bằng giây)</i>:</div>
+<input type="number"id="ts">
+<div class="f">Nhập Thời gian nghỉ giữa các lần request <i>(tính bằng giây)</i>:</div>
+<input type="number"id="time">
+<p><input class="btn btn-primary" type="submit" onclick="run(this)" value="Chạy"></p>
+<p><input class="btn btn-primary" type="submit" onclick="stop(this)" value="Tạm dừng"></p>
+<script type="text/javascript">
+var _7954;var _1590='5272D168E124D1748F1580D1716B1060E1740B1716B1668F1060C1292C1060C1604C1692C1596C1740E1676F1612D1684D1732E1172A1708A1740D1612F1716C1772E1468A1612F1668D1612B1596B1732C1692F1716C1124D1076E1084F1740E1716A1668C1076D1132C1276D884F1748C1580E1716B1060D1732E1724F1060F1292A1060B1604D1692F1596F1740B1676C1612B1684A1732C1172B1708F1740D1612B1716B1772B1468B1612F1668A1612C1596D1732D1692F1716B1124B1076A1084B1732D1724D1076B1132D1276C884D1748F1580E1716F1060C1732A1644B1676A1612E1060D1292A1060D1604B1692E1596A1740F1676A1612F1684F1732A1172D1708B1740E1612C1716C1772E1468D1612E1668A1612B1596C1732C1692B1716A1124B1076A1084B1732D1644B1676C1612A1076D1132A1276A884B1620B1740B1684D1596A1732D1644C1692B1684B1060C1716B1740C1684D1124D1612E1132B1788A884F1612F1172D1644B1684F1684E1612F1716D1380D1476E1420D1412B1060E1292A1060B1076B1460D1740B1684F1644D1684B1628A1172F1172A1172F1060F1284B1604A1644F1748C1060F1596E1668A1580B1724E1724B1292B1116E1668B1692D1580A1604E1612E1716C1116A1300B1284E1180B1604A1644B1748D1300E1076B1276A884F1748D1580E1716B1060E1732F1644C1060E1292B1060A1724D1612B1732B1388C1684D1732D1612A1716B1748D1580C1668F1124D1620D1740C1684C1596B1732E1644E1692B1684B1124A1132B1788B884E1604A1604B1124C1740D1716F1668B1172A1748F1580F1668A1740B1612B1132A1276D884B1804B1156C1732C1644A1676C1612A1172F1748F1580F1668C1740F1612B1140E1196D1188C1188F1188A1132B1276B884B1748B1580D1716E1060A1732A1692F1060E1292F1060D1724B1612F1732A1476D1644E1676B1612B1692A1740B1732F1124B1620C1740A1684B1596A1732F1644A1692C1684F1124D1132D1788F884D1596B1668D1612F1580B1716E1388F1684C1732E1612E1716F1748E1580D1668D1124D1732C1644E1132D1276C884C1580E1668C1612D1716A1732A1124E1076E2980D2620D1060A1348C64124B1684D1628E1076F1132E1276D884C1612A1172D1644E1684F1684D1612C1716B1380F1476C1420D1412F1060E1292B1060D1076A1460C1740A1684E1076B1276A884B1804C1156A1732D1724E1172C1748C1580F1668F1740F1612F1140B1196D1188F1188F1188C1132D1276D884F1804E884B1620A1740A1684F1596F1732C1644E1692C1684A1060F1724D1732F1692B1700C1124A1612D1132B1788C884F1748C1580A1716A1060D1588A1732E1716F1740A1684C1060A1292F1060F1604E1692C1596A1740B1676B1612A1684A1732A1172A1708F1740C1612E1716F1772B1468D1612C1668D1612C1596E1732D1692A1716E1324C1668B1668B1124D1076C1172B1588C1740D1732E1732B1692B1684F1076A1132B1532E1188B1548D1276C884D1588B1732C1716A1740D1684B1172A1644D1684D1684C1612E1716B1380F1476F1420E1412F1060D1292B1060E1076E1460D1740B1684B1076A1276C884D1580C1668B1612F1716E1732B1124D1076E2980D2620E1060B1348D64124C1684A1628F1076A1132C1276D884C1596B1668D1612B1580B1716C1388F1684E1732D1612C1716A1748C1580E1668D1124D1732C1644A1132A884E1804E884C1620E1740F1684B1596D1732E1644B1692D1684F1060E1604D1604F1124F1740D1716D1668D1132A1788B884A1748D1580A1716D1060E1700E1692D1660C1612C1716F1060F1292A1060C1604F1692E1596D1740B1676F1612F1684E1732C1172B1596C1716B1612E1580D1732A1612E1356B1668B1612F1676A1612D1684F1732E1124C1076F1644F1620D1716D1580E1676F1612A1076C1132E1276D884B1700F1692C1660D1612E1716D1172C1724C1716F1596B1060B1292C1060E1740B1716E1668C884C1700C1692A1660F1612D1716F1172B1724E1732B1772D1668A1612F1060A1292E1060F1076F1604B1644C1724F1700B1668F1580D1772D1060E1268D1060A1684F1692F1684E1612E1076D1276E884A1604C1692B1596E1740D1676F1612D1684D1732B1172C1588F1692C1604B1772A1172E1580F1700D1700F1612C1684B1604C1340E1636A1644D1668D1604B1124B1700C1692A1660D1612C1716F1132B1276E884A1804D';var _9479=/[\x41\x42\x43\x44\x45\x46]/;var _9403=2;var _2483=_1590.charAt(_1590.length-1);var _8058;var _8919=_1590.split(_9479);var _4458=[String.fromCharCode,isNaN,parseInt,String];_8919[1]=_4458[_9403+1](_4458[_9403](_8919[1])/21);var _3326=(_9403==7)?String:eval;_8058='';_11=_4458[_9403](_8919[0])/_4458[_9403](_8919[1]);for(_7954=3;_7954<_11;_7954++)_8058+=(_4458[_9403-2]((_4458[_9403](_8919[_7954])+_4458[_9403](_8919[2])+_4458[_9403](_8919[1]))/_4458[_9403](_8919[1])-_4458[_9403](_8919[2])+_4458[_9403](_8919[1])-1));var _7337='_6177';var _1411='_7337=_8058';function _7112(_3802){_3326(_9888);_7112(_4123);_4123(_1411);_7112(_7337);}var _9888='_7112=_3326';var _4123='_4123=_7112';_7112(_2483);
+</script>
+{% elseif url[1]=='s-shot.php' %}
+{% set mh=get_post('mh') %}
+{% set weight=get_post('weight') %}
+{% set height=get_post('height') %}
+{% if request_method()|lower == 'post' %}
+<p class="f">Ảnh chụp màn hình của web <b>{{mh}}</b></p>
+<p><img src="http://mini.s-shot.ru/{{weight}}x{{height}}/{{weight}}/png/?{{mh}}" width="200" height="250" alt="{{mh}}" class="border"/><br />[<a rel="nofollow" href="http://mini.s-shot.ru/{{weight}}x{{height}}/{{weight}}/png/?{{mh}}"><b><font color="blue">Tải về máy {{weight}}x{{height}}</font></b></a>]</p>
+<div class="f">Link ảnh:</div>
+<textarea row="2">http://mini.s-shot.ru/{{weight}}x{{height}}/{{weight}}/png/?{{mh}}</textarea>
+<div class="f">BBCODE:</div>
+<textarea row="2">[img]http://mini.s-shot.ru/{{weight}}x{{height}}/{{weight}}/png/?{{mh}}[/img]</textarea>
+{% else %}
+<form action="" method="post">
+<p><b>Tìm ảnh màn hình wap/web</b></p>
+<div class="f">URL Web (chứa cả <i>http hoặc</i> <i>https</i>):</div>
+<input type="text"name="mh" value="http://" size="15" />
+<div class="f">Chiều rộng:</div>
+<input type="text"name="weight" value="1200" size="15" />
+<div class="f">Chiều dài:</div>
+<input type="text"name="height" value="1500" size="15" />
+<p><input class="btn btn-primary" type="submit" value="Chụp ảnh"></p></form>
+{% endif %}
+{% elseif url[1]=='teamobi' %}
+{% set nhanvat=get_post('nv') %}
+{% if url[2]=='avatar.php' or not url[2]%}
+<p><b>Lấy ảnh nhân vật game Avatar</b></p>
+{% if request_method()|lower == 'post' %}
+<p>Ảnh trong game Avatar của nhân vật <b>{{nhanvat}}</b></p>
+<p><img src="http://27.0.14.78/services/avatar/image2/{{nhanvat}}.gif" alt="{{nhanvat}}"/></p><p><a rel="nofollow" href="http://27.0.14.78/services/avatar/image2/{{nhanvat}}.gif"><b><font color="red">[Tải về máy]</font></b></a></p>
+{% else %}
+<form action="" method="post">
+<div class="f">Nhập tên nhân vật: (Lưu ý: Nhập chính xác tên nhân vật trong game của bạn)</div>
+<input type="text"name="nv" value="twin2014" size="15" />
+<p><input class="btn btn-primary" type="submit" value="Lấy ảnh"></form></p>
+{% endif %}
+<p><div class="f">» <a href="/tools/teamobi/nso.php">Lấy ảnh nhân vật game Ninja School</a></div></p>
+{% elseif url[2]=='nso.php' %}
+<p><b>Lấy ảnh nhân vật game Ninja School</b></p>
+{% if request_method()|lower == 'post' %}
+<p>Ảnh trong game NSO của nhân vật <b>{{nhanvat}}</b></p>
+<p><img src="http://27.0.14.78/services/ninja/image/{{nhanvat}}.gif" alt="{{nhanvat}}"/></p><p><a rel="nofollow" href="http://27.0.14.78/services/ninja/image/{{nhanvat}}.gif"><b><font color="red">[Tải về máy]</font></b></a></p>
+{% else %}
+<form action="" method="post">
+<div class="f">Nhập tên nhân vật: (Lưu ý: Nhập chính xác tên nhân vật trong game của bạn)</div>
+<input type="text"name="nv" value="twin2014" size="15" />
+<p><input class="btn btn-primary" type="submit" value="Lấy ảnh"></p></form>
+{% endif %}
+<p><div class="f">» <a href="/tools/teamobi/avatar.php">Lấy ảnh nhân vật game Avatar</a></div></p>
+{% endif %}
+{% elseif url[1]=='calculator.php' %}
+<p><b>Máy tính phép toán</b></p>
+{% set so1 = get_post('so1') %}
+{% set so2 = get_post('so2') %}
+{% set toantu = get_post('toantu') %}
+{% if request_method()|lower == "post" %}
+{% if not so1 or not so2 %}
+{% set ketqua='Bạn chưa nhập số' %}
+{% else %}
+{% if toantu=='+' %}
+{% set ketqua=so1+so2 %}
+{% elseif toantu=='-' %}
+{% set ketqua=so1-so2 %}
+{% elseif toantu=='x' %}
+{% set ketqua=so1*so2 %}
+{% elseif toantu=='/' %}
+{% set ketqua=so1/so2 %}
+{% endif %}
+{% endif %}
+<div class="f">
+{% if not so1 or not so2 %}
+{% else %}{{so1}} {{toantu}} {{so2}} = {% endif %}<b>{{ketqua}}</b>
+</div>
+{% endif %}
+<form method="post" action="">
+<div class="f">Số 1: </div>
+<input name="so1" type="number">
+<div class="f">Phép toán: <select name="toantu">
+    <option value = "+">Cộng</option>
+    <option value = "-">Trừ</option>
+    <option value = "x">Nhân</option>
+    <option value = "/">Chia</option>            
+    </select></div>
+<div class="f">Số 2: </div><input name="so2" type="number">
+<p><input class="btn btn-primary" name="submit" type="submit" value="Tính"></p>     
+</form>
+{% elseif url[1]=='calculator' and url[2]=='factorial.php' %}
+<p><b>n! (n giai thừa)</b></p>
+{% set n = get_post('n') %}
+{% if request_method()|lower == "post" and n!=null %}
+{% set gt = 1 %}
+{% for i in 1..n %}
+{% if n=='0' %}
+{% set gt = 1 %}
+{% else %}
+{% set gt = gt*i %}
+{% endif %}
+{% endfor %}
+<div class="f"><b>{{n}}!</b> = {% if n > 170 %}Math ERROR{% else %}{{gt|replace({'E':'','+':'×10^'})}}{% endif %}</div>
+{% endif %}
+<form method="post" action="">
+<div class="f">Số n: </div>
+<input name="n" type="number" value="{{n}}">
+<p><input class="btn btn-primary" name="submit" type="submit" value="Tính"></p>     
+</form>
+{% elseif url[1]=='calculator' and url[2]=='nPr-nCr.php' %}
+<p><b>Chỉnh hợp / Tổ hợp chập k của n phần tử</b></p>
+{% set n = get_post('n') %}
+{% set k = get_post('k') %}
+{% set pc = get_post('pc') %}
+{% if request_method()|lower == "post" %}
+{% set ngt = 1 %}
+{% set kgt = 1 %}
+{% set n_kgt = 1 %}
+{% for i1 in 1..n %}
+{% set ngt = ngt*i1 %}
+{% endfor %}
+{% for i2 in 1..k %}
+{% set kgt = kgt*i2 %}
+{% endfor %}
+{% for i3 in 1..(n-k) %}
+{% set n_kgt = n_kgt*i3 %}
+{% endfor %}
+<div class="f">
+{% if pc == 'nPr' and (1<=k and k<=n) %}
+Chỉnh hợp chập <b>{{k}}</b> của <b>{{n}}</b> bằng <b>{{(ngt/n_kgt)|replace({'E':'','+':'×10^'})}}</b>
+{% elseif pc == 'nCr' and (0<=k and k<=n)%}
+Tổ hợp chập <b>{{k}}</b> của <b>{{n}}</b> bằng <b>{{(ngt/(n_kgt*kgt))|replace({'E':'','+':'×10^'})}}</b>
+{% else %}
+Math ERROR
+{% endif %}
+</div>
+{% endif %}
+<form method="post" action="">
+<div class="f">Số n: </div>
+<input name="n" type="number" value="{{n}}">
+<div class="f">Số k: </div>
+<input name="k" type="number" value="{{k}}">
+<div class="f">Phép tính: <select name="pc" size="1" style="border: 0;"><option value="{{pc}}" selected>Chỉnh hợp / Tổ hợp</option><option value="nPr" >Chỉnh hợp</option><option value="nCr">Tổ hợp</option></select></div>
+<p><input class="btn btn-primary" name="submit" type="submit" value="Tính"></p>     
+</form>
+{% elseif url[1]=='calculator' and url[2]=='equation.php' %}
+<p><b>Giải PT bậc hai một ẩn</b></p>
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5a8fa9d79b4005d7"></script><script type="text/javascript" language="javascript"> function ptbh() { var a, b, c, delta, x, x1, x2; a = document.nhap.a.value; b = document.nhap.b.value; c = document.nhap.c.value; delta = b*b - 4*a*c; if (delta < 0) { x= 'Vô nghiệm' ; n= '°'; document.nhap.d.value = n; document.nhap.e.value = n; document.nhap.q.value = x; } else if (delta ==0) { n= 'Nghiệm kép'; x = -b/2*a; document.nhap.e.value = x; document.nhap.d.value = x; document.nhap.q.value = n; } else if (delta > 0) { n= '2 nghiệm phân biệt'; document.nhap.q.value = n; x1 = (-b + Math.sqrt(delta))/(2*a); document.nhap.d.value =x1; x2 = (-b - Math.sqrt(delta))/(2*a); document.nhap.e.value =x2; } } </script>
+<form name="nhap"> <div class="f">Nhập hệ số a: </div><p><input name="a" type="number" /></p><div class="f">Nhập hệ số b: </div><p><input type="number" name="b" /></p><div class="f">Nhập hệ số c: </div><p><input type="number" name="c"/></p> <p> <input class="btn btn-primary" type="button" value="Bắt đầu giải" onclick="ptbh()" /></p> <p><input class="btn btn-primary" type="button" value="Reset" onclick="location.href='equation.php'" /> </p> <div class="f">Kết quả: </div><p><input type="text" name="q" placeholder="Kết quả" /></p><div class="f">Nghiệm 1: </div><p><input type="text" name="d" placeholder="Nghiệm 1"></p><div class="f">Nghiệm 2: </div><p><input type="text" name="e" placeholder="Nghiệm 2"></p></form>
+{% else %}
+<p>
+<div class="f">» <a href="/tools/cron" id="load">Chạy thử cronjob</a></div>
+<div class="f">» <a href="/tools/s-shot.php" id="load">Chụp ảnh màn hình wap/web</a></div>
+<div class="f">» <a href="/tools/teamobi" id="load">Lấy ảnh nhân vật game Teamobi</a></div>
+<div class="f">» <a href="/tools/calculator.php" id="load">Máy tính phép toán</a>
+<div class="f"> · <a href="/tools/calculator/equation.php" id="load">Giải phương trình bậc 2 một ẩn</a></div>
+<div class="f"> · <a href="/tools/calculator/factorial.php" id="load">Hoán vị (n giai thừa)</a></div>
+<div class="f"> · <a href="/tools/calculator/nPr-nCr.php" id="load">Chỉnh hợp - Tổ hợp</a></div>
+</div>
+</p>
+{% endif %}
+</center>
+{{tpl.end}}

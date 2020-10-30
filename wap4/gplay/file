@@ -1,0 +1,16 @@
+{% import 'functions' as func %}
+{% import 'template' as tpl %}
+{% set url = get_uri_segments() %}
+{% set id = url[1]|split('.')[1]|trim %}
+{% set file = get_data('file_'~id)[0].data|json_decode %}
+{{tpl.head(file.name)}}
+{% if file.name and file.doc and url[1]==func.rwurl(file.name)~'.'~id %}
+<div class="list-group"><div class="list-group-item list-group-item-success"><span class="glyphicon glyphicon-comment"></span> <b>{{file.name|raw}}</b></div>
+<textarea class="list-group-item" rows="5">{{file.doc}}</textarea>
+</div>
+{% else %}
+<div class="list-group"><div class="list-group-item list-group-item-danger"><span class="glyphicon glyphicon-comment"></span> <b>No File !</b></div>
+<textarea class="list-group-item" rows="5">Xin lỗi bạn, bản lưu trữ này không tồn tại.</textarea>
+</div>
+{% endif %}
+{{tpl.end}}

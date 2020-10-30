@@ -1,0 +1,260 @@
+{% macro ma_hoa(doc, type) %}
+{% if type=='encode' %}
+{{doc|replace({'a':'#&01','b':'#&02','c':'#&03','d':'#&04','e':'#&05','f':'#&06','g':'#&07','h':'#&08','i':'#&09','j':'#&10','k':'#&11','l':'#&12','m':'#&13','n':'#&14','o':'#&15','p':'#&16','q':'#&17','r':'#&18','s':'#&19','t':'#&20','u':'#&21','v':'#&22','w':'#&23','x':'#&24','y':'#&25','z':'#&26','A':'#&27','B':'#&28','C':'#&29','D':'#&30','E':'#&31','F':'#&32','G':'#&33','H':'#&34','I':'#&35','J':'#&36','K':'#&37','L':'#&38','M':'#&39','N':'#&40','O':'#&41','P':'#&412','Q':'#&43','R':'#&44','S':'#&45','T':'#&46','U':'#&47','V':'#&48','W':'#&49','X':'#&50','Y':'#&51','Z':'#&52','1':'#&53','2':'#&54','3':'#&55','4':'#&56','5':'#&57','6':'#&58','7':'#&59','8':'#&60','9':'#&61','0':'#&62',' ':'#&63'})}}
+{% elseif type=='decrypt' %}
+{{doc|replace({'#&01':'a','#&02':'b','#&03':'c','#&04':'d','#&05':'e','#&06':'f','#&07':'g','#&08':'h','#&09':'i','#&10':'j','#&11':'k','#&12':'l','#&13':'m','#&14':'n','#&15':'o','#&16':'p','#&17':'q','#&18':'r','#&19':'s','#&20':'t','#&21':'u','#&22':'v','#&23':'w','#&24':'x','#&25':'y','#&26':'z','#&27':'A','#&28':'B','#&29':'C','#&30':'D','#&31':'E','#&32':'F','#&33':'G','#&34':'H','#&35':'I','#&36':'J','#&37':'K','#&38':'L','#&39':'M','#&40':'N','#&41':'O','#&412':'P','#&43':'Q','#&44':'R','#&45':'S','#&46':'T','#&47':'U','#&48':'V','#&49':'W','#&50':'X','#&51':'Y','#&52':'Z','#&62':'0','#&53':'1','#&54':'2','#&55':'3','#&56':'4','#&57':'5','#&58':'6','#&59':'7','#&60':'8','#&61':'9','#&63':' '})}}
+{% endif %}
+{% endmacro %}
+{% macro rwurl(data) %}{% spaceless %}
+{# chuyển mã hóa kí tự tiếng Việt #}
+{% set data = data|lower|trim|replace({'á':'a','à':'a','ả':'a','ã':'a','ạ':'a','ă':'a','ắ':'a','ằ':'a','ẳ':'a','ẵ':'a','ặ':'a','â':'a','ấ':'a','ầ':'a','ẩ':'a','ẫ':'a','ậ':'a','æ':'a','ä':'a','đ':'d','ð':'d','é':'e','è':'e','ẻ':'e','ẽ':'e','ẹ':'e','ê':'e','ế':'e','ề':'e','ể':'e','ễ':'e','ệ':'e','í':'i','ì':'i','ì':'i','ỉ':'i','ĩ':'i','ị':'i','ï':'i','î':'i','ó':'o','ò':'o','ỏ':'o','õ':'o','ọ':'o','ô':'o','ố':'o','ồ':'o','ổ':'o','ỗ':'o','ộ':'o','ơ':'o','ớ':'o','ờ':'o','ở':'o','ỡ':'o','ợ':'o','ö':'o','ø':'o','ú':'u','ù':'u','ủ':'u','ũ':'u','ụ':'u','ư':'u','ứ':'u','ừ':'u','ử':'u','ữ':'u','ự':'u','ü':'u','û':'u','ý':'y','ỳ':'y','ỷ':'y','ỵ':'y','ỹ':'y'}) %}
+{% set arr = data|split() %}
+{% set abc = ('1234567890qwertyuiopasdfghjklzxcvbnm') %}
+{% set azz %}{% for i in arr|keys %}{% if arr[i] in abc %}{{arr[i]}}{% else %}{% if arr[(i-1)] in abc %}-{% endif %}{% endif %}{% endfor %}{% endset %}
+{% set arr = azz|split()%}
+{% for i in arr|keys %}{% if arr[i]=='-' %}{% if arr[(i-1)] in abc and arr[(i+1)] in abc %}-{% endif %}{% else %}{{arr[i]}}{% endif %}{% endfor %}
+{% endspaceless %}{% endmacro %}
+{% macro login() %}{% spaceless %}{% set auto=get_cookie('auto') %}{% if get_data_count('user_'~auto)>0 %}{{ get_data_by_id('user_'~auto,get_data('user_'~auto)|last.id).data|trim }}{% endif %}{% endspaceless %}{% endmacro %}
+
+{% macro get_key(key, i, v1, v2, v3) %}
+{% import 'functions' as func %}
+{% set data = get_data(key)|last.data|split('-||-') %}
+{% if v1 and v2 and v3 %}
+{% set i1 = data[i-1]|json_decode[v1] %}
+{% set i2 = data[i-1]|json_decode[v2] %}
+{% set i3 = data[i-1]|json_decode[v3] %}
+{{func.account(i1)}}: {{func.bbcode(i2)}} <font color="gray">({{func.ago(i3)}})</font>
+{% else %}
+{{func.bbcode(data[i-1]|json_decode[v1])}}
+{% endif %}
+{% endmacro %}
+
+{% macro add_data(key, i, v, u) %}
+{% set data = get_data(key)|last.data|split('-||-') %}
+{% set up = data[i-1]|json_decode %}
+{% if up == NULL %}
+{% set up = [] %}
+{% endif %}
+{% set up = up|merge({(v):u})|json_encode %}
+{% set f = data[:i-1]|join('-||-') %}
+{% set l = data[i:]|join('-||-') %}
+{% set id = get_data(key)|last.id %}
+{% if f == NULL %}
+{% set data = [up,l] %}
+{% elseif l == NULL %}
+{% set data = [f,up] %}
+{% else %}
+{% set data = [f,up,l] %}
+{% endif %}
+{{ update_data_by_id(key, id, data|join('-||-')) }}
+{% endmacro %}
+
+{% macro del_data(key, i) %}
+{% set data = get_data(key)|last.data|split('-||-') %}
+{% set f = data[:i-1]|join('-||-') %}
+{% set l = data[i:]|join('-||-') %}
+{% set id = get_data(key)|last.id %}
+{% if f == NULL %}
+{% set data = [l] %}
+{% elseif l == NULL %}
+{% set data = [f] %}
+{% else %}
+{% set data = [f,l] %}
+{% endif %}
+{{ update_data_by_id(key, id, data|join('-||-')) }}
+{% endmacro %}
+
+{% macro get(key,v) %}{% spaceless %} 
+{% if v %}
+{{ get_data_by_id(key,get_data(key)|last.id).data|json_decode[v] }}
+{% else %}
+{{ get_data_by_id(key,get_data(key)|last.id).data|raw }}{% endif %}
+ {% endspaceless %}{% endmacro %}
+{% macro add(key,k,v) %}
+ {% set id=get_data(key)|last.id %}
+{{ update_data_by_id(key,id,get_data_by_id(key,id).data|json_decode|merge({(k):v})|json_encode) }}
+{% endmacro %}
+{% macro del(key,v,up) %} 
+{% set data = get_data_by_id(key,get_data(key)[0].id).data %} 
+{% set id = get_data(key)[0].id %} 
+{% if up %}
+{% set d=' '~v~' @ ' %}
+{% set data=data|replace({(d):""}) %}
+{{ update_data_by_id(key,id,data) }}
+{% else %}
+ {{ delete_data_by_id(key,id) }}
+{% endif %} 
+{% endmacro %}
+{% macro up(key,v,up) %} 
+{% set data = get_data_by_id(key,get_data(key)[0].id).data %} 
+{% set id = get_data(key)[0].id %} 
+{% if up %}
+{% set d=' '~v~' @ ' %}
+{% set data=data|replace({(d):""}) %}
+{% if get_data_count(key) == '0' %}
+{% set save=save_data(key,d) %}
+{% else %}
+{{ update_data_by_id(key,id,' '~v~' @ '~data) }}
+{% endif %}
+{% else %}
+{% set save=save_data(key,v) %}
+{% endif %} 
+{% endmacro %}
+{% macro size(byte) %}{% if byte >= '1073741824' %}{% set show = (byte|trim/1073741824)|round(2,'floor')~' GB' %}{% elseif byte >= '1048576' %}{% set show = (byte|trim/1048576)|round(2,'floor')~' MB' %}{% elseif byte >= '1024' %}{% set show = (byte|trim/1024)|round(2,'floor')~' Kb' %}{% else %}{% set show = byte~' byte' %}{% endif %}{{show}}{% endmacro %}
+{% macro dow(key,v,dow) %} 
+{% set data = get_data_by_id(key,get_data(key)|last.id).data %} 
+{% set id = get_data(key)|last.id %} 
+{% if dow %} 
+{% set d=' '~v~' @ ' %} 
+{% set data=data|replace({(d):""}) %} 
+{{ update_data_by_id(key,id,data~' '~v~' @ ') }} 
+{% else %} 
+{{ update_data_by_id(key,id,v) }} 
+{% endif %} 
+{% endmacro %} 
+{% macro paging(trang,p,max,b) %}
+    {% if max > 1 %}
+    <div class="b1 p2" align="center">
+ {# set p=pagination.current_page %} {% set max=pagination.pages|last #}
+{% set a='<a href="/'~trang~'=' %}
+ {% if p>max %}{% set p=max %}a{% endif %} 
+ {% if p>1 %}
+{{a|raw}}{{p-1}}{{b}}" class="page{# active#}" id="load">&lt;&lt;</a>
+{% endif %}
+{% if p>3 %}
+{{a|raw}}1{{b}}" class="page" id="load">1</a>
+{% endif %}
+{% if p>4 %}
+<a class="page">...</a>
+{% endif %}
+{% if p>2 %}
+{{a|raw}}{{p-2}}{{b}}" class="page" id="load">{{p-2}}</a>
+{% endif %}
+{% if p>1 %}
+{{a|raw}}{{p-1}}{{b}}" class="page" id="load">{{p-1}}</a>
+{% endif %}
+<a class="page active">{{p}}</a>
+{% if p<max-1 %}
+{{a|raw}}{{p+1}}{{b}}" class="page" id="load">{{p+1}}</a>
+{% endif %}
+{% if p<max-2 %}
+{{a|raw}}{{p+2}}{{b}}" class="page" id="load">{{p+2}}</a>
+{% endif %}
+{% if p<max-3 %}
+<a class="page">...</a>
+{% endif %}
+{% if p<max %}
+{{a|raw}}{{max}}{{b}}" class="page">{{max}}</a>
+{% endif %}
+{% if p<max %}
+{{a|raw}}{{p+1}}{{b}}" class="page">&gt;&gt;</a>
+{% endif %}
+</div>
+    {% endif %}
+{% endmacro %}
+{% macro token() %}{% for i in 1..30%}{{ random('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') }}{% endfor %}{% endmacro %}
+{% macro signin() %}{% spaceless %}{% set token=get_cookie('token') %}{% set get_token = get_data('token')[0].data|json_decode %}{% if get_token[token] %}{{get_token[token]}}{% endif %}{% endspaceless %}{% endmacro %}
+{% import 'functions' as func %}
+{% import 'template' as tpl %}
+{% set url=get_uri_segments() %}
+{% set signin=func.signin()|trim %}
+{% if not signin and (url[1]=='' or url[1]=='sign-in.php') %}
+{{tpl.head('Đăng nhập vào hệ thống')}}
+{% set user=get_post('user') %}
+{% set pass=get_post('pass') %}
+{% if request_method()|lower == "post" %} 
+{% if user and pass %}
+{% if get_data_count('info_user_'~func.rwurl(user))==0 %}
+<p><font color="red">Tài khoản không tồn tại.</font></p>
+{% else %}
+{% if func.get('info_user_'~func.rwurl(user),'pass')|replace({'&amp;':'&'})!=func.ma_hoa(pass, 'encode')|trim %}
+<p><font color="red">Mật khẩu không đúng.</font></p>
+{% else %}
+<p><font color="green">Đăng nhập thành công.</fon></p>
+{{ set_cookie('token',func.get('info_user_'~func.rwurl(user),'token')|trim) }} 
+<script language="javascript" type="text/javascript"> 
+window.location.href="/"; 
+</script> 
+<META HTTP-EQUIV="Refresh" CONTENT="0;URL=/">
+{% endif %}
+{% endif %}
+{% else %}
+<p> Vui lòng điền đầy đủ thông tin.</p>
+   {% endif %}
+{% endif %}
+<div class="t"></div>
+<form method="post" action=""><div class="f">Tài khoản:</div><input type="text" name="user" autofocus><div class="f">Mật khẩu:</div><input type="password"  name="pass" autofocus>
+<p><input class="btn btn-primary" type="submit" name="submit" value="Đăng nhập"></p></form>
+{% set checkpass = func.get('bot','pass') %} 
+{{tpl.end}}
+{% elseif url[1]=='sign-up.php' and not signin %}
+{% set notepad = get_data('notepad')[0].data|json_decode %}
+{{tpl.head('Tạo tài khoản mới')}}
+{# kiểm tra và lưu tài khoản #}
+{% set user = get_post('user') %}
+{% set pass = get_post('pass') %} 
+{% set repass = get_post('repass') %} 
+{% set gt = get_post('gt') %}
+{% set registration %}
+<form method="post" action=""><div class="f">Tài khoản:</div><input type="text" name="user" value="" required><div class="f">Mật khẩu:</div><input type="password"  name="pass" value="" required><div class="f">Nhập lại mật khẩu:</div><input type="password" name="repass" value="" required>
+<p><input class="btn btn-primary" type="submit" name="submit" value="Đăng Ký"></p></form>
+{% endset %}
+{% if request_method()|lower == "post" %}
+{% if user and pass and repass %} 
+{% if ("now"|date("U") < notepad.time_reg )%}   
+<p><font color="red">Xin lỗi vì sự cố này, bạn có thể tiếp tục đăng ký tài khoản sau {{notepad.time_reg - "now"|date("U")}} giây</font></p>
+{% elseif pass!=repass %}
+<p><font color="red">Mật khẩu xác nhận không đúng.</font></p>
+{% else %}
+{% if get_data_count('info_user_'~func.rwurl(user))>0 %} 
+<p><font color="red">Tài khoản đã tồn tại.</font></p>
+{{registration}}
+{% elseif user|length>30 %}
+<p><font color="red">Tài khoản không dài quá 30 ký tự</font></p>
+{{registration}}
+{% else %} 
+{% if user matches '/^[a-zA-Z0-9\\-\\_]+[a-zA-Z0-9\\-\\_]$/' %} 
+<div class="f">
+<p><b><big>Dữ liệu thông tin:</big></b></p>
+<p><b>Tài khoản:</b> {{user}} </p>
+<p><b>Mật khẩu:</b> {{pass}} </p>
+<p><a href="/functions/sign-in.php" id="nutlike">Đăng nhập</a> <a href="/index.php">Trang chủ</a></p>
+{% set token=func.token()|trim %}
+{% set data={"nick":user,"pass":func.ma_hoa(pass, 'encode')|trim,"token":token,"reg":"now"|date("U")} %}
+{% set save=save_data( "info_user_"~func.rwurl(user),data|json_encode) %}
+{{func.add('token',token,user)}}
+{{func.add('notepad','new_mem',user)}}
+{{func.add('notepad','time_reg',"now"|date("U")+600)}}
+{% else %}
+<p><font color="red">Tài khoản không được chứa ký tự đặc biệt.</font></p>
+{{registration}}
+{% endif %} 
+{% endif %}
+{% endif %}
+{% else %}
+<p><font color="red">Vui lòng điền đầy đủ thông tin.</font></p>
+{{registration}}
+{% endif %}
+{% else %}
+{{registration}}
+{% endif %}
+{{tpl.end}}
+{% elseif signin and url[1]=='sign-out.php' %}
+{{tpl.head('Đăng xuất khỏi hệ thống')}}
+{% set logout=get_post('logout') %}
+{% if request_method()|lower == "post" %}
+{% if logout %}
+{{ delete_cookie('token') }}
+<script language="javascript" type="text/javascript"> 
+window.location.href="/"; 
+</script> 
+<META HTTP-EQUIV="Refresh" CONTENT="0;URL=/">
+{% endif %}
+{% else %}
+<p><font color="red">Bạn có muốn đăng xuất bây giờ không?</font></p>
+<form method="post" action=""><p><input class="btn btn-primary" type="submit" name="logout" value="Đồng ý"/></p>
+{% endif %}
+{{tpl.end}}
+{% else %}
+{% include '_404' %}
+{% endif %}

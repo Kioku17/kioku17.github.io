@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?> <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> <html lang="vi"> <head> <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> <meta http-equiv="X-UA-Compatible" content="IE=edge" /> <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" /> <meta name="HandheldFriendly" content="true" /> <meta name="MobileOptimized" content="width" /> <meta content="yes" name="apple-mobile-web-app-capable" /> <title>404 Page !</title> <link rel="icon" href="http://authorbb.viwap.com/images/favicon-32x32.png" type="image/png" /> <link rel="shortcut icon" href="http://authorbb.viwap.com/images/favicon.ico" type="image/x-icon" /> <link rel="apple-touch-icon" href="http://authorbb.viwap.com/images/favicon-512x512.png" /> <link rel="stylesheet" href="/theme/style.css" /> <link rel="stylesheet" href="/theme/imgur.css" /> </head> <body> <div class="p1 b6 c1"><a href="http://gplay.viwap.com" class="c1">GPlay</a> · <b class="c1">404 Page !</b></div> <div class="b1 p2" align="center">Xin lỗi. Trang này không tồn tại trên hệ thống của chúng tôi !</div>
+{% set run = get_data('notepad')[0].data|json_decode %}
+</center>
+</div>
+<div class="p1 b6 c1"><b>Số bản lưu</b> {{run.file}}, <b>IP:</b> {{ip()}}
+</div>
+</body>
+</html>

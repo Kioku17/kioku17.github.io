@@ -1,0 +1,17 @@
+Tạo entry:
+1)
+- Entry: notepad
+- Data: {"file":0,"new_mem":"admin","time_reg":1530792019}
+
+2)
+- Entry: list_file
+- Data: []
+Khi tải lên thành công text đầu tiên, vào custom data tìm entry list_file xóa kí tự [] trong data.
+
+3)
+- Entry: token
+- Data: {"qazwsxedcrfvthblmn":"admin"}
+
+4)
+- Entry: info_user_admin
+- Data: {"nick":"admin","pass":"#&53#&54#&55#&56#&57#&58","token":"qazwsxedcrfvthblmn","rights":"9","reg":"1530792019"}
