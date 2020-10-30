@@ -292,7 +292,7 @@ Như phía trên mình đã đề cập là code, và import chúng, còn đây 
 
 > Tải xuống -> Giải nén -> Đăng nhập wap4 -> Chọn website -> Upload
 
-> https://cafedang.xyz/wap4/cafedang/download-update-14102020.zip
+> [Download-update-14102020.zip](https://cafedang.xyz/wap4/cafedang/download-update-14102020.zip)
 
 Cuối cùng, đừng quên chạy <strong>web/install</strong> để khởi tạo những entry gốc nhé.
 
