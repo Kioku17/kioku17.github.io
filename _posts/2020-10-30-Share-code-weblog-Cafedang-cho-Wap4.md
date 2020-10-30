@@ -3,7 +3,7 @@ layout: post
 title:  "Share code weblog Cafedang cho Wap4"
 rwurl: "share-code-weblog-cafedang-cho-wap4"
 date:   2020-10-30 09:05:30
-categories: Mã nguồn
+categories: Programming
 comments: 1
 ---
 Chẳng là trước đây, Tròm vẫn còn xây dựng weblog trên nền tảng Wap4. 
