@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "Tôi và chiếc thuyền"
-rwurl: "Share code weblog Cafedang cho Wap4"
+title:  "Share code weblog Cafedang cho Wap4"
+rwurl: "share-code-weblog-cafedang-cho-wap4"
 date:   2020-10-30 09:05:30 +0700
 categories: Source_Code
 comments: 1
