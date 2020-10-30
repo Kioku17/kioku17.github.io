@@ -20,8 +20,10 @@ Code được xây dựng dựa trên func gốc của wap4, func tiaxgame và m
 
 - Hệ thống giải trí và công cụ tiện ích
 
-> Đây là demo: http://valeric.viwap.com (nói không phải mê tín chứ demo ngẻo rồi)
+> Đây là demo: [Valeric.viwap.com](http://http://valeric.viwap.com) (nói không phải mê tín chứ demo dẹo rồi)
 
-Còn đây là code, các bạn import các file có dạng "CFĐ: tên file" từ trang này: http://gplay.viwap.com
+Còn đây là code, các bạn import các file có dạng "CFĐ: tên file" từ trang này: [GPlay.viwap.com](http://http://gplay.viwap.com)
 
 Sau đó là import file này "chat_module_bot". File này mình để riêng vì một số lý do của GPlay.
+
+Và các thư mục js, css như bên dưới đây.
