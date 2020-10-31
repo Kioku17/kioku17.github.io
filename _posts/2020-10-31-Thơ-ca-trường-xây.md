@@ -1,7 +1,7 @@
 ---
 layout: post
-title: Thơ tình trường xây
-rwurl: "tho-tinh-truong-xay"
+title: Thơ ca trường xây
+rwurl: "tho-ca-truong-xay"
 date:   2020-10-31 19:20:01
 categories: Thơ
 ---
