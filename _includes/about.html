@@ -12,23 +12,4 @@
       </div>
     </div>
   </div>
-
-<div id="page-info">
-  <h3>{{page.shoutbox}}</h3>
-</div>
-<div class="col s12">
-<div class="tnkxd"></div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.7.0/jquery.validate.min.js"></script>
-<script type="text/javascript">var chatbox="https://jekyllrb.gq/shoutbox.php",loadcontent='<div class="menu" align="center">Đang tải dữ liệu</div>';$(document).ready(function(){$("#idChat").html(loadcontent),$.get(chatbox,function(t){$("#idChat").html(t).hide().slideDown("slow")}),reload_chat=setInterval(function(){$.get(chatbox,function(t){$("#idChat").html(t)})},4e3);var e=$("#form"),i=$("#submit"),o=$("#alert"),a=$("#postText");e.on("submit",function(t){if(t.preventDefault(),""==a)return o.show(),o.text("Bạn chưa nhập nội dung !!!"),$("#postText").focus(),!1;$.ajax({url:"https://jekyllrb.gq/shoutbox.php",type:"POST",timeout:5e3,dataType:"html",data:e.serialize(),beforeSend:function(){o.fadeOut(),i.html('Đang gửi ')},success:function(t){$.get(chatbox,function(t){$("#idChat").html(t).hide().slideDown("slow")}),e.trigger("reset"),$("#postText").focus(),$("#postText").val(""),i.html('<i class="fa fa-check" aria-hidden="true"></i> Chat')},error:function(t){console.log(t)}})})});</script>
-<div class="menu">
-<form id="form" action="" method="POST" name="form">
-<textarea rows="4" type= "text" id="postText" name="msg">
-</textarea>
-<button name="submit" type="submit" id="submit"> Chat</button>
-<input type="hidden" name="token" value="shoutbox5529"/>
-</form>
-</div>
-<div id="alert"></div>
-<div id="postText"></div>
-<div id="idChat"></div>
 </div>
