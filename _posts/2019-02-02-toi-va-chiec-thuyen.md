@@ -4,7 +4,6 @@ title:  "Tôi và chiếc thuyền"
 rwurl: "toi-va-chiec-thuyen"
 date:   2019-02-02 09:10:05
 categories: Thơ
-comments: 1
 ---
 Tôi đưa em vào vần thơ tự do
 
