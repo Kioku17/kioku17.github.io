@@ -4,7 +4,6 @@ title: Thơ tình trường xây
 rwurl: "tho-tinh-truong-xay"
 date:   2020-10-31 19:20:01
 categories: Thơ
-comments: 1
 ---
 Tròm vô tình đọc được mấy bài này ở đâu đó.Trước khi vào xây, mình có nghe người ta bảo là dân xây khô khan, bụi bặm. Còn bây giờ, thì mình thấy con trai xây dựng sinh là dành cho nhau rồi :)) Nói vui vậy thôi chứ, các bạn cùng theo dõi một số bài thơ nhé.
 
