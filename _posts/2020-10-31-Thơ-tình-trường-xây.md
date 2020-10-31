@@ -6,9 +6,9 @@ date:   2020-10-31 19:20:01
 categories: Thơ
 comments: 1
 ---
-Tròm vô tình đọc được bài này ở đâu đó.Trước khi vào xây, mình có nghe người ta bảo là dân xây khô khan, bụi bặm. Còn bây giờ, thì mình thấy con trai xây dựng sinh là dành cho nhau rồi :)) Nói vui vậy thôi chứ, các bạn cùng theo dõi một số bài thơ nhé.
+Tròm vô tình đọc được mấy bài này ở đâu đó.Trước khi vào xây, mình có nghe người ta bảo là dân xây khô khan, bụi bặm. Còn bây giờ, thì mình thấy con trai xây dựng sinh là dành cho nhau rồi :)) Nói vui vậy thôi chứ, các bạn cùng theo dõi một số bài thơ nhé.
 
-> Tỏ tình
+> TỎ TÌNH
 
 Ánh mắt em làm công trình nghiêng đổ
 
@@ -48,7 +48,22 @@ Ngập trong nước của gama đẩy nổi
 Giữa công trình hay mặt bằng taluy.
 
 
-> Về thôi anh
+> HOA CỦA ĐÁ
+
+<center>Tôi yêu cô gái trường Xây,</center>
+<center>Bông hoa của đá ngập tràn sắc hương;</center>
+<center>Khi thùy mị lúc kiên cường;</center>
+<center>Để cho bao kẻ....vấn vương trong lòng.</center>
+
+<center>Nay ngồi ngắm nguyệt bên song,</center>
+<center>Tay nghiêng bút vạch vài dòng tâm tư;</center>
+<center>Tình riêng tình thấm từ từ;</center>
+<center>Thấm qua nét mực, thấm nhừ tâm can.</center>
+
+<center>Ngô Quang Định</center>
+
+
+> VỀ THÔI ANH
 
 "Anh hỏi em: Yêu anh, em có khổ?
 
