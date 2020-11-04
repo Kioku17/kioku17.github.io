@@ -22,6 +22,7 @@ css: ["index.css"]
     </div>
   </div>
   {% endfor %}
+{% if paginator.total_pages > 1 %}
   <div class="col s12 center-align">
     <ul class="pagination">
       <li class="{% unless paginator.previous_page %}disabled{% else %}waves-effect{% endunless %}">
@@ -63,6 +64,7 @@ css: ["index.css"]
       </li>
     </ul>
   </div>
+{% endif %}
  <div class="col s12">
   <div class="tnkxd border_red">Bình luận gần đây</div>
    <script language="javascript" src="https://jekyllrb.gq/comment.html?site=cafedang.xyz&tag=js&title=total"></script>
