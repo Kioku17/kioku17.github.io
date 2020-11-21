@@ -3,7 +3,7 @@ layout: post
 title:  "Tôi và chiếc thuyền"
 rwurl: "toi-va-chiec-thuyen"
 date:   2019-02-02 09:10:05
-categories: tho
+categories: Thơ
 ---
 Tôi đưa em vào vần thơ tự do
 

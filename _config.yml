@@ -15,22 +15,6 @@ contact_url: "https://facebook.com/tnkxd"
 google_tracking_id: "UA-96359860-1"
 google_site_verification: "UA-96359860-1"
 
-weblog:
-  - cat: viet
-    desc: Viết lách
-
-  - cat: tho
-    desc: Thơ
-    
-  - cat: programming
-    desc: Lập trình
-    
-  - cat: truyen
-    desc: Đọc truyện
-    
-  - cat: media
-    desc: Giải trí
-
 # Build settings
 markdown: kramdown
 gems:
