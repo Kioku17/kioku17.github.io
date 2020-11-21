@@ -11,7 +11,7 @@
     {% for cat in site.categories %}
     {% capture test %}{{cat[0] | slice: 0}}{% endcapture %}
     {% capture testup %}{{cat[0] | slice: 0 | upcase}}{% endcapture %}
-    <h4 id="{{cat[0] | slugify}}{% if test == testup %}_cap{% endif %}">{{cat[0]}}</h4>
+    <h4 id="{{cat[0] | slugify}}{% if test == testup %}_cap{% endif %}">{% if cat[0]=='viet-lach' %}Viết lách{% elseif cat[0]=='tho' %}Thơ{% elseif cat[0]=='programming' %}Lập trình{% endif %}</h4>
     <ul class="cat-post">
       {% for post in cat[1] %}
       <a class="post-title" href="{{site.baseurl}}{{post.url}}">
