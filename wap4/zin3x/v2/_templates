@@ -1,0 +1,162 @@
+{% block header %}
+{% set site_basic = (current_url|split('/').0~"//"~current_url|split('/').2) %}
+{% set site_logo = site_basic~'/images/logo.png' %}
+{% set default_title = 'Phim Sex, Xem Phim Sex Chất Lượng Cao Tốc Độ Nhanh, Xem Ảnh Sex, Tải Ảnh Sex Về Điện Thoại Cực Nhanh' %}
+{% set default_description = 'Phim sex, Ảnh sex miễn phí được cập nhật mỗi ngày nội dung hấp dẫn chất lượng cao, tốc độ xem phim sex, ảnh sex cực nhanh đầy đủ thể loại dành cho các bạn xem cực sướng và hoàn toàn miễn phí.' %}
+{% set default_css = site_basic~'/css/default.css' %}
+{% set default_favicon = site_basic~'/images/favicon.ico' %}
+{% set default_image = site_basic~'/images/default.jpg' %}
+{% from 'func.twig' import mi_get,get,html_decode %}
+{% from 'function.twig' import get,time,slug,description %}
+{% import '_functions' as func %}
+{% set url = get_uri_segments() %}
+{% if url[0]=='registration.php' %}
+{% if get_cookie('captcha')=='' or get_cookie('captcha')==null %}
+{{set_cookie('captcha',random(1000..9999))|lower}}
+{% endif %}
+{% endif %}
+{% set key = 'list_category' %}
+{% set data = mi_get(key) %}
+{% set signin = func.signin()|trim %}
+{% set user = get_data('user_'~signin)|last.data|json_decode %}
+<!DOCTYPE html><html lang="vi_VN" prefix="og: http://ogp.me/ns#"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="robots" content="index, follow" /><link rel="profile" href="https://gmpg.org/xfn/11" /><link rel="shortcut icon" href="{{default_favicon}}" /><title>{% if url[0]=='category' %}{{(current_url|split('/').2)|upper}} | {% endif %}{{title|default(default_title)}}</title><meta name="description" content="{{description|default(default_description)}}" />
+<meta name="keywords"  content="truyện sex, truyện người lớn, truyện 18+, truyện dâm, truyen sex, ảnh sex, hình sex, hình nền điện thoại, hentai,  cosplay, phim sex, phim sex hay, zin3x, zin3x.ml" />
+{% if url[0]!='manager' %}
+<script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+{% if url[0] in ['','index.php'] %}
+      "@graph": [{"@type":"Organization","@id":"{{site_basic}}/#organization","url":"{{site_basic}}","name":"{{default_title}}","sameAs":[]},{"@type":"WebSite","@id":"{{site_basic}}/#website","url":"{{site_basic}}","name":"{{default_title}}","publisher":{"@id":"{{site_basic}}/#organization"}},{"@type":"WebPage","@id":"{{site_basic}}/#webpage","url":"{{site_basic}}","inLanguage":"en-US","name":"{{default_title}}","isPartOf":{"@id":"{{site_basic}}/#website"},"about":{"@id":"{{site_basic}}/#organization"},"description":"{{default_description}}"}],
+{% endif %}
+      "@type": "BreadcrumbList"{% if url[0]=='watch' and get_data_count('blog_'~(url[1]|split('-')|first|trim))!='0' %},
+      "image": "{{img}}"{% endif %},
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Zin3X.ML",
+        "item": "{{site_basic}}"
+      }{% if url[0]!='' %}{% if url[0]=='category' %},{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "{% if get_data_count('category_'~(url[1]|split('-')|first|trim))!='0' %}{{get('category_'~(url[1]|split('-')|first|trim),'ten')}}{% else %}Danh mục bài viết{% endif %}",
+        "item": "{{site_basic}}/category{% if get_data_count('category_'~(url[1]|split('-')|first|trim))!='0' %}/{{get('category_'~(url[1]|split('-')|first|trim),'id')}}-{{get('category_'~(url[1]|split('-')|first|trim),'slug')}}/{% endif %}"
+      }{% elseif url[0]=='watch' and get_data_count('blog_'~(url[1]|split('-')|first|trim))!='0' %},{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Danh mục bài viết",
+        "item": "{{site_basic}}/category"
+      }{% else %},{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "{{title}}"
+      }{% endif %}{% if url[0]=='watch' and get_data_count('blog_'~(url[1]|split('-')|first|trim))!='0' %},{
+        "@type": "ListItem",
+        "position": 3,
+        "name": "{{get('blog_'~(url[1]|split('-')|first|trim),'title')}}"
+      }{% endif %}{% endif %}]
+    }
+    </script>
+{% endif %}
+<link rel="canonical" href="{{current_url|split('/').0~"//"~current_url|split('/').2}}" /><meta property="og:locale" content="vi_VN" /><meta property="og:type" content="website" /><meta property="og:title" content="{{title|default(default_title)}}" /><meta property="og:description" content="{{description|default(default_description)}}" /><meta property="og:url" content="{{current_url}}" /><meta property="og:site_name" content="{{title|default(default_title)}}" /><meta name="twitter:card" content="summary" /><meta name="twitter:description" content="{{description|default(default_description)}}" /><meta name="twitter:title" content="{{title|default(default_title)}}" /><meta name="twitter:image" content="{{image|default(default_image)}}" /><link type="text/css" rel="stylesheet" href="{{default_css}}?v={{"now"|date("U")}}"><script type="text/javascript">
+var ajaxurl = '{{site_basic}}/ajax.php';
+</script><script src="{{site_basic}}/js/jquery.js" type="text/javascript"></script><script src="{{site_basic}}/js/media.js?v={{"now"|date("U")}}js" type="text/javascript"></script></head><body><div id="app"><header><div class="menu1"><div class="logo"><a href="{{site_basic}}" title=""><img src="{{site_logo}}" alt="{{(current_url|split('/').2)|upper}}" class="logo" /></a></div><div class="button-menu"><span><i></i><i></i><i></i></span></div><nav class="list-menu"><ul>{% if signin and user['right']>='3' %}<li><a class="h_active" href="/manager" title="Bảng Điều Khiển">Bảng Điều Khiển</a></li>{% endif %}
+{% for i in data|split(' @ ')|reverse %}
+{% set cmm = get('category_'~i,'ten') %}
+{% set idcmm = get('category_'~i,'id') %}
+{% set slugcmm = get('category_'~i,'slug') %}
+{% if loop.last==false %}
+<li><a href="{{current_url|split('/').0~"//"~current_url|split('/').2}}/category/{{idcmm}}-{{slugcmm}}/" title="{{cmm}}">{{cmm}}</a></li>
+{% endif %}
+{% endfor %}
+<li><a class="h_active" href="/shoutbox.php" title="Phòng Chat">Phòng Chat</a></li>
+</ul></nav><div class="button-search"></div><div class="form-search"><form id="form-search" action="{{current_url|split('/').0~"//"~current_url|split('/').2}}/search.php" method="get"><input id="search-input" type="text" name="key" placeholder="Tìm kiếm nội dung..." autocomplete="off" required=""><button id="search-submit" type="submit"></button></form><div id="results-container"></div></div></div></header><main><div class="body row"><div class="tab-movies">
+{% endblock %}
+
+{% block footer %}
+{% from 'func.twig' import mi_get,get,html_decode %}
+{% from 'function.twig' import get,time,slug,description %}
+{% import '_functions' as func %}
+{% set url = get_uri_segments() %}
+{% set site_basic = (current_url|split('/').0~"//"~current_url|split('/').2) %}
+{% set site_logo = site_basic~'/images/logo.png' %}
+{% set key = 'list_category' %}
+{% set data = mi_get(key) %}
+</div></div></main><footer><div class="row"><div class="tab-footer"><div class="logo"><a href="/"><img src="{{site_logo}}" alt="{{(current_url|split('/').2)|split('.')[0]|upper}}" title="logo" class="logo" /></a></div><p>{{(current_url|split('/').2)|upper}} là website đọc truyện sex hay nhất Việt Nam, xem ảnh sex, tải ảnh sex miễn phí. {% if (url[1]|split('-')|first|trim)=='2' and url[0]=='category' %}Ảnh sex với hình sex được chúng tôi đăng tải với mục đích giải trí, thư giãn sau những phút giây học tập, làm việc mệt mỏi, hoặc dùng nó để tăng cảm xúc cho các bạn khi làm tình, lấy hứng làm tình... Không khuyến khích các bạn sử dụng ảnh sex, hình sex vào mục đích xấu. Nội dung được đăng tải trên website do chúng tôi sưu tầm trên internet nên chúng tôi không chịu trách nhiệm phần nội dung của hình ảnh. {% else %}Chúng tôi chuyên cập nhật ảnh sex, truyện sex hàng ngày cho các bạn thưởng thức cùng với những bộ phim vô cùng hay nội dung phong phú thường xuyên được cập nhật, tuyển chọn những em gái vô cùng xinh đẹp với những màn địt nhau hấp dẫn nhất.{% endif %}</p></div><div class="copyright">
+{% for i in data|split(' @ ')|reverse %}
+{% set cmm = get('category_'~i,'ten') %}
+{% set idcmm = get('category_'~i,'id') %}
+{% set slugcmm = get('category_'~i,'slug') %}
+{% if loop.last==false %}
+<a title="{{cmm}}" href="{{current_url|split('/').0~"//"~current_url|split('/').2}}/category/{{idcmm}}-{{slugcmm}}/">{{cmm}}</a>
+{% endif %}
+{% endfor %}
+</div><div class="copyright">© Copyright 2020 {{(current_url|split('/').2)|upper}}</div></div></footer></div><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/balloon-css/0.5.0/balloon.min.css"> {% if url[0]!='manager' %}<script>
+function togglecomments(a){a=document.getElementById(a);a.className="commentshown"==a.className?"commenthidden":"commentshown"};
+!function(){var Z={load:function E(c,f){var g=function d(){return window.XMLHttpRequest?new window.XMLHttpRequest:new ActiveXObject("Microsoft.XMLHTTP")}();g.open("GET",c,!0),g.onreadystatechange=function a(h,i){return function(){if(4===h.readyState&&200===h.status){try{i(null,JSON.parse(h.responseText))}catch(e){i(e,null)}}}}(g,f),g.send()}};(function D(a){if(!function d(e){return !!e&&"undefined"!=typeof e.required&&e.required instanceof Array}(a)){throw new Error("-- OptionsValidator: required options missing")}if(!(this instanceof D)){return new D(a)}var c=a.required;this.getRequiredOptions=function(){return c},this.validate=function(f){var g=[];return c.forEach(function(e){"undefined"==typeof f[e]&&g.push(e)}),g}});var R=function Y(d,g){var j=g.length,f=d.length;if(j<f){return !1}if(f===j){return d===g}d:for(var c=0,h=0;c<f;c++){for(var a=d.charCodeAt(c);h<j;){if(g.charCodeAt(h++)===a){continue d}}return !1}return !0},aa=new function H(){this.matches=function(a,c){return R(c.toLowerCase(),a.toLowerCase())}};var K=new function k(){this.matches=function(c,a){return !!c&&(c=c.trim().toLowerCase(),(a=a.trim().toLowerCase()).split(" ").filter(function(d){return 0<=c.indexOf(d)}).length===a.split(" ").length)}};var U={put:function B(c){if(ac(c)){return I(c)}if(function d(e){return Boolean(e)&&"[object Array]"===Object.prototype.toString.call(e)}(c)){return function a(f){var h=[];ad();for(var i=0,g=f.length;i<g;i++){ac(f[i])&&h.push(I(f[i]))}return h}(c)}return undefined},clear:ad,search:function b(d){return d?function c(g,j,m,h){for(var f=[],l=0;l<g.length&&f.length<h.limit;l++){var a=ab(g[l],j,m,h);a&&f.push(a)}return f}(Q,d,G.searchStrategy,G).sort(G.sort):[]},setOptions:function N(a){(G=a||{}).fuzzy=a.fuzzy||!1,G.limit=a.limit||10,G.searchStrategy=a.fuzzy?aa:K,G.sort=a.sort||W}};function W(){return 0}var Q=[],G={};function ad(){return Q.length=0,Q}function ac(a){return Boolean(a)&&"[object Object]"===Object.prototype.toString.call(a)}function I(a){return Q.push(a),Q}function ab(c,f,g,d){for(var a in c){if(!P(c[a],d.exclude)&&g.matches(c[a],f)){return c}}}function P(c,f){for(var h=!1,d=0,a=(f=f||[]).length;d<a;d++){var g=f[d];!h&&new RegExp(c).test(g)&&(h=!0)}return h}G.fuzzy=!1,G.limit=10,G.searchStrategy=G.fuzzy?aa:K,G.sort=W;var X={compile:function V(a){return T.template.replace(T.pattern,function(c,d){var f=T.middleware(d,a[d],T.template);return void 0!==f?f:a[d]||c})},setOptions:function J(a){T.pattern=a.pattern||T.pattern,T.template=a.template||T.template,"function"==typeof a.middleware&&(T.middleware=a.middleware)}},T={};T.pattern=/\{(.*?)\}/g,T.template="",T.middleware=function(){};var F={merge:function A(a,d){var f={};for(var c in a){f[c]=a[c],"undefined"!=typeof d[c]&&(f[c]=d[c])}return f},isJSON:function x(a){try{return !!(a instanceof Object&&JSON.parse(JSON.stringify(a)))}catch(c){return !1}}};!function(p){var e={searchInput:null,resultsContainer:null,json:[],success:Function.prototype,searchResultTemplate:'<div class="result-search"><a href="{url}"><i class="fa fa-rss" aria-hidden="true"></i> {title}</a></div>',templateMiddleware:Function.prototype,sortMiddleware:function(){return 0},noResultsText:"<div class='result-search'>Không tìm thấy nội dung.</div>",limit:10,fuzzy:!1,exclude:[]},f=["searchInput","resultsContainer","json"],d=function j(c){if(!function i(n){return !!n&&"undefined"!=typeof n.required&&n.required instanceof Array}(c)){throw new Error("-- OptionsValidator: required options missing")}if(!(this instanceof j)){return new j(c)}var a=c.required;this.getRequiredOptions=function(){return a},this.validate=function(o){var r=[];return a.forEach(function(n){"undefined"==typeof o[n]&&r.push(n)}),r}}({required:f});function g(a){e.success(a),U.put(a),function c(){e.searchInput.addEventListener("keyup",function(i){(function n(o){return -1===[13,16,20,37,38,39,40,91].indexOf(o)})(i.which)&&(m(),h(i.target.value))})}()}function m(){e.resultsContainer.innerHTML=""}function l(a){e.resultsContainer.innerHTML+=a}function h(c){(function n(i){return i&&0<i.length})(c)&&(m(),function a(i,s){var u=i.length;if(0===u){return l(e.noResultsText)}for(var o=0;o<u;o++){i[o].query=s,l(X.compile(i[o]))}}(U.search(c),c))}function q(a){throw new Error("SimpleJekyllSearch --- "+a)}p.SimpleJekyllSearch=function(a){return 0<d.validate(a).length&&q("You must specify the following required options: "+f),e=F.merge(e,a),X.setOptions({template:e.searchResultTemplate,middleware:e.templateMiddleware}),U.setOptions({fuzzy:e.fuzzy,limit:e.limit,sort:e.sortMiddleware}),F.isJSON(e.json)?g(e.json):function c(i){Z.load(i,function(n,o){n&&q("failed to get JSON ("+i+")"),g(o)})}(e.json),{search:h}}}(window)}();</script>
+<script type="text/javascript">var sjs = SimpleJekyllSearch({searchInput: document.getElementById('search-input'), resultsContainer: document.getElementById('results-container'), json: '{{current_url|split('/').0~"//"~current_url|split('/').2}}/search.json'})</script>
+<script src="https://ajax.cloudflare.com/cdn-cgi/scripts/7089c43e/cloudflare-static/rocket-loader.min.js" type="text/javascript"></script>{% endif %}</body></html>
+{% endblock %}
+
+{% block mem %}
+{% set run = get_data('forum')|last.data|json_decode %}
+{% set slm = (run['account']/5)*100 %}
+{% set rslm = (run['account']//5)*100  %}
+<style>.c-max{width:100%;background-color:#ddd;text-align: right;}.skills{padding-top:2px;padding-bottom:2px;color:white;}.c{{rslm}}{width: {{slm}}%;background-color: #4CAF50;}</style><div class="c-max"><div class="skills c{{rslm}}"></div></div>
+{% endblock %}
+
+{% block main %}
+{% set site_basic = (current_url|split('/').0~"//"~current_url|split('/').2) %}
+{% import '_functions' as func %}
+{% from 'function.twig' import slug,description,time %}
+{% from 'func.twig' import mi_get,get,html_decode %}
+{% set data = mi_get(key|default('show_blog'))|split(' @ ')|reverse  %}
+{% set idfirst = mi_get(key|default('show_blog'))|split(' @ ')|reverse[0]|trim %}
+{% set per = '20' %}
+{% set total=data|length-1 %}
+{% set page_max=total//per %}
+{% if total//per != total/per %}
+{% set page_max=total//per+1 %}
+{% endif %}
+{% set url = get_uri_segments() %}
+{% set p=get_get('p')|default(1) %}
+{% if p matches '/[a-zA-z]|%/' or p<1 %}
+{% set p=1 %}
+{% endif %}
+{% if p>page_max %}
+{% set p=page_max %}
+{% endif %}
+{% set st=p*per-per %}
+{% if total == '0' %}
+{% else %}
+<h1 class="title-movies">{% if get_data_count('category_'~iid)!='0' and iid!=null %}{{name}}{% else %}Mới Cập Nhật{% endif %}</h1>
+{% if iid not in ['1','2'] %}<ul class="list-movies">{% endif %}
+{% for i in data|slice(0,total)|slice(st,per) %}
+{% set name = get('blog_'~i,'title') %}
+{% set id = get('blog_'~i,'id')|trim %}
+{% set category = get('blog_'~i,'category') %}
+{% set slug = get('blog_'~i,'slug') %}
+{% set cat = get('category_'~category,'ten') %}
+{% set catid = get('category_'~category,'id') %}
+{% set catslug = get('category_'~category,'slug') %}
+{% set time = get('blog_'~i,'time')|trim %}
+{% set view = get('blog_'~i,'view')|trim %}
+{% set content = get('blog_'~i,'content','raw') %}
+{% set mota = description(content) %}
+{% set description = (description(content|split('[desc]')[1]|split('[/desc]')[0])|default(mota))|striptags|slice(0,100) %}
+{% set thumb = get('blog_'~i,'thumb')|trim %}
+{% set cmt = get('blog_'~i,'comment_num')|trim %}
+{% set cat2 = get('blog_'~i,'content')|split('[search]')[1]|split('[/search]')[0] %}
+{% set pre = name|split('[')[1]|split(']')[0] %}
+{% set view = get('blog_'~i,'view')|trim %}
+{% if iid == '1' %}
+<div class="result-post"><i class="fa fa-rss" aria-hidden="true"></i> <a href="{{site_basic}}/watch/{{id}}-{{slug}}/">{% if pre!='' %}{{name|replace({(pre):'','[':'',']':''})}}{% else %}{{name}}{% endif %}</a></div>
+{% elseif iid == '2' %}
+<div class="result-post"><table width="100%"><tr><td width="30%" align="right"><img  src="{{thumb|default(get('blog_'~i,'content')|split('[img]')[1]|split('[/img]')[0]|default(site_basic~'/images/default.jpg'))}}" alt="{{name}}" itemprop="image" class="result-thumb"/></td><td width="70%"><a href="{{site_basic}}/watch/{{id}}-{{slug}}/"> {% if pre!='' %}{{name|replace({(pre):'','[':'',']':''})}}{% else %}{{name}}{% endif %}</a><br/><i class="fa fa-eye" aria-hidden="true"></i> {{view}} Views</td></tr></table></div>
+{% else %}
+<li class="item-movie"><a title="{% if pre!='' %}{{name|replace({(pre):'','[':'',']':''})}}{% else %}{{name}}{% endif %}" href="{{site_basic}}/watch/{{id}}-{{slug}}/"><div class="image"><div class="movie-play"><div class="movie-thumbnail" style="background-image:url('{{thumb|default(get('blog_'~i,'content')|split('[img]')[1]|split('[/img]')[0]|default(site_basic~'/images/default.jpg'))}}')"></div><span class="cripple"></span></div></div><div class="title-movie">{% if pre!='' %}{{name|replace({(pre):'','[':'',']':''})}}{% else %}{{name}}{% endif %}</div></a></li>
+{% endif %}
+{% endfor %}
+{% if iid not in ['1','2'] %}</ul>{% endif %}
+{{func.paging(''~url|join('/')~'?p',p,page_max)}}
+{% endif %}
+{% endblock %}

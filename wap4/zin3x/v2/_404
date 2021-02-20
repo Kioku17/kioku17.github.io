@@ -1,0 +1,6 @@
+{% use '_templates' %}
+{% set title = 'Page Not Found' %}
+{{block('header')}}
+<script type="text/javascript">var count=4,redirect="{{current_url|split('/').0~"//"~current_url|split('/').2}}";function countDown(){var a=document.getElementById("timer");0<count?(count--,a.innerHTML="<b>"+count+"</b>",setTimeout("countDown()",1E3)):window.location.href=redirect};</script>
+<center>Xin lỗi, trang bạn đang tìm kiếm không có sẵn.<br />Bạn hãy <a href="{{current_url|split('/').0~"//"~current_url|split('/').2}}">Ấn vào đây</a> để quay lại trang chủ, hoặc website sẽ tự động quay lại trang chủ sau <span id="timer"><script type="text/javascript">countDown();</script></span> giây nữa.<br /><img src="{{current_url|split('/').0~"//"~current_url|split('/').2}}/images/404.png"></center>
+{{block('footer')}}

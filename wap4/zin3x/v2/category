@@ -1,0 +1,23 @@
+{% use '_templates' %}
+{% set site_basic = (current_url|split('/').0~"//"~current_url|split('/').2) %}
+{% set url = get_uri_segments() %}
+{% import '_functions' as func %}
+{% from 'function.twig' import slug,description,time %}
+{% from 'func.twig' import mi_get,get,html_decode %}
+{% if url[1]=='' %}
+{{block('header')}}
+{{block('main')}}
+{{block('footer')}}
+{% else %}
+{% set iid=url[1]|split('-')|first|trim %}
+{% set name = get('category_'~iid,'ten') %}
+{% set keywords = get('category_'~iid,'key') %}
+{% set description = get('category_'~iid,'content') %}
+{% set key = 'show_category_'~iid %}
+{% set title = name %}
+{% set idcmm = get('category_'~iid,'id') %}
+{% set slugcmm = get('category_'~iid,'slug') %}
+{{block('header')}}
+{{block('main')}}
+{{block('footer')}}
+{% endif %}
