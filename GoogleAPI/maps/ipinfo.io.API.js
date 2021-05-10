@@ -11,7 +11,7 @@ function getLocation() {
             //Khai bao cac thuoc tinh
             var mapProp = {
               //Tam ban do, quy dinh boi kinh do va vi do
-              center:new google.maps.LatLng(lon, lat),
+              center:new google.maps.LatLng(position[1], position[0]),
               //set default zoom cua ban do khi duoc load
               zoom:5,
               //Dinh nghia type
