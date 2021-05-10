@@ -22,4 +22,4 @@ function getLocation() {
           }
           google.maps.event.addDomListener(window, 'load', initialize);
   }
-});
+
