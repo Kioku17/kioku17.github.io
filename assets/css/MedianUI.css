@@ -1,4 +1,3 @@
-  <style><!-- /* <style id='page-skin-1' type='text/css'><!--
 /* Variable color */
 :root{
 --head-color: #262d3d ;
@@ -550,8 +549,6 @@ footer{padding-bottom:50px}
 footer .toTop:before{content:'Top'}
 }
 
---></style>
-<style>/*<![CDATA[*/
 /* Related Posts */
 .relatedPosts{margin:40px 0 0;line-height:1.6em} .relatedPosts ul{display:flex;flex-wrap:wrap; position:relative;width:calc(100% + 20px);left:-10px; list-style:none;margin:0;padding:0} .relatedPosts li{display:block;width:calc(33.333% - 20px); margin:0 10px 30px} .relatedPosts .itemThumbnail a{background-image:none; color:inherit} .relatedPosts .itemThumbnail > *:before{content:'No image';display:block;position:absolute;top:50%;left:50%;max-width:none;max-height:100%;-webkit-transform:translate(-50%, -50%);transform:translate(-50%, -50%); font-size:12px; opacity:.7} .relatedPosts .itemThumbnail div{background-position:center;background-size:cover;background-repeat:no-repeat; display:block;position:absolute;top:0;left:0;bottom:0;right:0} .relatedPosts .itemTitle{font-size:.85rem;line-height:1.5em; font-family:var(--font-head);font-weight:700}
 
@@ -589,4 +586,3 @@ footer .toTop:before{content:'Top'}
 .relatedPosts ul{flex-wrap:nowrap;width:calc(100% + 40px);left:-20px;margin-bottom:50px;padding:0 20px; overflow-y:hidden;overflow-x:scroll;scroll-behavior:smooth;scroll-snap-type:x mandatory; -ms-overflow-style:none;-webkit-overflow-scrolling:touch} .relatedPosts li{display:block;flex-shrink:0; width:70%; margin:0 15px 0 0; scroll-snap-align:center} .relatedPosts li:last-child{margin-right:0} .relatedPosts ul:after{content:'';display:block;flex-shrink:0; align-self:stretch;padding-left:20px}
 .relatedPosts .itemTitle{font-size:13px}
 }
-  /*]]>*/</style>
