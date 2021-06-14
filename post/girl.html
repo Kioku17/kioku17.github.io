@@ -355,9 +355,14 @@ thisPageUrl: "girl"
     <form onsubmit="return postComment()" id="comment-form" autocomplete="off">
     <div class="topic_img">
        <div class="post_menu" style="padding:20px;font-size:16px">
-        <input class="w3-input" id="comment-name" name="username" placeholder="Mô tả (bắt buộc)" required="" value=""><br/>
-        <label><b>Nội dung: </b>(có thể sử dụng markdown)</label><br />
-        <textarea id="comment-comment" name="comment" placeholder="" required="" rows="1"></textarea><br />
+        <input class="w3-input" id="comment-name" name="username" placeholder="Mô tả (bắt buộc)" required="" value="">
+          <div style="font-weight:500;margin-top:10px">
+            <div style="margin-left:7px">
+              Tải ảnh lên <font color="red">(bắt buộc)</font>: <a id="upload">[ <i class="fa fa-upload" aria-hidden="true"></i> ]</a>
+            </div>
+            <textarea id="comment-comment" name="comment" placeholder="" required="" rows="1"></textarea>
+            <input style="display:none" type="file" id="f" accept="image/*">
+          </div>
        </div>
      </div>
     <div class="topic_comment_wrap" style="padding:7px;text-align:center;background:#fff">
@@ -366,6 +371,16 @@ thisPageUrl: "girl"
     </form>
  </li>
 
+<script src="https://kioku17.github.io/assets/js/api.imgur.js"></script>
+<script>
+document.querySelector("#upload").onclick = function() {
+document.querySelector("#f").click();}
+imgur("#f",{loading : function(load) {document.querySelector("#upload").innerHTML = '[ <i class="fa fa-upload" aria-hidden="true"></i> '+load+' ]'},
+loaded : function(link,size,type,time) {
+var input = $("textarea").val();
+$("textarea").val(link);
+$("#upload").html('[ <i class="fa fa-upload" aria-hidden="true"></i> ]');}})
+</script>
 
 <div class="phdr"><i class="fa fa-comments-o" aria-hidden="true"></i> Thảo luận</div>
 <div class="menu">
