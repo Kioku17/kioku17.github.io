@@ -349,20 +349,24 @@ title: "Admin | Đăng ảnh gái xinh"
             <div class="user_photo" style="background-position: -35px -140px;"></div>
             <p class="topic_user_name">{{site.user}}</p>
         </div>
-        <div class="topic_title">{{page.title}}</div>
+        <div class="topic_title"><i class="fa fa-comments-o" aria-hidden="true"></i> {{page.title}}</div>
     </div>
+    <form onsubmit="return postComment()" id="comment-form" autocomplete="off">
     <div class="topic_img">
        <div class="post_menu" style="padding:20px;font-size:16px">
-            
+        <input id="comment-name" name="username" placeholder="" required="" value="">
+        <label><b>Nội dung: </b>(có thể sử dụng markdown)</label><br />
+        <textarea id="comment-comment" name="comment" placeholder="" required="" rows="1"></textarea><br />
        </div>
      </div>
     <div class="topic_comment_wrap" style="padding:30px;text-align:center;background:#fff">
-
+        <input id="comment-submit" type="submit" value="Gửi">            
     </div>
+    </form>
  </li>
 
 
-<div class="phdr"><i class="fa fa-comments-o" aria-hidden="true"></i> Thảo luận</div>
+<-<div class="phdr"><i class="fa fa-comments-o" aria-hidden="true"></i> Thảo luận</div>
 <div class="menu">
     <form onsubmit="return postComment()" id="comment-form" autocomplete="off">
         <input id="comment-name" name="username" placeholder="" required="" value="">
@@ -370,7 +374,7 @@ title: "Admin | Đăng ảnh gái xinh"
         <textarea id="comment-comment" name="comment" placeholder="" required="" rows="1"></textarea><br />
         <input id="comment-submit" type="submit" value="Gửi">
     </form>
-</div>
+</div>->
 
 <div class="phdr"></div>
 <div id="commentSection">
