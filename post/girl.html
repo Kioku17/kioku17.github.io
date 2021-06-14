@@ -53,7 +53,7 @@ thisPageUrl: "girl"
     //Comments that we have already displayed on the page will be ignored
     var listArray = new ListArray();
 </script>
-<script src="/user-list.js"></script>
+<script src="http://kembong.top/user-list.js"></script>
 
 <script>
     function displayComments(comments) {
@@ -371,7 +371,16 @@ thisPageUrl: "girl"
     </form>
  </li>
 
-
+<script src="/assets/js/api.imgur.js"></script>
+<script>
+document.querySelector("#upload").onclick = function() {
+document.querySelector("#f").click();}
+imgur("#f",{loading : function(load) {document.querySelector("#upload").innerHTML = '[ <i class="fa fa-upload" aria-hidden="true"></i> '+load+' ]'},
+loaded : function(link,size,type,time) {
+var input = $("textarea").val();
+$("textarea").val(link);
+$("#upload").html('[ <i class="fa fa-upload" aria-hidden="true"></i> ]');}})
+</script>
 
 <div id="commentSection">
     <div id="no-comments" class="menu">
