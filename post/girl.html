@@ -1,6 +1,7 @@
 ---
 layout: null
 title: "Admin | Đăng ảnh gái xinh"
+thisPageUrl: "girl"
 ---
 {% include header.html %}
 <!-- Load Required 3rd-Party Scripts. We use the following: 
@@ -27,7 +28,7 @@ title: "Admin | Đăng ảnh gái xinh"
 
 <!-- Our own JS starts here-->
 <script>
-    var thisPageUrl = "girl";
+    var thisPageUrl = "{{page.thisPageUrl}}";
     var visibleComments = [];
     //Format the comment's date to our desired format
     function formatDate(stringDate) {
