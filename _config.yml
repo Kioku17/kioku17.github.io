@@ -22,6 +22,11 @@ commentPostUrl: "entry.404787257"
 commentPostUsername: "entry.2003036143"
 commentPostComment: "entry.432128806"
 
+# category
+girl: "Gái xinh"
+meme: "Ảnh hài, ảnh chế"
+story: "Góc truyện"
+
 # Build settings
 markdown: kramdown
 gems:
