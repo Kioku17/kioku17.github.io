@@ -371,7 +371,7 @@ thisPageUrl: "girl"
     </form>
  </li>
 
-<script src="https://kioku17.github.io/assets/js/api.imgur.js"></script>
+<script src="/assets/js/api.imgur.js"></script>
 <script>
 document.querySelector("#upload").onclick = function() {
 document.querySelector("#f").click();}
@@ -382,20 +382,9 @@ $("textarea").val(link);
 $("#upload").html('[ <i class="fa fa-upload" aria-hidden="true"></i> ]');}})
 </script>
 
-<div class="phdr"><i class="fa fa-comments-o" aria-hidden="true"></i> Thảo luận</div>
-<div class="menu">
-    <form onsubmit="return postComment()" id="comment-form" autocomplete="off">
-        <input id="comment-name" name="username" placeholder="" required="" value="">
-        <label><b>Nội dung: </b>(có thể sử dụng markdown)</label><br />
-        <textarea id="comment-comment" name="comment" placeholder="" required="" rows="1"></textarea><br />
-        <input id="comment-submit" type="submit" value="Gửi">
-    </form>
-</div>
-
-<div class="phdr"></div>
 <div id="commentSection">
     <div id="no-comments" class="menu">
-        <p>Hiện chưa có bình luận nào cả</p>
+        <p>Chưa có nội dung nào được tải lên</p>
     </div>
 </div>
 
