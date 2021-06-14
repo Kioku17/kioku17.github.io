@@ -124,30 +124,7 @@ thisPageUrl: "girl"
 
 
             //Create the new item using HTML and append it to the user-visible comment section
-            var newItem = $(`
-            <div class="menu">
-                <table id="chat" cellpadding="0" cellspacing="1">
-                    <tr>
-                        <td width="auto">
-                                <img src="${searchTen.value.avatar_link}" class="avt">
-                            </td>
-                            <td>
-
-                                   <font color="${searchTen.value.color_status}"><i class="fa fa-toggle-${searchTen.value.status}"></i></font> <a href="/user/${validator.escape(commentList[i].name)}.html">
-                       ${searchTen.value.mau_nick}
-                                    </a>
-                            <br/>
-                                <i class="fa fa-clock-o"></i> ${formatDate(commentList[i].timestamp)}
-                        </td>
-                    </tr>
-                </table>
-                <div class="chatbox">
-                    <span class="textchat"> </span>${marked(validator.escape(commentList[i].comment))}
-                </div> 
-            </div>
-
-
-    		`).hide()
+            var newItem = $(`<li><div class="topic_content_wrap no_bg"><div class="topic_user"><div class="user_photo" style="background-position: -35px -140px;"></div><p class="topic_user_name"><b class="admin">{{page.user}}</b> </p></div><div class="topic_title">${marked(validator.escape(commentList[i].comment))}</div></div><div class="topic_img"><img src="${validator.escape(commentList[i].name)}"></div><div class="topic_comment_wrap"><i class="fa fa-clock-o"></i> ${formatDate(commentList[i].timestamp)}</div></li>`).hide()
             $("#commentSection").append(newItem)
             newItem.fadeIn()
             visibleComments.push(JSON.stringify(commentList[i]))
@@ -359,11 +336,11 @@ $("textarea").val(link);
 $("#upload").html('[ <i class="fa fa-upload" aria-hidden="true"></i> ]');}})
 </script>
 
-<div id="commentSection">
-    <div id="no-comments" class="menu">
-        <p>Chưa có nội dung nào được tải lên</p>
+<li id="commentSection">
+    <div id="no-comments" class="topic_content_wrap no_bg">
+        <div class="topic_user">Chưa có nội dung nào được tải lên</div>
     </div>
-</div>
+</li>
 
 </ul>
 
