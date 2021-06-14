@@ -2,7 +2,7 @@ title: Cà Phê Đắng
 description: Gửi tặng thanh xuân của tôi
 domain: "cafedang.xyz"
 baseurl: "/"
-url: "https://cafedang.xyz"
+url: "https://m.cafedang.xyz"
 permalink: /:title
 repository: Kioku17/kioku17.github.io
 paginate: 10
